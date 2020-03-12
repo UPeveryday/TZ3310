@@ -1,0 +1,163 @@
+﻿<Window x:Class="SCEEC.TTM.WSShortImp"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SCEEC.TTM"
+        MouseLeftButtonDown="Window_MouseLeftButtonDown" WindowStartupLocation="CenterScreen"
+             WindowStyle="None"  Background="Transparent" AllowsTransparency="True" Topmost="True"
+             mc:Ignorable="d" Width="1246" Height="350" BorderThickness="50">
+    <Window.Resources>
+        <Style TargetType="{x:Type local:TextBoxNumber}">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="White"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Padding" Value="5,6,5,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Grid>
+                            <Rectangle RadiusX="3" RadiusY="3" x:Name="textBoxrectangle" Stroke="Transparent">
+                            </Rectangle>
+                            <ScrollViewer x:Name="PART_ContentHost" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" Padding="{TemplateBinding Padding}" Focusable="false">
+                            </ScrollViewer>
+
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused"  Value="True">
+                                <Setter TargetName="textBoxrectangle" Property="Fill" Value="#FFA500" />
+                            </Trigger>
+                            <Trigger Property="IsFocused"  Value="False">
+                                <Setter TargetName="textBoxrectangle" Property="Fill" Value="Transparent" />
+                            </Trigger>
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="{x:Type TextBox}">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="White"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Padding" Value="5,6,5,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Grid>
+                            <Rectangle RadiusX="3" RadiusY="3" x:Name="textBoxrectangle" Stroke="Transparent">
+                            </Rectangle>
+                            <ScrollViewer x:Name="PART_ContentHost" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" Padding="{TemplateBinding Padding}" Focusable="false">
+                            </ScrollViewer>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused"  Value="True">
+                                <Setter TargetName="textBoxrectangle" Property="Fill" Value="#FFA500" />
+                            </Trigger>
+                            <Trigger Property="IsFocused"  Value="False">
+                                <Setter TargetName="textBoxrectangle" Property="Fill" Value="Transparent" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Border Grid.Row="2" Margin="2 0 2 2" Background="#FF222222" CornerRadius="10" >
+
+        <Border.Effect>
+            <DropShadowEffect Color="White" BlurRadius="50" ShadowDepth="0" Opacity="1" />
+        </Border.Effect>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="400"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition/>
+                <RowDefinition Height="60"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="短路阻抗试验" Foreground="White" Margin="10,0,0,5" VerticalAlignment="Bottom" />
+            <Grid Margin="20 5 20 5" Grid.Row="1" Grid.ColumnSpan="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1.2*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Border Grid.Column="0" Grid.Row="0" BorderThickness="0.6" BorderBrush="White">
+                    <TextBlock Text="   高压对低压&#13;低电压短路阻抗" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Border>
+                <Border Grid.Column="1" Grid.Row="0" BorderThickness="0.6" BorderBrush="White">
+                    <TextBlock Text="试验电流&#13;  （A）" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Border>
+                <Border Grid.Column="2" Grid.Row="0" BorderThickness="0.6" BorderBrush="White">
+                    <TextBlock Text="AB试验电压&#13;     （V）" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Border>
+                <Border Grid.Column="3" Grid.Row="0" BorderThickness="0.6" BorderBrush="White">
+                    <TextBlock Text="BC试验电压&#13;     （V）" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Border>
+                <Border Grid.Column="4" Grid.Row="0" BorderThickness="0.6" BorderBrush="White">
+                    <TextBlock Text="CA试验电压&#13;     （V）" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Border>
+                <Border Grid.Column="5" Grid.Row="0" BorderThickness="0.6" BorderBrush="White">
+                    <TextBlock Text="初始阻抗&#13;  （%）" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Border>
+                <Border Grid.Column="6" Grid.Row="0" BorderThickness="0.6" BorderBrush="White">
+                    <TextBlock Text="实测阻抗&#13;  （%）" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Border>
+                <Border Grid.Column="0" Grid.Row="1" BorderThickness="0.6" BorderBrush="White">
+                    <TextBlock Text="额定档" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Border>
+                <Border Grid.Column="1" Grid.Row="1" BorderThickness="0.6" BorderBrush="White">
+                    <local:TextBoxNumber  HorizontalAlignment="Stretch"  Height="30"   Text="{Binding TestCur,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" />
+                </Border>
+                <Border Grid.Column="2" Grid.Row="1" BorderThickness="0.6" BorderBrush="White">
+                    <local:TextBoxNumber HorizontalAlignment="Stretch"  Height="30"   Text="{Binding TestABVol,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" />
+                </Border>
+                <Border Grid.Column="3" Grid.Row="1" BorderThickness="0.6" BorderBrush="White">
+                    <local:TextBoxNumber HorizontalAlignment="Stretch"  Height="30"   Text="{Binding TestBCVol,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" />
+                </Border>
+                <Border Grid.Column="4" Grid.Row="1" BorderThickness="0.6" BorderBrush="White">
+                    <local:TextBoxNumber HorizontalAlignment="Stretch"  Height="30"   Text="{Binding TestCAVol,Mode=TwoWay}" VerticalAlignment="Center" />
+                </Border>
+                <Border Grid.Column="5" Grid.Row="1" BorderThickness="0.6" BorderBrush="White">
+                    <local:TextBoxNumber HorizontalAlignment="Stretch"  Height="30"   Text="{Binding InitImp,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" />
+                </Border>
+                <Border Grid.Column="6" Grid.Row="1" BorderThickness="0.6" BorderBrush="White">
+                    <local:TextBoxNumber HorizontalAlignment="Stretch"  Height="30"   Text="{Binding TestImp,Mode=TwoWay}" VerticalAlignment="Center" />
+                </Border>
+                <Border Grid.Column="0" Grid.Row="2" BorderThickness="0.6" BorderBrush="White">
+                    <TextBlock Text="试验仪器" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Border>
+                <Border Grid.Column="1" Grid.Row="2" BorderThickness="0.6" BorderBrush="White" Grid.ColumnSpan="3">
+                    <TextBox HorizontalAlignment="Stretch" Background="Transparent"  Height="30" BorderBrush="Transparent"  Text="{Binding InstName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" />
+                </Border>
+                <Border Grid.Column="4" Grid.Row="2" BorderThickness="0.6" BorderBrush="White" Grid.ColumnSpan="3">
+                    <TextBox HorizontalAlignment="Stretch" Background="Transparent"  Height="30" BorderBrush="Transparent"  Text="{Binding InstNum,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" />
+                </Border>
+            </Grid>
+            <Grid Grid.Row="2" Grid.Column="1"  >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Content="确定" Grid.RowSpan="2" Margin="5" FontSize="18" Width="110" Height="40" Background="#434343" Foreground="White" Click="btnOK_Click"/>
+                <Button Grid.Column="1" Content="取消" Grid.RowSpan="2" Margin="5" FontSize="18" Width="110" Height="40" Background="#434343" Foreground="White" Click="btnCancle_Click"/>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>
