@@ -4,9 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SCEEC.TTM"
+        xmlns:kb="clr-namespace:AutomaterRu.OnScreenKeyboard;assembly=AutomaterRu.OnScreenKeyboard"
         MouseLeftButtonDown="Window_MouseLeftButtonDown" WindowStartupLocation="CenterScreen"
              WindowStyle="None"  Background="Transparent" AllowsTransparency="True" Topmost="True"
-             mc:Ignorable="d" Width="1000" Height="400" BorderThickness="50" >
+             mc:Ignorable="d" Width="1000" Height="650" BorderThickness="50" >
     <Window.Resources>
         <Style TargetType="{x:Type local:TextBoxNumber}">
             <Setter Property="VerticalAlignment" Value="Center"/>
@@ -80,8 +81,14 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
                 <RowDefinition/>
+                <RowDefinition Height="auto"/>
                 <RowDefinition Height="60"/>
             </Grid.RowDefinitions>
+
+            <kb:Keyboard Grid.Row="2" Language="Rn" Margin="20,0" Visibility="{Binding kbvisible,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" MaxHeight="200" Grid.ColumnSpan="2"></kb:Keyboard>
+            <CheckBox  Grid.Row="3" Grid.Column="0"  Content="启用键盘" IsChecked="{Binding kbckeck,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Height="30" Margin="15,5" />
+
+
             <TextBlock Text="泄漏电流试验" Foreground="White" Margin="10,0,0,5" VerticalAlignment="Bottom" />
             <Grid Margin="20 5 20 5" Grid.Row="1" Grid.ColumnSpan="2">
                 <Grid.RowDefinitions>
@@ -163,7 +170,7 @@
                     <TextBox HorizontalAlignment="Stretch" Background="Transparent"  Height="30" BorderBrush="Transparent"  Text="{Binding InstNum,Mode=TwoWay}" VerticalAlignment="Center" />
                 </Border>
             </Grid>
-            <Grid Grid.Row="2" Grid.Column="1"  >
+            <Grid Grid.Row="3" Grid.Column="1"  >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>

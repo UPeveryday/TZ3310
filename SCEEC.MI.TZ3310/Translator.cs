@@ -14,6 +14,7 @@ namespace SCEEC.MI.TZ3310
             //miList.Add(MeasurementItemStruct.CreateInformation("添加使用用户信息模块"));//问题
 
             int TapNum = (jobList.Transformer.OLTC.TapNum - 1) / 2;
+            int mulTapNum = (jobList.Transformer.OLTC.MulTapNum - 1) / 2;
             if (jobList.Transformer.OLTC.Contained == true)
                 miList.Add(MeasurementItemStruct.CreateText("将变压器有载分接开关位置切换到额定分接(分接" + (TapNum + 1).ToString() + "B)位置;"));
 
@@ -139,7 +140,8 @@ namespace SCEEC.MI.TZ3310
             if (jobList.OLTC.Enabled)
             {
                 int range = jobList.OLTC.Range;
-                int lowest = TapNum - range + 1;
+                int mulrange = jobList.OLTC.MulRange;
+                int lowest = mulTapNum - mulrange + 1;
                 int highest = TapNum + range + 1;
                 miList.Add(MeasurementItemStruct.CreateText("使用直阻与有载分接试验模块："));
 

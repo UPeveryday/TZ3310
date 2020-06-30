@@ -111,8 +111,40 @@ namespace SCEEC.TTM
                 NewRowTestResults["result_pv1"] = value;
             }
         }
+        private Visibility _kbvisible=Visibility.Collapsed;
 
-        private double _ClipGUD;
+        public Visibility kbvisible
+        {
+            get
+            {
+                return _kbvisible;
+            }
+            set
+            {
+                _kbvisible = value;
+                UpdateProperty(nameof(kbvisible));
+            }
+        }
+
+        public bool kbckeck
+        {
+            get { return _kbckeck; }
+            set
+            {
+                _kbckeck = value;
+                UpdateProperty(nameof(kbckeck));
+                if(_kbckeck==true)
+                {
+                    kbvisible = Visibility.Visible;
+                }
+                else
+                    kbvisible = Visibility.Collapsed;
+
+            }
+
+        }
+
+        private bool _kbckeck;
         /// <summary>
         /// 夹件对地
         /// </summary>
@@ -126,7 +158,7 @@ namespace SCEEC.TTM
                 NewRowTestResults["result_pv2"] = value;
             }
         }
-
+        private double _ClipGUD;
 
         private string _InstName;
         /// <summary>
@@ -150,7 +182,9 @@ namespace SCEEC.TTM
         public string InstNum
         {
             get { return _InstNum; }
-            set { _InstNum = value; UpdateProperty(nameof(InstNum));
+            set
+            {
+                _InstNum = value; UpdateProperty(nameof(InstNum));
                 NewRowTestResults["instnum"] = value;
 
             }

@@ -271,6 +271,7 @@ namespace SCEEC.MI.TZ3310
     public struct OLTCJobList
     {
         public int Range;
+        public int MulRange;
         public bool DCResistance;
         public bool SwitchingCharacter;
         public bool Enabled
@@ -680,9 +681,9 @@ namespace SCEEC.MI.TZ3310
             if (mi.Function == MeasurementFunction.Leakagecurrent)
             {
                 var data = JsonConvert.DeserializeObject<TTM.LeakCurJson>(Convert.ToString(row["waves"]));
-                short[] waves = new short[]{ (short)data.HL10kV, (short)data.HL20kV, (short)data.HL40kV,
-                (short)data.H_L10kV, (short)data.H_L20kV, (short)data.H_L40kV,
-                 (short)data.L_H10kV, (short)data.L_H20kV, (short)data.L_H40kV};
+                short[] waves = new short[]{ (short)data.H_L10kV, (short)data.L_H10kV, (short)data.HL10kV,
+                (short)data.H_L20kV, (short)data.L_H20kV, (short)data.HL20kV,
+                 (short)data.H_L40kV, (short)data.L_H40kV, (short)data.HL40kV};
                 mi.result = new MeasurementResult(mi.Function, pv, waves, false, (DateTime)row["recordtime"]);
             }
 
@@ -1005,30 +1006,33 @@ namespace SCEEC.MI.TZ3310
                             else
                                 return this.Winding.ToString() + "套管" + this.Terimal[0].ToString() + "末屏的电容量: " + result.values[2] + " 介质损耗：" + SCEEC.Numerics.NumericsConverter.Value2Text((double)result.values[3].value, 4, -5, "", "", percentage: true, usePrefix: false).Trim();
                         case MeasurementFunction.Coreinsulation:
-                            string retdata = string.Empty;
+                            string retdata = "铁芯(夹件)绝缘电阻:\n";
                             if (result.values[0] != null)
-                                retdata += "铁芯对地: "+ result.values[0].OriginText+ "MΩ";
-                            if(result.values[1] != null)
-                                retdata += "   夹件对地: " + result.values[1].OriginText + "MΩ";
+                                retdata += "铁芯对地: " + result.values[0].OriginText + "MΩ。\t";
+                            if (result.values[1] != null)
+                                retdata += "夹件对地: " + result.values[1].OriginText + "MΩ。  ";
                             return retdata;
                         case MeasurementFunction.Leakagecurrent:
-                            return "泄露电流";
+                           return "泄漏电流试验(双绕组):\n" +
+                                "测试电压10KV：   高压对低压及地： " + result.waves[0].ToString() + " 。 低压对高压及地：  " + result.waves[1].ToString() + " 。 高压、低压对地：  " + result.waves[1].ToString() + "\n" +
+                                "测试电压20KV：   高压对低压及地： " + result.waves[3].ToString() + " 。 低压对高压及地：  " + result.waves[4].ToString() + " 。 高压、低压对地：  " + result.waves[5].ToString() + "\n" +
+                                "测试电压10KV：   高压对低压及地： " + result.waves[6].ToString() + " 。 低压对高压及地：  " + result.waves[7].ToString() + " 。 高压、低压对地：  " + result.waves[8].ToString();
                         case MeasurementFunction.Shortcircuitimpedance:
-                            string retdata1 = string.Empty;
+                            string retdata1 = "低电压短路阻抗:\n";
                             if (result.values[0] != null)
-                                retdata1 += "试验电流 " + result.values[0].OriginText + "A";
+                                retdata1 += "试验电流 " + result.values[0].OriginText + "A。 ";
                             if (result.values[1] != null)
-                                retdata1 += "  AB试验电压: " + result.values[1].OriginText + "V";
+                                retdata1 += "  AB试验电压: " + result.values[1].OriginText + "V。 ";
                             if (result.values[2] != null)
-                                retdata1 += "  BC试验电压: " + result.values[2].OriginText + "V";
+                                retdata1 += "  BC试验电压: " + result.values[2].OriginText + "V。";
                             if (result.values[3] != null)
-                                retdata1 += "\nCA试验电压: " + result.values[3].OriginText + "V";
+                                retdata1 += "\nCA试验电压: " + result.values[3].OriginText + "V。 ";
                             if (result.values[4] != null)
-                                retdata1 += "  初始阻抗: " + result.values[4].OriginText + "%";
+                                retdata1 += "  初始阻抗: " + result.values[4].OriginText + "%。 ";
                             if (result.values[5] != null)
-                                retdata1 += "  实测阻抗: " + result.values[5].OriginText + "%";
+                                retdata1 += "  实测阻抗: " + result.values[5].OriginText + "%。 ";
                             if (result.values[6] != null)
-                                retdata1 += "  误差(%): " + result.values[6].OriginText + "%";
+                                retdata1 += "  误差(%): " + result.values[6].OriginText + "%。 ";
                             return retdata1;
                         default:
                             throw new NotImplementedException();

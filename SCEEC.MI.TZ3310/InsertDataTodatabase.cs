@@ -55,26 +55,21 @@ namespace SCEEC.MI.TZ3310
             row["DifferentWiring"] = tws.job.Transformer.WindingConfig.HV + "/" + tws.job.Transformer.WindingConfig.LV
                 + "/" + tws.job.Transformer.WindingConfig.LVLabel + "/" + tws.job.Transformer.WindingConfig.MV + "/" +
                 tws.job.Transformer.WindingConfig.MVLabel;//连结组标号
-
-         
-
-
-
-            //row["Model"] = WorkingSets.local.MethonID;
-            //row["PhaseNumber"] = tws.Transformer.SerialNo;
-            //row["RatedCapacitance"] = tws.job.Information.testingName;
-            //row["VoltageCombination"] = tws.job.Information.testingAgency;
+            row["Model"] = tws.Transformer.SerialNo;
+            row["PhaseNumber"] = tws.Transformer.PhaseNum;
+          //  row["RatedCapacitance"] = tws.job.Information.testingName;
+          //  row["VoltageCombination"] = tws.job.Information.testingAgency;
             //row["DifferentWiring"] = tws.job.Information.auditor; 
             //row["CapacityCombination"] = tws.job.Information.approver;
             //row["CurrentCombination"] = tws.job.Information.principal;
-            //row["ImpedanceHighAlignment"] = tws.job.Information.weather;
-            //row["ImpedanceHighToLow"] = tws.job.Information.temperature;
-            //row["ImpedanceMediumToLow"] = tws.job.Information.humidity;
-            //row["LoadHighAlignment"] = tws.job.Information.humidity;
-            //row["LoadHighToLow"] = tws.job.Information.humidity;
-            //row["LoadMediumToLow"] = tws.job.Information.humidity;
-            //row["No_LoadLoss"] = tws.job.Information.humidity;
-            //row["No_LoadCurrent"] = tws.job.Information.humidity;
+            row["ImpedanceHighAlignment"] = tws.Transformer.transformermessage.Impedancevoltagehv;
+            row["ImpedanceHighToLow"] = tws.Transformer.transformermessage.Impedancevoltagemv;
+            row["ImpedanceMediumToLow"] = tws.Transformer.transformermessage.Impedancevoltagelv;
+            row["LoadHighAlignment"] = tws.Transformer.transformermessage.Theloadlosshv;
+            row["LoadHighToLow"] = tws.Transformer.transformermessage.Theloadlossmv;
+            row["LoadMediumToLow"] = tws.Transformer.transformermessage.Theloadlosslv;
+            row["No_LoadLoss"] = tws.Transformer.transformermessage.Noloadloss;
+            row["No_LoadCurrent"] = tws.Transformer.transformermessage.Noloadcurrent;
             WorkingSets.local.Parameter_Information.Rows.Add(row);
             if (!WorkingSets.local.SaveCreateLocateDatabase())
             {
@@ -456,7 +451,7 @@ namespace SCEEC.MI.TZ3310
                     rowHighResult["ProjectConclusions"] = "ProjectConclusions";
                     rowResultBushingDCInsulation["ProjectConclusions"] = "ProjectConclusions";
                     rowResultBushingCapacitance["ProjectConclusions"] = "ProjectConclusions";
-                    
+
 
                     rowMResult["TestCode"] = tws.job.Information.GetHashCode();
                     rowMResult["Temperature"] = tws.job.Information.temperature;
@@ -660,9 +655,9 @@ namespace SCEEC.MI.TZ3310
                                     rowLow["unbalance"] = ChangeValueToNeed.UnBalance(Convert.ToDouble(tws.MeasurementItems[i].Result.values[2].value) * 310 / 255,
                                         Convert.ToDouble(tws.MeasurementItems[i].Result.values[5].value) * 310 / 255,
                                         Convert.ToDouble(tws.MeasurementItems[i].Result.values[8].value) * 310 / 255);
-                                    rowLow["ax-byMutualDifference"] = ChangeValueToNeed.MutualDifference((double)tws.MeasurementItems[i].Result.values[2].value * 310 / 255, (double)(tws.MeasurementItems[i].Result.values[5].value * 310 / 255)); 
-                                    rowLow["by-czMutualDifference"] = ChangeValueToNeed.MutualDifference((double)tws.MeasurementItems[i].Result.values[5].value * 310 / 255, (double)(tws.MeasurementItems[i].Result.values[8].value * 310 / 255)); 
-                                    rowLow["cz-axMutualDifference"] = ChangeValueToNeed.MutualDifference((double)tws.MeasurementItems[i].Result.values[8].value * 310 / 255, (double)(tws.MeasurementItems[i].Result.values[2].value * 310 / 255)); 
+                                    rowLow["ax-byMutualDifference"] = ChangeValueToNeed.MutualDifference((double)tws.MeasurementItems[i].Result.values[2].value * 310 / 255, (double)(tws.MeasurementItems[i].Result.values[5].value * 310 / 255));
+                                    rowLow["by-czMutualDifference"] = ChangeValueToNeed.MutualDifference((double)tws.MeasurementItems[i].Result.values[5].value * 310 / 255, (double)(tws.MeasurementItems[i].Result.values[8].value * 310 / 255));
+                                    rowLow["cz-axMutualDifference"] = ChangeValueToNeed.MutualDifference((double)tws.MeasurementItems[i].Result.values[8].value * 310 / 255, (double)(tws.MeasurementItems[i].Result.values[2].value * 310 / 255));
                                     rowLow["max"] = ChangeValueToNeed.MaxMutualDifference((double)tws.MeasurementItems[i].Result.values[2].value * 310 / 255, (double)tws.MeasurementItems[i].Result.values[2].value * 310 / 255,
                                         (double)tws.MeasurementItems[i].Result.values[2].value * 310 / 255);
                                     WorkingSets.local.Dcresistor_Lowpressure.Rows.Add(rowLow);
@@ -887,7 +882,7 @@ namespace SCEEC.MI.TZ3310
             return bytesCollection.ToArray();
         }
         //创建表头 
-        public static void CreateTableHead(string ResultName)
+        public static void CreateTableHead(string ResultName, string location = "湖南")
         {
             var tws = WorkingSets.local.getTestResults(ResultName);
             DataRow rowDCInsulation = WorkingSets.local.Insulationresistance_Threewinding.NewRow();
@@ -990,10 +985,13 @@ namespace SCEEC.MI.TZ3310
             WorkingSets.local.SaveCreateLocateDatabase();
 
         }
+
+
+
         public static void ShowExport(string ResultName)
         {
             var tws = WorkingSets.local.getTestResults(ResultName);
-            HNReport.DoReport.Run(HNReport.ReportOperator.Previev, tws.job.Information.GetHashCode().ToString(), "配电变压器");
+            HNReport.DoReport.Run(HNReport.ReportOperator.Design, tws.job.Information.GetHashCode().ToString(), "配电变压器（上海）");
         }
         /// <summary>
         /// 处理波形数据库问题
@@ -1028,8 +1026,8 @@ namespace SCEEC.MI.TZ3310
         }
         public static void UpdataDatabase(string ResultName)
         {
-            // WorkingSets.local.DeleteAllExportTable();//删除原表数据
-            //  CreateTableHead(ResultName);//创建新表头，表头哈希代码不同需要新的表头检索
+            WorkingSets.local.DeleteAllExportTable(ResultName);//删除原表数据
+            CreateTableHead(ResultName);//创建新表头，表头哈希代码不同需要新的表头检索
             CreateParameterInformation(ResultName);
             CreateSampleInformation(ResultName);
             CreateTestResult(ResultName);

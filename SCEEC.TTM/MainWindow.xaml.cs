@@ -493,6 +493,8 @@ namespace SCEEC.TTM
                 NewJobButton.IsEnabled = false;
                 NewJobButton.Opacity = 0.3;
             }
+            JobListBox.ItemsSource = new List<string>();
+            TestListBox.ItemsSource = new List<string>();
             refreshJobList();
         }
 
@@ -589,15 +591,8 @@ namespace SCEEC.TTM
 
         private void ExportButton_Click(object sender, RoutedEventArgs e)
         {
-            // var tws = WorkingSets.local.getTestResults(ResultName);
-            /* try { */
             InsertDataTodatabase.UpdataDatabase(TestListBox.SelectedItem.ToString());/* }*/
-            //catch {
-            //    throw new Exception("插入报告数据出错");
-            //}
             InsertDataTodatabase.ShowExport(TestListBox.SelectedItem.ToString());
-            //WorkingSets.local.DeleteAllExportTable();
-
         }
 
         private void ListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -671,11 +666,21 @@ namespace SCEEC.TTM
             //var local = JsonConvert.SerializeObject(WorkingSets.local.Locations, Formatting.Indented, jsetting);
             //JobList ts = JsonConvert.DeserializeObject<JobList>(datatablejson);
 
+
+            WorkingSets.local.getTransformer(13);
         }
 
         private void ExportList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            try
+            {
+                InsertDataTodatabase.ShowExport(TestListBox.SelectedItem.ToString());
 
+            }
+            catch 
+            {
+                MessageBox.Show("打开报告错误");
+            }
         }
 
         private void ExportList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -716,6 +721,17 @@ namespace SCEEC.TTM
                     refreshTransformerList();
                     TransformerListBox.ItemsSource = WorkingSets.local.getTransformerSerialNo(LocationListBox.SelectedItem.ToString());
                 }
+            }
+        }
+
+        private void deletelocationTask(object sender, RoutedEventArgs e)
+        {
+            if (LocationListBox.SelectedIndex > -1)
+            {
+                WorkingSets.local.DeleteDataBase("Tz3310", "location", "name", LocationListBox.SelectedItem.ToString());
+                WorkingSets.local.updateLocation();
+                LocationListBox.ItemsSource = WorkingSets.local.getLocationName();
+
             }
         }
 

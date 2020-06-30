@@ -792,7 +792,6 @@ namespace SCEEC.MI.TZ3310
                     }
                     break;
                 case 3:
-
                     mi.stateText = "正在读取波形中。。。";
                     Thread.Sleep(8000);
                     mi.state++;

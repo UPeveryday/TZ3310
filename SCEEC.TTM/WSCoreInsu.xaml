@@ -4,10 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SCEEC.TTM"
+        xmlns:kb="clr-namespace:AutomaterRu.OnScreenKeyboard;assembly=AutomaterRu.OnScreenKeyboard"
          MouseLeftButtonDown="Window_MouseLeftButtonDown" WindowStartupLocation="CenterScreen"
              WindowStyle="None"  Background="Transparent" AllowsTransparency="True" Topmost="True"
         mc:Ignorable="d"
-        Title="WSCoreInsu" Width="800" Height="550" BorderThickness="50">
+        Title="WSCoreInsu" Width="1000" Height="700" BorderThickness="50">
     <Window.Resources>
         <Style TargetType="{x:Type local:TextBoxNumber}">
             <Setter Property="VerticalAlignment" Value="Center"/>
@@ -69,18 +70,18 @@
         </Style>
     </Window.Resources>
     <Border Grid.Row="2" Margin="2 0 2 2" Background="#FF222222" CornerRadius="10" >
-
         <Border.Effect>
             <DropShadowEffect Color="White" BlurRadius="50" ShadowDepth="0" Opacity="1" />
         </Border.Effect>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="400"/>
+                <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
                 <RowDefinition/>
+                <RowDefinition Height="auto"/>
                 <RowDefinition Height="60"/>
             </Grid.RowDefinitions>
             <TextBlock Text="铁芯绝缘电阻" Foreground="White" Margin="10,0,0,5" VerticalAlignment="Bottom" />
@@ -131,7 +132,7 @@
                     <TextBox HorizontalAlignment="Stretch" Background="Transparent"  Height="30" BorderBrush="Transparent"  Text="{Binding InstNum,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" />
                 </Border>
             </Grid>
-            <Grid Grid.Row="2" Grid.Column="1"  >
+            <Grid Grid.Row="3" Grid.Column="1"  >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
@@ -139,6 +140,10 @@
                 <Button Grid.Column="0" Content="确定" Grid.RowSpan="2" Margin="5" FontSize="18" Width="110" Height="40" Background="#434343" Foreground="White" Click="btnOK_Click"/>
                 <Button Grid.Column="1" Content="取消" Grid.RowSpan="2" Margin="5" FontSize="18" Width="110" Height="40" Background="#434343" Foreground="White" Click="btnCancle_Click"/>
             </Grid>
+            <kb:Keyboard Grid.Row="2"  Language="EN" Margin="20,0" Visibility="{Binding kbvisible,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" MaxHeight="200" Grid.ColumnSpan="2"></kb:Keyboard>
+            <CheckBox  Grid.Row="3" Grid.Column="0"  Content="启用键盘" IsChecked="{Binding kbckeck,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Height="30" Margin="15,5" />
+
+
         </Grid>
     </Border>
 </Window>

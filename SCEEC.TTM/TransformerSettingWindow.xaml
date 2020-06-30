@@ -7,6 +7,40 @@
         mc:Ignorable="d"
         Style="{DynamicResource WizardForm}"
         Title="TransformerSettingWindow" Height="600" Width="750" FontSize="18" MinWidth="750" MinHeight="600" Closing="Window_Closing" Loaded="Window_Loaded">
+
+    <Window.Resources>
+        <Style TargetType="{x:Type local:TextBoxNumber}">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="White"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Padding" Value="5,6,5,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Grid>
+                            <Rectangle RadiusX="3" RadiusY="3" x:Name="textBoxrectangle" Stroke="White">
+                            </Rectangle>
+                            <ScrollViewer x:Name="PART_ContentHost" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" Padding="{TemplateBinding Padding}" Focusable="false">
+                            </ScrollViewer>
+
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused"  Value="True">
+                                <Setter TargetName="textBoxrectangle" Property="Fill" Value="#FFA500" />
+                            </Trigger>
+                            <Trigger Property="IsFocused"  Value="False">
+                                <Setter TargetName="textBoxrectangle" Property="Fill" Value="Transparent" />
+                            </Trigger>
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -180,13 +214,17 @@
                                 <WrapPanel x:Name="OLTCMainTapWrapPanel">
                                     <TextBlock Text=":  具有"/>
                                     <TextBox x:Name="OLTCTapMainNumTextBox" Text="1" Width="30" TextAlignment="Right" Margin="5,0,5,0" PreviewTextInput="OLTCTapMainNumTextBox_PreviewTextInput" LostKeyboardFocus="OLTCTapMainNumTextBox_LostKeyboardFocus"/>
-                                    <TextBlock Text="个主分接"/>
+                                    <TextBlock Text="个主分接,"/>
+
+                                    <TextBlock Text="主分接位置"/>
+                                    <TextBox x:Name="OLTCTapMainNumLocationTextBox" Text="1" Width="30" TextAlignment="Right" Margin="5,0,5,0" PreviewTextInput="OLTCTapMainNumTextBox_PreviewTextInput" LostKeyboardFocus="OLTCTapMainNumLocationTextBox_LostKeyboardFocus"/>
+                                    <TextBlock Text="分接处。"/>
                                 </WrapPanel>
                             </WrapPanel>
                             <Grid x:Name="OLTCGrid" Grid.Row="1" Visibility="Collapsed">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1.8*"/>
                                     <ColumnDefinition Width="0.1*"/>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="1.1*"/>
@@ -210,7 +248,7 @@
                                 </WrapPanel>
                                 <TextBlock Text="分接范围：" Grid.Row="2" Grid.Column="0" Margin="5"/>
                                 <WrapPanel Grid.Row="2" Grid.Column="1">
-                                    <TextBlock Text="±" Margin="5,5,0,5"/>
+                                    <TextBlock Text="+" Margin="0"/>
                                     <ComboBox x:Name="OLTCTapNumComboBox" Margin="2.5" SelectionChanged="OLTCTapNumComboBox_SelectionChanged">
                                         <ComboBoxItem Content="1"/>
                                         <ComboBoxItem Content="2"/>
@@ -219,7 +257,18 @@
                                         <ComboBoxItem Content="8" IsSelected="True"/>
                                         <ComboBoxItem Content="10"/>
                                     </ComboBox>
-                                    <TextBlock Text="×" Margin="0,5,0,5"/>
+                                    <TextBlock Text="至-" Margin="1,5"/>
+                                    <ComboBox x:Name="OLTCMulTapNumComboBox" Margin="2.5" SelectionChanged="OLTCMulTapNumComboBox_SelectionChanged">
+                                        <ComboBoxItem Content="1"/>
+                                        <ComboBoxItem Content="2"/>
+                                        <ComboBoxItem Content="4"/>
+                                        <ComboBoxItem Content="5"/>
+                                        <ComboBoxItem Content="8" IsSelected="True"/>
+                                        <ComboBoxItem Content="10"/>
+                                    </ComboBox>
+
+
+<TextBlock Text="×" Margin="0,5,0,5"/>
                                     <ComboBox x:Name="OLTCStepComboBox" Margin="2.5" SelectionChanged="TextChanged">
                                         <ComboBoxItem Content="0.50%"/>
                                         <ComboBoxItem Content="1.00%"/>
@@ -246,8 +295,136 @@
 
                 </ListBoxItem>
                 <ListBoxItem>
-                    <GroupBox Grid.Row="3" Header="其他信息" Width="690">
-                        <local:UCOrderSet x:Name="ucOrderSet" />
+                    <GroupBox Grid.Row="3" Name="other" Header="其他信息" Width="690" >
+
+                        <Grid Margin="5" Background="#FF222222">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="7*"></RowDefinition>
+                                <RowDefinition Height="3*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <GroupBox Margin="3,3,10,3" Grid.Row="0" Grid.Column="0" Foreground="White" BorderThickness="0.6">
+                                <GroupBox.HeaderTemplate>
+                                    <DataTemplate>
+                                        <Border>
+                                            <TextBlock Text="阻抗电压（%）" Margin="20,0,0,0">
+                                                <TextBlock.Foreground>
+                                                    <RadialGradientBrush>
+                                                        <GradientStop Color="White" Offset="1"/>
+                                                    </RadialGradientBrush>
+                                                </TextBlock.Foreground>
+                                            </TextBlock>
+                                        </Border>
+                                    </DataTemplate>
+                                </GroupBox.HeaderTemplate>
+                                <Grid Grid.Row="0" Margin="10">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="3*" />
+                                        <ColumnDefinition Width="7*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Grid.Row="0" Text="高——中" Foreground="White" VerticalAlignment="Center" Margin="5" />
+                                    <local:TextBoxNumber Margin="15,0,0,0" Grid.Column="1" Grid.Row="0"  HorizontalAlignment="Stretch"  Height="30"  x:Name="HMImpVol"  VerticalAlignment="Center" />
+
+                                    <TextBlock Grid.Column="0" Grid.Row="1" Text="高——低" Foreground="White" VerticalAlignment="Center" Margin="5" />
+                                    <local:TextBoxNumber Margin="15,0,0,0"  Grid.Column="1" Grid.Row="1"  HorizontalAlignment="Stretch"  Height="30"  x:Name="HLImpVol"    VerticalAlignment="Center" />
+
+                                    <TextBlock Grid.Column="0" Grid.Row="2" Text="中——低" Foreground="White" VerticalAlignment="Center" Margin="5" />
+                                    <local:TextBoxNumber  Margin="15,0,0,0" Grid.Column="1" Grid.Row="2"  HorizontalAlignment="Stretch"  Height="30"  x:Name="MLImpVol"   VerticalAlignment="Center" />
+                                </Grid>
+                            </GroupBox>
+
+                            <GroupBox  Margin="10,3,3,3" Grid.Row="0" Grid.Column="1" Foreground="White" BorderThickness="0.6">
+                                <GroupBox.HeaderTemplate>
+                                    <DataTemplate>
+                                        <Border>
+                                            <TextBlock Text="负载损耗（kW）" Margin="20,0,0,0">
+                                                <TextBlock.Foreground>
+                                                    <RadialGradientBrush>
+                                                        <GradientStop Color="White" Offset="1"/>
+                                                    </RadialGradientBrush>
+                                                </TextBlock.Foreground>
+                                            </TextBlock>
+                                        </Border>
+                                    </DataTemplate>
+                                </GroupBox.HeaderTemplate>
+                                <Grid Grid.Row="0" Margin="10">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1*"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="3*" />
+                                        <ColumnDefinition Width="7*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Grid.Row="0" Text="高——中" Foreground="White" VerticalAlignment="Center" Margin="5" />
+                                    <local:TextBoxNumber Margin="15,0,0,0"  Grid.Column="1" Grid.Row="0"  HorizontalAlignment="Stretch"  Height="30" x:Name="HMLoadLoss" VerticalAlignment="Center" />
+
+                                    <TextBlock Grid.Column="0" Grid.Row="1" Text="高——低" Foreground="White" VerticalAlignment="Center" Margin="5" />
+                                    <local:TextBoxNumber  Margin="15,0,0,0" Grid.Column="1" Grid.Row="1"  HorizontalAlignment="Stretch"  Height="30"   x:Name="HLLoadLoss"  VerticalAlignment="Center" />
+
+                                    <TextBlock Grid.Column="0" Grid.Row="2" Text="中——低" Foreground="White" VerticalAlignment="Center" Margin="5" />
+                                    <local:TextBoxNumber Margin="15,0,0,0"  Grid.Column="1" Grid.Row="2"  HorizontalAlignment="Stretch"  Height="30"   x:Name="MLLoadLoss"     VerticalAlignment="Center" />
+                                </Grid>
+                            </GroupBox>
+
+                            <GroupBox  Margin="3,3,10,3" Grid.Row="1" Grid.Column="0" Foreground="White" BorderThickness="0.6">
+                                <GroupBox.HeaderTemplate>
+                                    <DataTemplate>
+                                        <Border>
+                                            <TextBlock Text="空载损耗（kW）" Margin="20,0,0,0">
+                                                <TextBlock.Foreground>
+                                                    <RadialGradientBrush>
+                                                        <GradientStop Color="White" Offset="1"/>
+                                                    </RadialGradientBrush>
+                                                </TextBlock.Foreground>
+                                            </TextBlock>
+                                        </Border>
+                                    </DataTemplate>
+                                </GroupBox.HeaderTemplate>
+                                <Grid Grid.Row="0" Margin="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="3*" />
+                                        <ColumnDefinition Width="7*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Grid.Row="0" Text="空载损耗" Foreground="White" VerticalAlignment="Center" Margin="5" />
+                                    <local:TextBoxNumber Margin="15,0,0,0"  Grid.Column="1" Grid.Row="0"  HorizontalAlignment="Stretch"  Height="30" x:Name="NoLoadLoss"   VerticalAlignment="Center" />
+                                </Grid>
+                            </GroupBox>
+
+                            <GroupBox  Margin="10,3,3,3" Grid.Row="1" Grid.Column="1" Foreground="White" BorderThickness="0.6">
+                                <GroupBox.HeaderTemplate>
+                                    <DataTemplate>
+                                        <Border>
+                                            <TextBlock Text="空载电流（%）" Margin="20,0,0,0">
+                                                <TextBlock.Foreground>
+                                                    <RadialGradientBrush>
+                                                        <GradientStop Color="White" Offset="1"/>
+                                                    </RadialGradientBrush>
+                                                </TextBlock.Foreground>
+                                            </TextBlock>
+                                        </Border>
+                                    </DataTemplate>
+                                </GroupBox.HeaderTemplate>
+                                <Grid Grid.Row="0" Margin="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="3*" />
+                                        <ColumnDefinition Width="7*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Grid.Row="0" Text="空载电流" Foreground="White" VerticalAlignment="Center" Margin="5" />
+                                    <local:TextBoxNumber Margin="15,0,0,0"  Grid.Column="1" Grid.Row="0"  HorizontalAlignment="Stretch"  Height="30" x:Name="NoLoadCur" VerticalAlignment="Center" />
+                                </Grid>
+                            </GroupBox>
+                        </Grid>
+
                     </GroupBox>
 
                 </ListBoxItem>

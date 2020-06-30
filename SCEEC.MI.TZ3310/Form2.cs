@@ -22,7 +22,7 @@ namespace SCEEC.TTM
         short[] Tempdata = new short[24008];
         public int Testcode { get; set; }
         public string OLTCLABEL { get; set; }
-        public Form2(short[] Tdata, string oltclable,int testcode)
+        public Form2(short[] Tdata, string oltclable, int testcode)
         {
             InitializeComponent();
             Testcode = testcode;
@@ -515,7 +515,7 @@ namespace SCEEC.TTM
 
         }
 
-       
+
         private void Panel2_MouseMove(object sender, MouseEventArgs e)
         {
             panel2.BringToFront();
@@ -546,7 +546,7 @@ namespace SCEEC.TTM
 
             }
         }
-    
+
         private void Panel1_MouseUp(object sender, MouseEventArgs e)
         {
             SetChart1();
@@ -554,8 +554,8 @@ namespace SCEEC.TTM
             SetChart3();
 
         }
-     
-      
+
+
         private int ax4, ax3, ax5, ax6;
         private int ax7, ax8, ax9, ax10, ax11, ax12;
         private void Panel4_MouseDown(object sender, MouseEventArgs e)

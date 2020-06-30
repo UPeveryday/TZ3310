@@ -55,6 +55,8 @@ namespace SCEEC.MI.TZ3310
         public bool Contained;
         public int TapMainNum;
         public int TapNum;
+        public int MulTapNum;
+
         public WindingType WindingPosition;
         public string SerialNo;
         public string ModelType;
@@ -90,8 +92,21 @@ namespace SCEEC.MI.TZ3310
         public TransformerRatingStruct PowerRating;//额定容量
         public BushingStruct Bushing;
         public OLTCStruct OLTC;
+        public TransformerMessage transformermessage;
         public bool Coupling;
 
+    }
+
+    public struct TransformerMessage
+    {
+        public string Noloadloss;
+        public string Impedancevoltagehv;
+        public string Impedancevoltagemv;
+        public string Impedancevoltagelv;
+        public string Theloadlosshv;
+        public string Theloadlossmv;
+        public string Theloadlosslv;
+        public string Noloadcurrent;
     }
 
     //public struct Job
@@ -232,30 +247,31 @@ namespace SCEEC.MI.TZ3310
             else
                 return false;
         }
-        public bool DeleteAllExportTable()
+        public bool DeleteAllExportTable(string ResultName)
         {
-            LocalSQLClient.deleteTable(database, "casingtest_commonbody");
-            LocalSQLClient.deleteTable(database, "casingtest_commonbodyresults");
-            LocalSQLClient.deleteTable(database, "conclusion");
-            LocalSQLClient.deleteTable(database, "dcresistor_highpressure");
-            LocalSQLClient.deleteTable(database, "dcresistor_highpressureresults");
-            LocalSQLClient.deleteTable(database, "dcresistor_lowpressure");
-            LocalSQLClient.deleteTable(database, "dcresistor_lowpressureresults");
-            LocalSQLClient.deleteTable(database, "dcresistor_mediumvoltage");
-            LocalSQLClient.deleteTable(database, "dcresistor_mediumvoltageresults");
-            LocalSQLClient.deleteTable(database, "dielectriclossandcapacitance_threewinding");
-            LocalSQLClient.deleteTable(database, "dielectriclossandcapacitance_threewindingresults");
-            LocalSQLClient.deleteTable(database, "insulationresistance_threewinding");
-            LocalSQLClient.deleteTable(database, "dielectriclossandcapacitance_threewindingresults");
-            LocalSQLClient.deleteTable(database, "insulationresistance_threewinding");
-            LocalSQLClient.deleteTable(database, "insulationresistance_threewindingresults");
-            LocalSQLClient.deleteTable(database, "parameter_information");
-            LocalSQLClient.deleteTable(database, "sample_information");
-            LocalSQLClient.deleteTable(database, "tapchangertest");
-            LocalSQLClient.deleteTable(database, "transformermassage");
-            LocalSQLClient.deleteTable(database, "tapchangertestresults");
-            LocalSQLClient.deleteTable(database, "windingcoreinsulationresistance");
-            return LocalSQLClient.deleteTable(database, "windingcoreinsulationresistanceresults");
+            var tws = WorkingSets.local.getTestResults(ResultName);
+            var testcode = tws.job.Information.GetHashCode();
+            LocalSQLClient.deleteDataRow(database, "casingtest_commonbody", "TestCode", testcode.ToString());
+            LocalSQLClient.deleteDataRow(database, "casingtest_commonbodyresults", "TestCode", testcode.ToString());
+            LocalSQLClient.deleteDataRow(database, "conclusion", "TestCode", testcode.ToString());
+            LocalSQLClient.deleteDataRow(database, "dcresistor_highpressure", "TestCode", testcode.ToString());
+            LocalSQLClient.deleteDataRow(database, "dcresistor_highpressureresults", "TestCode", testcode.ToString());
+            LocalSQLClient.deleteDataRow(database, "dcresistor_lowpressure", "TestCode", testcode.ToString());
+            LocalSQLClient.deleteDataRow(database, "dcresistor_lowpressureresults", "TestCode", testcode.ToString());
+            LocalSQLClient.deleteDataRow(database, "dcresistor_mediumvoltage", "TestCode", testcode.ToString());
+            LocalSQLClient.deleteDataRow(database, "dcresistor_mediumvoltageresults", "TestCode", testcode.ToString());
+            LocalSQLClient.deleteDataRow(database, "dielectriclossandcapacitance_threewinding", "TestCode", testcode.ToString());
+            LocalSQLClient.deleteDataRow(database, "dielectriclossandcapacitance_threewindingresults", "TestCode", testcode.ToString());
+            LocalSQLClient.deleteDataRow(database, "insulationresistance_threewinding", "TestCode", testcode.ToString());
+            LocalSQLClient.deleteDataRow(database, "dielectriclossandcapacitance_threewindingresults", "TestCode", testcode.ToString());
+            LocalSQLClient.deleteDataRow(database, "insulationresistance_threewinding", "TestCode", testcode.ToString());
+            LocalSQLClient.deleteDataRow(database, "insulationresistance_threewindingresults", "TestCode", testcode.ToString());
+            LocalSQLClient.deleteDataRow(database, "parameter_information", "TestCode", testcode.ToString());
+            LocalSQLClient.deleteDataRow(database, "sample_information", "TestCode", testcode.ToString());
+            LocalSQLClient.deleteDataRow(database, "tapchangertest", "TestCode", testcode.ToString());
+            LocalSQLClient.deleteDataRow(database, "tapchangertestresults", "TestCode", testcode.ToString());
+            LocalSQLClient.deleteDataRow(database, "windingcoreinsulationresistance", "TestCode", testcode.ToString());
+            return LocalSQLClient.deleteDataRow(database, "windingcoreinsulationresistanceresults", "TestCode", testcode.ToString());
         }
         public void deletetap()
         {
@@ -434,6 +450,16 @@ namespace SCEEC.MI.TZ3310
             return false;
         }
 
+        public bool updateLocation()
+        {
+            if ((!disposedValue) && (LocalSQLClient != null))
+            {
+                this.Locations = LocalSQLClient.getDataTable(database, "location");
+                return LocalSQLClient.Connected;
+            }
+            return false;
+        }
+
         public bool saveTransformer()
         {
             if ((!disposedValue) && (LocalSQLClient != null))
@@ -445,7 +471,16 @@ namespace SCEEC.MI.TZ3310
             return false;
         }
 
-
+        public bool saveTransformermessage()
+        {
+            if ((!disposedValue) && (LocalSQLClient != null))
+            {
+                LocalSQLClient.updateDataTable(database, "transformermassage", Transformermassage);
+                Transformermassage.AcceptChanges();
+                return LocalSQLClient.Connected;
+            }
+            return false;
+        }
 
         public List<string> getTransformerSerialNo(string location = "")
         {
@@ -466,17 +501,36 @@ namespace SCEEC.MI.TZ3310
             return list;
         }
 
-
+        private string Convertdata(object data)
+        {
+            if (data.ToString() == "")
+                return string.Empty;
+            else
+                return (string)data;
+        }
 
         public Transformer getTransformer(string serialNo = "")
         {
+            updateTransformer();
             Transformer transformer = new Transformer();
             if (serialNo == string.Empty) return transformer;
             serialNo = serialNo.Trim();
             DataRow[] rows = WorkingSets.local.Transformers.Select("serialno = '" + serialNo + "'");
+            DataRow[] rowm = WorkingSets.local.Transformermassage.Select("serialno = '" + serialNo + "'");
             if (rows.Length < 1)
                 return transformer;
             DataRow r = rows[0];
+            if (rowm.Length > 0)
+            {
+                transformer.transformermessage.Impedancevoltagehv = Convertdata(rowm[0]["impedancevoltagehv"]);
+                transformer.transformermessage.Impedancevoltagelv = Convertdata(rowm[0]["impedancevoltagelv"]);
+                transformer.transformermessage.Impedancevoltagemv = Convertdata(rowm[0]["impedancevoltagemv"]);
+                transformer.transformermessage.Noloadcurrent      = Convertdata(rowm[0]["Noloadcurrent"]);
+                transformer.transformermessage.Noloadloss         = Convertdata(rowm[0]["noloadloss"]);
+                transformer.transformermessage.Theloadlosshv      = Convertdata(rowm[0]["theloadlosshv"]);
+                transformer.transformermessage.Theloadlosslv      = Convertdata(rowm[0]["theloadlosslv"]);
+                transformer.transformermessage.Theloadlossmv      = Convertdata(rowm[0]["theloadlossmv"]);
+            }
             transformer.ID = (int)r["id"];
             transformer.SerialNo = (string)r["serialno"];
             transformer.Location = (string)r["location"];
@@ -541,6 +595,29 @@ namespace SCEEC.MI.TZ3310
                     default:
                         throw new Exception();
                 }
+                switch ((int)r["oltc_multapnum"])
+                {
+                    case 0:
+                        transformer.OLTC.MulTapNum = 3;
+                        break;
+                    case 1:
+                        transformer.OLTC.MulTapNum = 5;
+                        break;
+                    case 2:
+                        transformer.OLTC.MulTapNum = 9;
+                        break;
+                    case 3:
+                        transformer.OLTC.MulTapNum = 11;
+                        break;
+                    case 4:
+                        transformer.OLTC.MulTapNum = 17;
+                        break;
+                    case 5:
+                        transformer.OLTC.MulTapNum = 21;
+                        break;
+                    default:
+                        throw new Exception();
+                }
                 switch (r["oltc_step"])
                 {
                     case 0:
@@ -578,12 +655,25 @@ namespace SCEEC.MI.TZ3310
 
         public Transformer getTransformer(int transformerID)
         {
+            updateTransformer();
             Transformer transformer = new Transformer() { ID = -1 };
             if (transformerID < 1) return transformer;
             DataRow[] rows = WorkingSets.local.Transformers.Select("id = '" + transformerID.ToString() + "'");
+            DataRow[] rowm = WorkingSets.local.Transformermassage.Select("transformerid = '" + transformerID + "'");
             if (rows.Length < 1)
                 return transformer;
             DataRow r = rows[0];
+            if (rowm.Length > 0)
+            {
+                transformer.transformermessage.Impedancevoltagehv = Convertdata(rowm[0]["impedancevoltagehv"]);
+                transformer.transformermessage.Impedancevoltagelv = Convertdata(rowm[0]["impedancevoltagelv"]);
+                transformer.transformermessage.Impedancevoltagemv = Convertdata(rowm[0]["impedancevoltagemv"]);
+                transformer.transformermessage.Noloadcurrent = Convertdata(rowm[0]["Noloadcurrent"]);
+                transformer.transformermessage.Noloadloss = Convertdata(rowm[0]["noloadloss"]);
+                transformer.transformermessage.Theloadlosshv = Convertdata(rowm[0]["theloadlosshv"]);
+                transformer.transformermessage.Theloadlosslv = Convertdata(rowm[0]["theloadlosslv"]);
+                transformer.transformermessage.Theloadlossmv = Convertdata(rowm[0]["theloadlossmv"]);
+            }
             transformer.ID = (int)r["id"];
             transformer.SerialNo = (string)r["serialno"];
             transformer.Location = (string)r["location"];
@@ -732,6 +822,7 @@ namespace SCEEC.MI.TZ3310
                 job.Bushing.Capacitance = (bool)jobRow["BushingCapacitance"];
                 job.OLTC.Enabled = (bool)jobRow["OLTC"];
                 job.OLTC.Range = (int)jobRow["OLTCRangeTextBox"];
+                job.OLTC.MulRange = (int)jobRow["oltcrangemultextbox"];
                 job.OLTC.DCResistance = (bool)jobRow["OLTCDCResistance"];
                 job.OLTC.SwitchingCharacter = (bool)jobRow["OLTCSwitching"];
                 job.Parameter.DCInsulationVoltage = (int)jobRow["dci_voltage"];
@@ -745,9 +836,9 @@ namespace SCEEC.MI.TZ3310
                 job.Parameter.DCMvResistanceCurrent = (int)jobRow["dcmvcurrent"];
                 job.Parameter.DCLvResistanceCurrent = (int)jobRow["dclvcurrent"];
                 job.DCResistance.ZcEnable = (bool)jobRow["zcenable"];
-                job.LossDcresistance= (bool)jobRow["losscurrent"];
-                job.CoreDCInsulation= (bool)jobRow["coredcienable"];
-                job.Shortcircuitimpedance= (bool)jobRow["shortcicuitimpedanceenable"];
+                job.LossDcresistance = (bool)jobRow["losscurrent"];
+                job.CoreDCInsulation = (bool)jobRow["coredcienable"];
+                job.Shortcircuitimpedance = (bool)jobRow["shortcicuitimpedanceenable"];
             }
             catch (Exception ex)
             {
@@ -894,6 +985,7 @@ namespace SCEEC.MI.TZ3310
                         {
                             int a = 0;
                         }
+
                         mis.Add(MeasurementItemStruct.FromDataRow(r));
                     }
                     else

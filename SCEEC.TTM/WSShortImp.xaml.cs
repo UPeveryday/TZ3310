@@ -112,7 +112,40 @@ namespace SCEEC.TTM
 
             }
         }
+        private Visibility _kbvisible = Visibility.Collapsed;
 
+        public Visibility kbvisible
+        {
+            get
+            {
+                return _kbvisible;
+            }
+            set
+            {
+                _kbvisible = value;
+                UpdateProperty(nameof(kbvisible));
+            }
+        }
+
+        public bool kbckeck
+        {
+            get { return _kbckeck; }
+            set
+            {
+                _kbckeck = value;
+                UpdateProperty(nameof(kbckeck));
+                if (_kbckeck == true)
+                {
+                    kbvisible = Visibility.Visible;
+                }
+                else
+                    kbvisible = Visibility.Collapsed;
+
+            }
+
+        }
+
+        private bool _kbckeck;
 
         public WSShortImp(int transformerid, int mj_id, int testid, string testname) : this()
         {

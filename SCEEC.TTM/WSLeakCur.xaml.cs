@@ -97,6 +97,10 @@ namespace SCEEC.TTM
         }
         public bool Confire { get; set; } = false;
 
+
+
+
+
         private void btnOK_Click(object sender, RoutedEventArgs e)
         {
             NewRowTestResults["function"] = 12;

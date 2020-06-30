@@ -123,26 +123,26 @@ namespace SCEEC.NET
         /// <param name="stopBits">停止位</param>
         public void setSerialPort(string comPortName, int baudRate, int dataBits, int stopBits)
         {
-            if (_seriaPort.IsOpen)
-                _seriaPort.Close();
-            _seriaPort.PortName = comPortName;
-            _seriaPort.BaudRate = baudRate;
-            _seriaPort.Parity = Parity.None;
-            _seriaPort.DataBits = dataBits;
-            _seriaPort.StopBits = (StopBits)stopBits;
-            _seriaPort.Handshake = Handshake.None; 
-            _seriaPort.RtsEnable = false;
-            _seriaPort.ReadTimeout = 2000;
-            _seriaPort.NewLine = "/r/n";
-            // _seriaPort.NewLine = "NONE";
-            _seriaPort.ReadBufferSize = 70000;
-            _seriaPort.WriteBufferSize = 70000;
+                if (_seriaPort.IsOpen)
+                    _seriaPort.Close();
+                _seriaPort.PortName = comPortName;
+                _seriaPort.BaudRate = baudRate;
+                _seriaPort.Parity = Parity.None;
+                _seriaPort.DataBits = dataBits;
+                _seriaPort.StopBits = (StopBits)stopBits;
+                _seriaPort.Handshake = Handshake.None; 
+                _seriaPort.RtsEnable = false;
+                _seriaPort.ReadTimeout = 2000;
+                _seriaPort.NewLine = "/r/n";
+                // _seriaPort.NewLine = "NONE";
+                _seriaPort.ReadBufferSize = 70000;
+                _seriaPort.WriteBufferSize = 70000;
 
-            //_seriaPort.ReceivedBytesThreshold
-            // _seriaPort.ReceivedBytesThreshold = 1024;
-            // _seriaPort.NewLine = "#";
+                //_seriaPort.ReceivedBytesThreshold
+                // _seriaPort.ReceivedBytesThreshold = 1024;
+                // _seriaPort.NewLine = "#";
 
-            setSerialPort();
+                setSerialPort();
 
         }
         #endregion
@@ -308,6 +308,7 @@ namespace SCEEC.NET
             {
                 try
                 {
+                    _seriaPort.WriteTimeout = 3000;
                     ReceiveEventFlag = true;//关闭接收事件
                     _seriaPort.DiscardInBuffer();//清空接收缓冲区     
                     _seriaPort.Write(SendData, 0, SendData.Length);

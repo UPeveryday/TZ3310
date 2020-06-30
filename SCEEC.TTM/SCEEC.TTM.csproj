@@ -39,6 +39,9 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutomaterRu.OnScreenKeyboard, Version=1.0.1.241, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutomaterRu.OnScreenKeyboard.dll.1.0.1.243\lib\net40\AutomaterRu.OnScreenKeyboard.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Expression.Controls">
       <HintPath>..\..\WPF.UI-master\ZdfFlatUI\DLL\Microsoft.Expression.Controls.dll</HintPath>
     </Reference>
@@ -103,6 +106,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="PortConfig.xaml.cs">
+      <DependentUpon>PortConfig.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TextBoxNumber.cs" />
     <Compile Include="ErrorReporter.cs" />
     <Compile Include="ExportDataWindow.xaml.cs">
@@ -180,6 +186,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="PortConfig.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="SplashScreen.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

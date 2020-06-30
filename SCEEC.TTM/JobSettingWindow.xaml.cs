@@ -133,6 +133,9 @@ namespace SCEEC.TTM
             jobList.Bushing.Capacitance = (BushingCapacitanceCheckBox.IsChecked == true);
 
             jobList.OLTC.Range = int.Parse(OLTCRangeTextBox.Text);
+            jobList.OLTC.MulRange = int.Parse(OLTCRangeMulTextBox.Text);
+
+
             jobList.OLTC.DCResistance = (OLTCDCResistanceCheckBox.IsChecked == true);
             jobList.OLTC.SwitchingCharacter = (OLTCSwitchingCheckBox.IsChecked == true);
             jobList.Shortcircuitimpedance = (Shortcircuitimpedance.IsChecked == true);
@@ -215,6 +218,7 @@ namespace SCEEC.TTM
             jobList.Bushing.Capacitance = (BushingCapacitanceCheckBox.IsChecked == true);
 
             jobList.OLTC.Range = int.Parse(OLTCRangeTextBox.Text);
+            jobList.OLTC.MulRange = int.Parse(OLTCRangeMulTextBox.Text);
             jobList.OLTC.DCResistance = (OLTCDCResistanceCheckBox.IsChecked == true);
             jobList.OLTC.SwitchingCharacter = (OLTCSwitchingCheckBox.IsChecked == true);
 
@@ -300,6 +304,8 @@ namespace SCEEC.TTM
             ZCWindingDCInsulationCheckBox.IsChecked = job.DCResistance.ZcEnable;
             OLTCCheckBox.IsChecked = job.OLTC.Enabled;
             OLTCRangeTextBox.Text = job.OLTC.Range.ToString();
+            OLTCRangeMulTextBox.Text = job.OLTC.MulRange.ToString();
+
             OLTCDCResistanceCheckBox.IsChecked = job.OLTC.DCResistance;
             OLTCSwitchingCheckBox.IsChecked = job.OLTC.SwitchingCharacter;
             Coreinsulation.IsChecked = job.CoreDCInsulation;
@@ -366,7 +372,7 @@ namespace SCEEC.TTM
                 MessageBox.Show("请输入任务单名称!", "任务单管理器", MessageBoxButton.OK, MessageBoxImage.Information);
                 return false;
             }
-            
+
             if (!checkOLTCRange()) return false;
             TransformerSerialNoTextBox.Text = TransformerSerialNoTextBox.Text.Trim();
             JobNameTextBox.Text = JobNameTextBox.Text.Trim();
@@ -401,6 +407,7 @@ namespace SCEEC.TTM
             r["BushingCapacitance"] = BushingCapacitanceCheckBox.IsChecked;
             r["OLTC"] = OLTCCheckBox.IsChecked;
             r["OLTCRangeTextBox"] = int.Parse(OLTCRangeTextBox.Text);
+            r["oltcrangemultextbox"] = int.Parse(OLTCRangeMulTextBox.Text);
             r["OLTCDCResistance"] = OLTCDCResistanceCheckBox.IsChecked;
             r["OLTCSwitching"] = OLTCSwitchingCheckBox.IsChecked;
             r["dci_voltage"] = SCEEC.Numerics.NumericsConverter.Text2Value(DCInsulationTestVoltageComboBox.Text).value;
@@ -532,7 +539,13 @@ namespace SCEEC.TTM
             else
                 e.Handled = false;
         }
-
+        private void OLTCRangemulTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            if (!Microsoft.VisualBasic.Information.IsNumeric(e.Text))
+                e.Handled = true;
+            else
+                e.Handled = false;
+        }
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
@@ -787,26 +800,22 @@ namespace SCEEC.TTM
 
         private void DCResistanceCurrentComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            try
-            {
-                if (DCResistanceCurrentComboBox.SelectedIndex != 2)
-                {
-                    DCHvResistanceCurrentComboBox.SelectedIndex = DCResistanceCurrentComboBox.SelectedIndex;
-                    DCMvResistanceCurrentComboBox.SelectedIndex = DCResistanceCurrentComboBox.SelectedIndex;
-                    DCLvResistanceCurrentComboBox.SelectedIndex = DCResistanceCurrentComboBox.SelectedIndex;
-                }
-                else
-                {
-                    DCHvResistanceCurrentComboBox.SelectedIndex = DCResistanceCurrentComboBox.SelectedIndex - 1;
-                    DCMvResistanceCurrentComboBox.SelectedIndex = DCResistanceCurrentComboBox.SelectedIndex - 1;
-                    DCLvResistanceCurrentComboBox.SelectedIndex = DCResistanceCurrentComboBox.SelectedIndex - 1;
-                }
-            }
-            catch 
-            {
+            if (DCHvResistanceCurrentComboBox == null)
+                return;
 
+            if (DCResistanceCurrentComboBox.SelectedIndex != 2)
+            {
+                DCHvResistanceCurrentComboBox.SelectedIndex = DCResistanceCurrentComboBox.SelectedIndex;
+                DCMvResistanceCurrentComboBox.SelectedIndex = DCResistanceCurrentComboBox.SelectedIndex;
+                DCLvResistanceCurrentComboBox.SelectedIndex = DCResistanceCurrentComboBox.SelectedIndex;
             }
-         
+            else
+            {
+                DCHvResistanceCurrentComboBox.SelectedIndex = DCResistanceCurrentComboBox.SelectedIndex - 1;
+                DCMvResistanceCurrentComboBox.SelectedIndex = DCResistanceCurrentComboBox.SelectedIndex - 1;
+                DCLvResistanceCurrentComboBox.SelectedIndex = DCResistanceCurrentComboBox.SelectedIndex - 1;
+            }
         }
     }
 }
+

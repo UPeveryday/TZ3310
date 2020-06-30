@@ -114,6 +114,23 @@ namespace SCEEC.TTM
 
             initialStatus = new initialStatusType("正在检索串口...", "正在链接仪器...");
             initialWorker.ReportProgress(90, initialStatus);
+            initport();
+            Thread.Sleep(300);
+            initialStatus = new initialStatusType("正在加载...", "启动管理器...");
+            initialWorker.ReportProgress(100, initialStatus);
+            Thread.Sleep(500);
+        }
+
+        private void byhand()
+        {
+            Application.Current.Dispatcher.Invoke(() => {
+                new PortConfig().ShowDialog();
+
+            });
+        }
+
+        private void initport()
+        {
             WorkingSets.local.Tz3310 = new ClassTz3310();
             string comconfig = XmlConfig.GetAddNodeValue("Comport");
             if (comconfig == "auto")
@@ -121,53 +138,53 @@ namespace SCEEC.TTM
                 string pn = WorkingSets.local.Tz3310.AutoConnectMe;
                 if (pn != null)
                 {
-                    WorkingSets.local.Tz3310.OpenPort(pn, 115200, 8, 1);
-                    Thread.Sleep(500);
-                    try { WorkingSets.local.MethonID = WorkingSets.local.Tz3310.ReadMethonId(); } catch { }
-
-                    if (WorkingSets.local.MethonID == null)
-                        WorkingSets.local.MethonID = "370001";
-
-                }
-                else
-                {
-                    try
+                    if (!WorkingSets.local.Tz3310.OpenPort(pn, 115200, 8, 1))
                     {
-                        WorkingSets.local.Tz3310.OpenPort(pn, 115200, 8, 1);
                         Thread.Sleep(500);
-                        try { WorkingSets.local.MethonID = WorkingSets.local.Tz3310.ReadMethonId(); } catch { }
+                        try { WorkingSets.local.MethonID = WorkingSets.local.Tz3310.ReadMethonId(); }
+                        catch
+                        {
+                            MessageBox.Show("读取仪器编号失败");
+                        }
+
                         if (WorkingSets.local.MethonID == null)
                             WorkingSets.local.MethonID = "370001";
                     }
-                    catch
+                    else
                     {
-                        ErrorReporter.ErrorReport(10005, "初始化", "打开串口失败");
-
+                        byhand();
                     }
+                }
+                else
+                {
+                    byhand();
+
                 }
             }
             else
             {
                 try
                 {
-                    if(XmlConfig.GetAddNodeValue("Check") != "False")
+                    if (XmlConfig.GetAddNodeValue("Check") != "False")
                     {
                         if (true == WorkingSets.local.Tz3310.OpenPort(comconfig, 115200, 8, 1))
-                            WorkingSets.local.Tz3310.CommunicationQuery(1);
+                        {
+                            if (!WorkingSets.local.Tz3310.CommunicationQuery(1))
+                            {
+                                byhand();
+                            }
+                        }
                         else
-                            ErrorReporter.ErrorReport(100025, "初始化", "打开串口失败");
+                            byhand();
                     }
                 }
                 catch
                 {
-                    ErrorReporter.ErrorReport(100025, "初始化", "打开串口失败");
+                    byhand();
                 }
             }
-            Thread.Sleep(300);
-            initialStatus = new initialStatusType("正在加载...", "启动管理器...");
-            initialWorker.ReportProgress(100, initialStatus);
-            Thread.Sleep(500);
         }
+
 
         private void initialWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {

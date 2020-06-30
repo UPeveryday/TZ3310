@@ -28,7 +28,7 @@ namespace SCEEC.TTM
         public string serialno = string.Empty;
 
 
-        
+
 
         public void TransformerInfoInitial(string serialNo)
         {
@@ -41,12 +41,19 @@ namespace SCEEC.TTM
             SerialNoTextBox.Text = serialNo;
             originSerialNo = serialNo;
             DataRow[] rows = WorkingSets.local.Transformers.Select("serialno = '" + serialNo + "'");
+            DataRow[] rowm = WorkingSets.local.Transformermassage.Select("serialno = '" + serialNo + "'");
             if (rows.Length < 1)
             {
                 Title = "新变压器";
                 return;
             }
             DataRow r = rows[0];
+            if (rowm.Length < 1)
+            {
+                Title = "新变压器";
+                return;
+            }
+            DataRow rm = rowm[0];
             locationComboBox.SelectedIndex = locationComboBox.Items.IndexOf((string)r["location"]);
             ApparatusIDTextBox.Text = (string)r["apparatusid"];
             ManufacturerTextBox.Text = (string)r["manufacturer"];
@@ -68,20 +75,39 @@ namespace SCEEC.TTM
             LvPowerRatingTextBox.Text = ((double)r["powerratinglv"]).ToString();
             HvBushingCheckBox.IsChecked = (bool)r["bushing_hv_enabled"];
             MvBushingCheckBox.IsChecked = (bool)r["bushing_mv_enabled"];
-            if (r["coupling"] != null )
+            if (r["coupling"] != null)
                 coupling.IsChecked = (bool)r["coupling"];
             OLTCCheckBox.IsChecked = (((int)r["oltc_tapnum"]) > -1);
             if (OLTCCheckBox.IsChecked == true)
             {
                 OLTCWindingComboBox.SelectedIndex = (int)r["oltc_winding"];
                 OLTCTapNumComboBox.SelectedIndex = (int)r["oltc_tapnum"];
+                OLTCMulTapNumComboBox.SelectedIndex = (int)r["oltc_multapnum"];
                 OLTCStepComboBox.SelectedIndex = (int)r["oltc_step"];
                 OLTCTapMainNumTextBox.Text = ((int)r["oltc_tapmainnum"]).ToString();
                 OLTCSerialNoTextBox.Text = (string)r["oltc_serialno"];
                 OLTCModelTypeTextBox.Text = (string)r["oltc_modeltype"];
                 OLTCManufacturerTextBox.Text = (string)r["oltc_manufacturer"];
                 OLTCProductionYearTextBox.Text = (string)r["oltcproductionyear"];
+                OLTCTapMainNumLocationTextBox.Text =r["oltc_taplocation"].ToString();
             }
+
+            HMImpVol.Text = Convertdata(rm["impedancevoltagehv"]);
+            HLImpVol.Text = Convertdata(rm["impedancevoltagemv"]);
+            MLImpVol.Text = Convertdata(rm["impedancevoltagelv"]);
+            HMLoadLoss.Text = Convertdata(rm["theloadlosshv"]);
+            HLLoadLoss.Text = Convertdata(rm["theloadlossmv"]);
+            MLLoadLoss.Text = Convertdata(rm["theloadlosslv"]);
+            NoLoadLoss.Text = Convertdata(rm["noloadloss"]);
+            NoLoadCur.Text = Convertdata(rm["Noloadcurrent"]);
+
+        }
+        private string Convertdata(object data)
+        {
+            if (data.ToString() == "")
+                return string.Empty;
+            else
+                return (string)data;
         }
 
         private bool reviewTable()
@@ -153,12 +179,27 @@ namespace SCEEC.TTM
         {
             if (!reviewTable()) return false;
             DataRow[] rows = WorkingSets.local.Transformers.Select("serialno = '" + SerialNoTextBox.Text.Trim() + "'");
+            DataRow[] rowm = WorkingSets.local.Transformermassage.Select("serialno = '" + SerialNoTextBox.Text.Trim() + "'");
             DataRow r = WorkingSets.local.Transformers.NewRow();
+            DataRow rm = WorkingSets.local.Transformermassage.NewRow();
             if (rows.Length > 0)
+            {
                 r = rows[0];
+            }
             else
+            {
                 r = WorkingSets.local.Transformers.NewRow();
+            }
+            if (rowm.Length > 0)
+            {
+                rm = rowm[0];
+            }
+            else
+            {
+                rm = WorkingSets.local.Transformermassage.NewRow();
+            }
             bool previewSave = WorkingSets.local.saveTransformer();
+            WorkingSets.local.saveTransformermessage();
             r["serialno"] = SerialNoTextBox.Text;
             r["location"] = (string)locationComboBox.SelectedItem;
             r["apparatusid"] = ApparatusIDTextBox.Text;
@@ -186,7 +227,10 @@ namespace SCEEC.TTM
             {
                 r["oltc_winding"] = OLTCWindingComboBox.SelectedIndex;
                 r["oltc_tapmainnum"] = int.Parse(OLTCTapMainNumTextBox.Text);
+
+                r["oltc_taplocation"] = int.Parse(OLTCTapMainNumLocationTextBox.Text);
                 r["oltc_tapnum"] = OLTCTapNumComboBox.SelectedIndex;
+                r["oltc_multapnum"] = OLTCMulTapNumComboBox.SelectedIndex;
                 r["oltc_step"] = OLTCStepComboBox.SelectedIndex;
                 r["oltc_serialno"] = OLTCSerialNoTextBox.Text;
                 r["oltc_modeltype"] = OLTCModelTypeTextBox.Text;
@@ -198,15 +242,29 @@ namespace SCEEC.TTM
                 r["oltc_winding"] = 0;
                 r["oltc_tapmainnum"] = 0;
                 r["oltc_tapnum"] = -1;
+                r["oltc_multapnum"] = -1;
                 r["oltc_serialno"] = string.Empty;
                 r["oltc_modeltype"] = string.Empty;
                 r["oltc_manufacturer"] = string.Empty;
                 r["oltcproductionyear"] = string.Empty;
             }
-            r["id"] = 1;
             if (rows.Length > 0) r.EndEdit();
             else WorkingSets.local.Transformers.Rows.Add(r);
-            return WorkingSets.local.saveTransformer();
+            WorkingSets.local.saveTransformer();
+
+            rm["transformerid"] = WorkingSets.local.Transformers.Select("serialno = '" + SerialNoTextBox.Text.Trim() + "'")[0]["id"];
+            rm["serialno"] = SerialNoTextBox.Text.Trim();
+            rm["noloadloss"] = NoLoadLoss.Text;
+            rm["impedancevoltagehv"] = HMImpVol.Text;
+            rm["impedancevoltagemv"] = HLImpVol.Text;
+            rm["impedancevoltagelv"] = MLImpVol.Text;
+            rm["theloadlosshv"] = HMLoadLoss.Text;
+            rm["theloadlossmv"] = HLLoadLoss.Text;
+            rm["theloadlosslv"] = MLLoadLoss.Text;
+            rm["Noloadcurrent"] = NoLoadCur.Text;
+            if (rowm.Length > 0) r.EndEdit();
+            else WorkingSets.local.Transformermassage.Rows.Add(rm);
+            return WorkingSets.local.saveTransformermessage();
         }
 
         public TransformerSettingWindow(string serialNo = "")
@@ -317,7 +375,6 @@ namespace SCEEC.TTM
             {
                 serialno = SerialNoTextBox.Text;
                 closeConfirmed = true;
-                this.Close();
             }
         }
 
@@ -477,18 +534,29 @@ namespace SCEEC.TTM
             changed = true;
         }
 
+
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            DataRow[] rows = WorkingSets.local.Transformers.Select("serialno = '" + serialno + "'");
-            if (rows.Length < 1)
-            {
-                Title = "新变压器";
+
+        }
+
+        private void TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void OLTCTapMainNumLocationTextBox_LostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            OLTCTapMainNumLocationTextBox.Focus();
+        }
+
+        private void OLTCMulTapNumComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            changed = true;
+            if (OLTCMulTapNumComboBox == null)
                 return;
-            }
-            else
-            {
-                ucOrderSet.TransformerID =(int)rows[0]["id"];
-            }
+
         }
     }
 }

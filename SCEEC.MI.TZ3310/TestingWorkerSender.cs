@@ -35,7 +35,7 @@ namespace SCEEC.MI.TZ3310
             for (int i = 0; i < MeasurementItems.Length; i++)
             {
                 WrapPanel wp = new WrapPanel();
-                if (i < CurrentItemIndex)
+                if (i <= CurrentItemIndex)
                 {
                     if (MeasurementItems[i].Function == MeasurementFunction.Description)
                     {

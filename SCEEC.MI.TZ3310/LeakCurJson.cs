@@ -4,11 +4,47 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace SCEEC.TTM
 {
     public class LeakCurJson : INotifyPropertyChanged
     {
+
+        private Visibility _kbvisible = Visibility.Collapsed;
+
+        public Visibility kbvisible
+        {
+            get
+            {
+                return _kbvisible;
+            }
+            set
+            {
+                _kbvisible = value;
+                UpdateProperty(nameof(kbvisible));
+            }
+        }
+
+        public bool kbckeck
+        {
+            get { return _kbckeck; }
+            set
+            {
+                _kbckeck = value;
+                UpdateProperty(nameof(kbckeck));
+                if (_kbckeck == true)
+                {
+                    kbvisible = Visibility.Visible;
+                }
+                else
+                    kbvisible = Visibility.Collapsed;
+
+            }
+
+        }
+
+        private bool _kbckeck;
         #region 界面UI
         private double _H_L10kV;
         /// <summary>

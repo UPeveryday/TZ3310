@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:SCEEC.TTM"
              xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2" x:Class="SCEEC.TTM.App"
-             StartupUri="mainwindow.xaml">
+             StartupUri="MainWindow.xaml">
     <Application.Resources>
         <Style x:Key="MainForm" TargetType="{x:Type Window}">
             <Setter Property="WindowStyle" Value="None"/>
