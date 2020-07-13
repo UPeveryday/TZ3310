@@ -115,7 +115,7 @@ namespace SCEEC.Data
                     sda.DeleteCommand = scb.GetDeleteCommand();
                     sda.Update(ds);
                 }
-                
+
                 catch (Exception ex)
                 {
                     errorText = ex.Message;
@@ -125,7 +125,7 @@ namespace SCEEC.Data
             return ds;
         }
 
-        public bool insertDataRow(string database, string table, string[] names , string[] values, int id = -1)
+        public bool insertDataRow(string database, string table, string[] names, string[] values, int id = -1)
         {
             if (this.Connected)
             {
@@ -189,11 +189,13 @@ namespace SCEEC.Data
             }
             return false;
         }
-        public bool deleteDataRow(string database, string table, string columnName, string name)
+        public bool deleteDataRow(string database, string table, string columnName, string name, string time = null)
         {
             if (this.Connected)
             {
-                string cmd = "delete from " + database + "." + table + " where " + columnName + " = '" + name + "'";
+                string cmd = cmd = "delete from " + database + "." + table + " where " + columnName + " = '" + name + "'";
+                if (time != null)
+                    cmd = "delete from " + database + "." + table + " where " + columnName + " = '" + name + "'" + " and " + "recordtime like '" + time + "%'";
                 try
                 {
                     MySqlCommand scmd = new MySqlCommand(cmd, sConn);

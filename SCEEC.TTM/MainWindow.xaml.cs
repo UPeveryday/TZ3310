@@ -498,11 +498,13 @@ namespace SCEEC.TTM
             refreshJobList();
         }
 
+        private int[] JobListBoxlist;
         private void refreshJobList()
         {
             if (this.TransformerListBox.SelectedIndex > -1)
             {
                 JobListBox.ItemsSource = WorkingSets.local.getJobNames(TransformerListBox.SelectedItem.ToString());
+                JobListBoxlist = WorkingSets.local.getJobNameids(TransformerListBox.SelectedItem.ToString()).ToArray();
             }
             else
             {
@@ -677,7 +679,7 @@ namespace SCEEC.TTM
                 InsertDataTodatabase.ShowExport(TestListBox.SelectedItem.ToString());
 
             }
-            catch 
+            catch
             {
                 MessageBox.Show("打开报告错误");
             }
@@ -739,7 +741,7 @@ namespace SCEEC.TTM
         {
             if (JobListBox.SelectedIndex > -1)
             {
-                WorkingSets.local.DeleteDataBase("Tz3310", "measurementjob", "JobName", JobListBox.SelectedItem.ToString());
+                WorkingSets.local.DeleteDataBase("Tz3310", "measurementjob", "id", JobListBoxlist[JobListBox.SelectedIndex].ToString());
                 if (TransformerListBox.Items.Count > 0)
                 {
                     TransformerListBox.SelectedIndex = 0;
@@ -755,7 +757,10 @@ namespace SCEEC.TTM
             if (TestListBox.SelectedIndex > -1)
             {
 
-                WorkingSets.local.DeleteDataBase("Tz3310", "testresult", "testname", TestListBox.SelectedItem.ToString().Split('(')[0]);
+                var data = TestListBox.SelectedItem.ToString().Split('=')[1].Replace(")", "").Trim();
+                WorkingSets.local.DeleteDataBase("Tz3310", "testresult", "id", data);
+
+                //  WorkingSets.local.DeleteDatabseS("Tz3310", "testresult", "testname", TestListBox.SelectedItem.ToString().Split('(')[0], data[1].Replace(")", "").Trim());
                 if (JobListBox.Items.Count > 0)
                 {
                     JobListBox.SelectedIndex = 0;

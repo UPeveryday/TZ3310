@@ -430,6 +430,16 @@ namespace SCEEC.MI.TZ3310
             return false;
         }
 
+
+        public bool DeleteDatabseS(string database, string table, string colname, string name,string testtime)
+        {
+            if ((!disposedValue) && (LocalSQLClient != null))
+            {
+                LocalSQLClient.deleteDataRow(database, table, colname, name, testtime);
+            }
+            return false;
+        }
+
         public bool deleteLocation(string name)
         {
             if ((!disposedValue) && (LocalSQLClient != null))
@@ -897,6 +907,18 @@ namespace SCEEC.MI.TZ3310
             }
             return jobNames;
         }
+        public List<int> getJobNameids(string TransformerSerialNo)
+        {
+            List<int> jobNames = new List<int>();
+            TransformerSerialNo = TransformerSerialNo.Trim();
+            if (TransformerSerialNo == string.Empty) return jobNames;
+            DataRow[] rows = WorkingSets.local.Jobs.Select("TransformerSerialNo = '" + TransformerSerialNo + "'");
+            foreach (DataRow row in rows)
+            {
+                jobNames.Add((int)row["id"]);
+            }
+            return jobNames;
+        }
 
         public bool saveJobs()
         {
@@ -934,6 +956,8 @@ namespace SCEEC.MI.TZ3310
 
         public List<string> getTestResultsFromJobID(int JobID)
         {
+            WorkingSets.local.refreshTestResults();
+
             List<string> ls = new List<string>();
             string selectStr = "mj_id = " + JobID.ToString();
             var rows = TestResults.Select(selectStr);
@@ -942,14 +966,74 @@ namespace SCEEC.MI.TZ3310
                 if ((int)r["function"] == (int)MeasurementFunction.Information)
                 {
                     var ji = JobInformation.FromString((string)r["waves"]);
-                    ls.Add(ji.testingName + "(" + ji.testingTime.ToString("yyyy-MM-dd") + ")");
+                    ls.Add(ji.testingName + "(" + ji.testingTime.ToString("yyyy-MM-dd") + "=" + r["id"] + ")");
                 }
             }
             return ls;
         }
 
+
+
+        public TestingWorkerSender getTestResultsbyid(string s)
+        {
+            WorkingSets.local.refreshTestResults();
+            var rows = TestResults.Select("function = " + ((int)MeasurementFunction.Information).ToString());
+            int testid = 0;
+            bool valid = false;
+            JobInformation information = new JobInformation(); ;
+            foreach (var r in rows)
+            {
+                var ji = JobInformation.FromString((string)r["waves"]);
+                if ((ji.testingName + "(" + ji.testingTime.ToString("yyyy-MM-dd") + ")") == (s.Split('=')[0]+")"))
+                {
+                    testid = (int)r["testid"];//原
+                  //  testid = ji.GetHashCode();
+                    information = ji;
+                    valid = true;
+                }
+            }
+          //  if (!valid) throw new Exception("测试结果查找为空");
+            rows = TestResults.Select("testid = " + testid.ToString());
+            //if (rows.Length <= 0) throw new Exception("测试结果导出出错");
+            var tws = new TestingWorkerSender();
+            if (rows.Length > 0)
+            {
+                tws.job = getJob((int)rows[0]["mj_id"]);
+                tws.job.Information = information;
+                tws.Transformer = getTransformer((int)rows[0]["transformerid"]);
+                tws.ProgressPercent = 100;
+                tws.CurrentItemIndex = 0;
+                List<MeasurementItemStruct> mis = new List<MeasurementItemStruct>();
+                foreach (var r in rows)
+                {
+                    if ((int)r["function"] != (int)MeasurementFunction.Information)
+                    {
+                        if ((int)r["function"] == (int)MeasurementFunction.Capacitance)
+                        {
+                            int a = 0;
+                        }
+
+                        mis.Add(MeasurementItemStruct.FromDataRow(r));
+                    }
+                    else
+                        tws.job.Information = JobInformation.FromString((string)r["waves"]);
+                }
+                tws.MeasurementItems = mis.ToArray();
+            }
+
+            return tws;
+        }
+
+
+
+
+
+
+
         public TestingWorkerSender getTestResults1(string s)
         {
+            WorkingSets.local.refreshTestResults();
+
             var rows = TestResults.Select("function = " + ((int)MeasurementFunction.Information).ToString());
             int testid = 0;
             bool valid = false;
@@ -1006,7 +1090,7 @@ namespace SCEEC.MI.TZ3310
             foreach (var r in rows)
             {
                 var ji = JobInformation.FromString((string)r["waves"]);
-                if ((ji.testingName + "(" + ji.testingTime.ToString("yyyy-MM-dd") + ")") == s)
+                if ((ji.testingName + "(" + ji.testingTime.ToString("yyyy-MM-dd") + ")") == s.Split('=')[0]+")")
                 {
                     testid = (int)r["testid"];//原
                     information = ji;

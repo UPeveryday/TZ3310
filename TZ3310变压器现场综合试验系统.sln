@@ -34,6 +34,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SCEEC.Converter", "SCEEC.Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test", "test\test.csproj", "{BCBAF050-9E11-496A-A595-16AAF65B5D3C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dashboard", "dashboard\dashboard.csproj", "{48605E7D-74B5-44FE-BD62-15CC07582E2B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -308,12 +310,32 @@ Global
 		{BCBAF050-9E11-496A-A595-16AAF65B5D3C}.Release|x64.Build.0 = Release|Any CPU
 		{BCBAF050-9E11-496A-A595-16AAF65B5D3C}.Release|x86.ActiveCfg = Release|Any CPU
 		{BCBAF050-9E11-496A-A595-16AAF65B5D3C}.Release|x86.Build.0 = Release|Any CPU
+		{48605E7D-74B5-44FE-BD62-15CC07582E2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48605E7D-74B5-44FE-BD62-15CC07582E2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48605E7D-74B5-44FE-BD62-15CC07582E2B}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{48605E7D-74B5-44FE-BD62-15CC07582E2B}.Debug|ARM.Build.0 = Debug|Any CPU
+		{48605E7D-74B5-44FE-BD62-15CC07582E2B}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{48605E7D-74B5-44FE-BD62-15CC07582E2B}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{48605E7D-74B5-44FE-BD62-15CC07582E2B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{48605E7D-74B5-44FE-BD62-15CC07582E2B}.Debug|x64.Build.0 = Debug|Any CPU
+		{48605E7D-74B5-44FE-BD62-15CC07582E2B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{48605E7D-74B5-44FE-BD62-15CC07582E2B}.Debug|x86.Build.0 = Debug|Any CPU
+		{48605E7D-74B5-44FE-BD62-15CC07582E2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48605E7D-74B5-44FE-BD62-15CC07582E2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48605E7D-74B5-44FE-BD62-15CC07582E2B}.Release|ARM.ActiveCfg = Release|Any CPU
+		{48605E7D-74B5-44FE-BD62-15CC07582E2B}.Release|ARM.Build.0 = Release|Any CPU
+		{48605E7D-74B5-44FE-BD62-15CC07582E2B}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{48605E7D-74B5-44FE-BD62-15CC07582E2B}.Release|ARM64.Build.0 = Release|Any CPU
+		{48605E7D-74B5-44FE-BD62-15CC07582E2B}.Release|x64.ActiveCfg = Release|Any CPU
+		{48605E7D-74B5-44FE-BD62-15CC07582E2B}.Release|x64.Build.0 = Release|Any CPU
+		{48605E7D-74B5-44FE-BD62-15CC07582E2B}.Release|x86.ActiveCfg = Release|Any CPU
+		{48605E7D-74B5-44FE-BD62-15CC07582E2B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {27FD4F3B-5243-4585-9612-825A7CB20798}
 		VisualSVNWorkingCopyRoot = .
+		SolutionGuid = {27FD4F3B-5243-4585-9612-825A7CB20798}
 	EndGlobalSection
 EndGlobal

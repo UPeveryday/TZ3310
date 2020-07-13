@@ -172,6 +172,7 @@
     <Compile Include="MyControls\EmailBox\Implementation\EmailBox.cs" />
     <Compile Include="MyControls\EmailBox\Implementation\EmailReceiverButton.cs" />
     <Compile Include="MyControls\Heading\Implementation\Heading.cs" />
+    <Compile Include="MyControls\MoveChart\Implementation\MoveChart.cs" />
     <Compile Include="MyControls\NavigationPanel\Implementation\NavigationPanel.cs" />
     <Compile Include="MyControls\Panel\Implementation\WaterfallPanel - 复制.cs" />
     <Compile Include="MyControls\Poptip\Implementation\Poptip.cs" />
@@ -412,6 +413,10 @@
     <Page Include="MyControls\ListView\Themes\Generic.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MyControls\MoveChart\Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="MyControls\MusicPlayer\Themes\Generic.xaml">
       <SubType>Designer</SubType>

@@ -30,7 +30,8 @@ namespace SCEEC.TTM
             InitializeComponent();
             IsUsb = false;
             MeasurementItemsListBox.ItemsSource = sender.GetList();
-            testingTime.Text = DateTime.Now.Date.ToString("yyyy-MM-dd");
+            testingTime.Text = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        
         }
 
         private List<string> Gettestme(List<MeasurementItemStruct> job)
@@ -53,7 +54,7 @@ namespace SCEEC.TTM
         {
             InitializeComponent();
             MeasurementItemsListBox.ItemsSource = Gettestme(job);
-            testingTime.Text = DateTime.Now.Date.ToString("yyyy-MM-dd");
+            testingTime.Text = DateTime.Now.Date.ToString("yyyy-MM-dd HH:mm:ss");
             IsUsb = true;
         }
 
@@ -68,17 +69,20 @@ namespace SCEEC.TTM
 
         private void OKButton_Click(object sender, RoutedEventArgs e)
         {
-            
-            if (!DateTime.TryParse(testingTime.Text, out Information.testingTime))
-            {
-                MessageBox.Show("试验日期信息错误");
-                return;
-            }
+
+            //if (!DateTime.TryParse(testingTime.Text, out Information.testingTime))
+            //{
+            //    MessageBox.Show("试验日期信息错误");
+            //    return;
+            //}
             if (!double.TryParse(OilTemperature.Text, out Information.oilTemperature))
             {
                 MessageBox.Show("油温必须为纯数值");
                 return;
             }
+
+            // (testingTime.Text, out Information.testingTime
+            Information.testingTime = Convert.ToDateTime(testingTime.Text); // testingTime.Text.ToString("yyyy-MM-dd HH:mm:ss");
             Information.testingName = testingName.Text;
             Information.tester = tester.Text;
             Information.testingAgency = testingAgency.Text;

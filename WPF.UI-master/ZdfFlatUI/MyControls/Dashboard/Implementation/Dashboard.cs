@@ -368,6 +368,10 @@ namespace ZdfFlatUI
             this.PART_IncreaseCircle = GetTemplateChild("PART_IncreaseCircle") as Arc;
 
             this.SetTicks();
+            //if(Skin==DashboardSkinEnum.Resistance)
+            //{
+
+            //}
             this.SetAngle();
             this.TransformAngle();
         }
@@ -383,16 +387,33 @@ namespace ZdfFlatUI
             List<object> shortticks = new List<object>();
             List<object> longticks = new List<object>();
 
+
+
             for (int i = 0; i < this.LongTickCount; i++)
             {
                 numbers.Add(Math.Round(this.Minimum + (this.Maximum - this.Minimum) / (this.LongTickCount - 1) * i));
+                if(Skin==DashboardSkinEnum.Resistance&&i== LongTickCount-1)
+                {
+                    numbers.Add("∞");
+                    longticks.Add(new object());
+                }
                 longticks.Add(new object());
             }
-
-            for (int i = 0; i < (this.LongTickCount - 1) * (this.ShortTickCount + 1) + 1; i++)
+            if(Skin!=DashboardSkinEnum.Resistance)
             {
-                shortticks.Add(new object());
+                for (int i = 0; i < (this.LongTickCount - 1) * (this.ShortTickCount + 1) + 1; i++)
+                {
+                    shortticks.Add(new object());
+                }
             }
+            else
+            {
+                for (int i = 0; i < (this.LongTickCount ) * (this.ShortTickCount + 1) + 1; i++)
+                {
+                    shortticks.Add(new object());
+                }
+            }
+           
 
             this.ShortTicks = shortticks;
             this.LongTicks = longticks;
@@ -404,13 +425,14 @@ namespace ZdfFlatUI
         /// </summary>
         private void SetAngle()
         {
+
             if(this.Value < this.Minimum)
             {
                 this.Angle = this.StartAngle;
                 return;
             }
 
-            if(this.Value > this.Maximum)
+            if(this.Value > this.Maximum&& Skin != DashboardSkinEnum.Resistance)
             {
                 this.Angle = this.EndAngle;
                 return;
@@ -419,6 +441,31 @@ namespace ZdfFlatUI
             var diff = this.Maximum - this.Minimum;
             var valueDiff = this.Value - this.Minimum;
             this.Angle = this.StartAngle + (this.EndAngle - this.StartAngle) / diff * valueDiff;
+
+            if (Skin == DashboardSkinEnum.Resistance)
+            {
+                if (this.Value > this.Maximum)
+                {
+                    var eachangle = (this.EndAngle - this.StartAngle) / diff;
+                    var longangle = (this.EndAngle - this.StartAngle) / (LongTickCount - 1);
+                    var maxneedangle = this.StartAngle + eachangle * (Maximum * (LongTickCount - 2) / (LongTickCount-1));
+                    if((this.Value - diff) / diff<1)
+                    {
+                        this.Angle = maxneedangle +0.4* longangle* ((this.Value - diff) / diff);
+                    }
+                    else
+                    {
+                        this.Angle = maxneedangle + longangle *(1-1/ Math.Log10(this.Value - diff));
+                    }
+                }
+                else
+                {
+                     diff = (this.Maximum - this.Minimum)/ (LongTickCount-1)* LongTickCount;
+                     valueDiff = this.Value - this.Minimum;
+                    this.Angle = this.StartAngle + (this.EndAngle - this.StartAngle) / diff * valueDiff;
+
+                }
+            }
         }
 
         /// <summary>

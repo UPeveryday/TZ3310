@@ -19,6 +19,8 @@ namespace ZdfFlatUI
         /// 流量
         /// </summary>
         Flow,
+
+        Resistance,
     }
     #endregion
 

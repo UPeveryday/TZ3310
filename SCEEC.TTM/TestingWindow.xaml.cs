@@ -37,26 +37,6 @@ namespace SCEEC.TTM
         public WindowTesting(string transformerSerialNo, string jobName, JobInformation job, int testID = -1, bool istcp = false)
         {
             InitializeComponent();
-            //Task.Factory.StartNew(() =>
-            //{
-            //    while (WorkingSets.local.IsVisible1)
-            //    {
-            //        if (WorkingSets.local.IsVisible)
-            //        {
-            //            Dispatcher.Invoke(new Action(delegate
-            //            {
-            //                ConfireIsOk.Visibility = Visibility.Visible;
-            //            }));
-            //        }
-            //        else
-            //        {
-            //            Dispatcher.Invoke(new Action(delegate
-            //            {
-            //                ConfireIsOk.Visibility = Visibility.Collapsed;
-            //            }));
-            //        }
-            //    }
-            //});
             currentJob = WorkingSets.local.getJob(transformerSerialNo, jobName);
             TestingWorker = new BackgroundWorker();
             TestingWorker.WorkerReportsProgress = true;
@@ -147,6 +127,29 @@ namespace SCEEC.TTM
             StatusRefresh(worker);
         }
 
+        //dashboard2.Value = 7.56;
+        //    DashboardValue2.Text = dashboard2.Value.ToString("0.00") + "kV";
+
+        enum Whichgroupbox
+        {
+            DCI, DCR, CAP, OLTC
+        }
+        private void SetgroupboxVisible(Whichgroupbox num)
+        {
+            dcigroupbox.Visibility = Visibility.Hidden;
+            dcrgroupbox.Visibility = Visibility.Hidden;
+            capgroupbox.Visibility = Visibility.Hidden;
+            oltcgroupbox.Visibility = Visibility.Hidden;
+            if (num == Whichgroupbox.DCI)
+                dcigroupbox.Visibility = Visibility.Visible;
+            if (num == Whichgroupbox.DCR)
+                dcrgroupbox.Visibility = Visibility.Visible;
+            if (num == Whichgroupbox.CAP)
+                capgroupbox.Visibility = Visibility.Visible;
+            if (num == Whichgroupbox.OLTC)
+                oltcgroupbox.Visibility = Visibility.Visible;
+
+        }
         private void StatusRefresh(TestingWorkerSender status)
         {
             if (WorkingSets.local.IsVisible == true && WorkingSets.local.IsVisible1 == true)
@@ -171,65 +174,128 @@ namespace SCEEC.TTM
                 {
                     if (status.MeasurementItems[status.CurrentItemIndex].Function == MeasurementFunction.DCResistance)
                     {
-                        vn1.Text = "A相电压";
-                        v1.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[0].OriginText;
-                        vn2.Text = "A相电流";
-                        v2.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[1].OriginText;
-                        vn3.Text = "A相电阻";
-                        v3.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[2].OriginText;
+                        //vn1.Text = "A相电压";
+                        //v1.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[0].OriginText;
+                        //vn2.Text = "A相电流";
+                        //v2.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[1].OriginText;
+                        //vn3.Text = "A相电阻";
+                        //v3.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[2].OriginText;
 
-                        vn4.Text = "B相电压";
-                        v4.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[3].OriginText;
-                        vn5.Text = "B相电流";
-                        v5.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[4].OriginText;
-                        vn6.Text = "B相电阻";
-                        v6.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[5].OriginText;
+                        //vn4.Text = "B相电压";
+                        //v4.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[3].OriginText;
+                        //vn5.Text = "B相电流";
+                        //v5.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[4].OriginText;
+                        //vn6.Text = "B相电阻";
+                        //v6.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[5].OriginText;
 
-                        vn7.Text = "C相电压";
-                        v7.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[6].OriginText;
-                        vn8.Text = "C相电流";
-                        v8.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[7].OriginText;
-                        vn9.Text = "C相电阻";
-                        v9.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[8].OriginText;
+                        //vn7.Text = "C相电压";
+                        //v7.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[6].OriginText;
+                        //vn8.Text = "C相电流";
+                        //v8.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[7].OriginText;
+                        //vn9.Text = "C相电阻";
+                        //v9.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[8].OriginText;
+
+                        SetgroupboxVisible(Whichgroupbox.DCR);
+                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[2].value != null)
+                            A_resistance_dashboad.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[2].value;
+                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value != null)
+                            A_current_dashboad.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value;
+                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[2].value != null)
+                            A_resistance_value.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[2].OriginText;
+                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value != null)
+                            A_Current_value.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[1].OriginText;
+                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[5].value != null)
+                            B_resistance_dashboad.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[5].value;
+                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[4].value != null)
+                            B_current_dashboad.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[4].value;
+                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[5].value != null)
+                            B_resistance_value.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[5].OriginText;
+                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[4].value != null)
+                            B_Current_value.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[4].OriginText;
+                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[8].value != null)
+                            C_resistance_dashboad.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[8].value;
+                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[7].value != null)
+                            C_current_dashboad.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[7].value;
+                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[8].value != null)
+                            C_resistance_value.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[8].OriginText;
+                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[7].value != null)
+                            C_Current_value.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[7].OriginText;
                     }
                     if (status.MeasurementItems[status.CurrentItemIndex].Function == MeasurementFunction.DCInsulation ||
                         status.MeasurementItems[status.CurrentItemIndex].Function == MeasurementFunction.BushingDCInsulation)
                     {
-                        vn4.Text = "电压：";
-                        v4.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[0].OriginText;
-                        vn6.Text = "阻值：";
-                        v6.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[1].OriginText;
+                        //vn4.Text = "电压：";
+                        //v4.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[0].OriginText;
+                        //vn6.Text = "阻值：";
+                        //v6.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[1].OriginText;
+                        SetgroupboxVisible(Whichgroupbox.DCI);
+                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[0].value != null)
+                            dciboard_volate.Value = (double)(status.MeasurementItems[status.CurrentItemIndex].Result.values[0].value/1000);
+                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[0].value != null)
+                            dciboard_volate_value.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[0].OriginText;
+                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value != null)
+                            dciboard_resistance.Value = (double)(status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value / 1000000000);
+                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value != null)
+                            dciboard_resistance_value.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[1].OriginText+ "Ω";
                     }
 
                     if (status.MeasurementItems[status.CurrentItemIndex].Function == MeasurementFunction.Capacitance ||
                        status.MeasurementItems[status.CurrentItemIndex].Function == MeasurementFunction.BushingCapacitance)
                     {
-                        vn4.Text = "电压：";
-                        v4.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[1].OriginText;
-                        vn5.Text = "频率：";
-                        v5.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[0].OriginText;
-                        vn6.Text = "";
-                        v6.Text = "";
+                        //vn4.Text = "电压：";
+                        //v4.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[1].OriginText;
+                        //vn5.Text = "频率：";
+                        //v5.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[0].OriginText;
+                        //vn6.Text = "";
+                        //v6.Text = "";
+
+                        SetgroupboxVisible(Whichgroupbox.CAP);
+                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value != null)
+                            captance.Value = (double)(status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value/1000);
+                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value != null)
+                            captancevalue.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[1].OriginText;
+
                     }
                     if (status.MeasurementItems[status.CurrentItemIndex].Function == MeasurementFunction.OLTCSwitchingCharacter)
                     {
-                        vn1.Text = "A相电压";
-                        v1.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[0].OriginText;
+                        //vn1.Text = "A相电压";
+                        //v1.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[0].OriginText;
 
-                        vn3.Text = "A相电流";
-                        v3.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[1].OriginText;
+                        //vn3.Text = "A相电流";
+                        //v3.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[1].OriginText;
 
-                        vn4.Text = "B相电压";
-                        v4.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[3].OriginText;
+                        //vn4.Text = "B相电压";
+                        //v4.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[3].OriginText;
 
-                        vn6.Text = "B相电流";
-                        v6.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[4].OriginText;
+                        //vn6.Text = "B相电流";
+                        //v6.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[4].OriginText;
 
-                        vn7.Text = "C相电压";
-                        v7.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[6].OriginText;
+                        //vn7.Text = "C相电压";
+                        //v7.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[6].OriginText;
 
-                        vn9.Text = "C相电流";
-                        v9.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[7].OriginText;
+                        //vn9.Text = "C相电流";
+                        //v9.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[7].OriginText;
+
+                        SetgroupboxVisible(Whichgroupbox.OLTC);
+                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value != null)
+
+                            Aoltcdashboard.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value;
+                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value != null)
+
+                            Aoltcavalue.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[1].OriginText;
+
+                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[4].value != null)
+
+                            Boltcdashboard.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[4].value;
+                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[4].value != null)
+
+                            Boltcavalue.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[4].OriginText;
+                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[7].value != null)
+
+                            Coltcdashboard.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[7].value;
+                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[7].value != null)
+
+                            Boltcavalue.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[7].OriginText;
                     }
 
 
@@ -315,6 +381,7 @@ namespace SCEEC.TTM
 
         public void StartButton_Click(object sender, MouseButtonEventArgs e)
         {
+
             if (!WaveThread.IsAlive)
             {
                 WaveThread.IsBackground = true;

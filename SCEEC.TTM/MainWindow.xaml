@@ -1,11 +1,9 @@
-﻿<Window xmlns:ZdfFlatUI="clr-namespace:ZdfFlatUI;assembly=SCEEC.TTM"  x:Class="SCEEC.TTM.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SCEEC.TTM"
-        xmlns:ZdfFlatUI1="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
-        mc:Ignorable="d"
+﻿<Window   x:Class="SCEEC.TTM.MainWindow"
+          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+          mc:Ignorable="d"
         Style="{DynamicResource MainForm}"
         Title="变压器现场综合测试系统管理器"  Icon="icon.ico"
         Height="720" Width="1280" 
@@ -116,11 +114,11 @@
             </ListBox>
             <StackPanel Grid.Column="1" Grid.Row="4">
                 <Button x:Name="ModifyTransformerButton"  BorderBrush="LightGreen" BorderThickness="1"  Click="ModifyTransformerButton_Click">
-                    <TextBlock Text="修改变压器参数" FontSize="18">
+                    <TextBlock  Visibility="Hidden" Text="修改变压器参数" FontSize="18">
                     </TextBlock>
                 </Button>
                 <Button x:Name="delete" Margin="3"  BorderBrush="LightGreen" BorderThickness="1"  Click="deleteTransform_click">
-                    <TextBlock Text="删除选中任务" FontSize="18"/>
+                    <TextBlock  Visibility="Hidden"  Text="删除选中任务" FontSize="18"/>
                 </Button>
             </StackPanel>
 

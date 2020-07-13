@@ -733,8 +733,11 @@ namespace SCEEC.MI.TZ3310
                 {
                     for (int i = 0; i < result.values.Length; i++)
                     {
-                        var pv = result.values[i];
-                        try { row["result_pv" + (i + 1).ToString()] = pv.OriginText; } catch { }
+                        if (result.values[i] != null)
+                        {
+                            var pv = result.values[i];
+                            try { row["result_pv" + (i + 1).ToString()] = pv.OriginText; } catch { }
+                        }
                     }
                 }
 
@@ -995,8 +998,8 @@ namespace SCEEC.MI.TZ3310
                         case MeasurementFunction.OLTCSwitchingCharacter:
                             return this.Winding.ToString() + "有载分接";
                         case MeasurementFunction.BushingDCInsulation:
-                            if (result.values[1].value == null) return this.Winding.ToString() + "套管" + this.Terimal[1] + "末屏绝缘电阻: " + result.values[2].ToString();
-                            if (result.values[2].value == null) return this.Winding.ToString() + "套管" + this.Terimal[1] + "末屏绝缘电阻: " + result.values[2].ToString() + " 吸收比: " + result.values[3].ToString();
+                            if (result.values[1].value == null) return this.Winding.ToString() + "套管" + this.Terimal[0] + "末屏绝缘电阻: " + result.values[1].ToString();
+                            if (result.values[2].value == null) return this.Winding.ToString() + "套管" + this.Terimal[0] + "末屏绝缘电阻: " + result.values[2].ToString() + " 吸收比: " + result.values[3].ToString();
                             return this.Winding.ToString() + "套管" + this.Terimal[0] + "末屏绝缘电阻: " + result.values[1].ToString() + " 吸收比: " + result.values[2].ToString() + " 极化指数: " + result.values[3].ToString();
                         case MeasurementFunction.BushingCapacitance:
                             if (result.values[3].value == null)

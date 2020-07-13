@@ -1,0 +1,12 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+                    xmlns:ZUI="clr-namespace:ZdfFlatUI"
+                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                    xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+                    xmlns:Converter="clr-namespace:ZdfFlatUI.Converters">
+
+    <Converter:StringIsEmptyConverter x:Key="StringIsEmptyConverter" />
+
+    <!--<Style TargetType="{x:Type ZUI:MoveChart}">-->
+    <!--</Style>-->
+</ResourceDictionary>

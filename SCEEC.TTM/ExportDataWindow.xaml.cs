@@ -68,7 +68,7 @@ namespace SCEEC.TTM
         private void DataViewGrid()
         {
         
-            var tws = WorkingSets.local.getTestResults1(ResultName);
+            var tws = WorkingSets.local.getTestResultsbyid(ResultName);
             if(tws.MeasurementItems!=null)
             {
                 List<string> resultList = new List<string>();
