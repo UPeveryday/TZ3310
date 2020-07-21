@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SCEEC.TTM"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         xmlns:WPF.UI="clr-namespace:ZdfFlatUI;assembly=WPF.UI"
         mc:Ignorable="d"
         Style="{DynamicResource WizardForm}"
@@ -43,6 +44,7 @@
             <Button x:Name="closeButton" Grid.Column="5" Height="35" Click="CloseButton_Click">
                 <Image Source="Resources/close.png" Margin="10"/>
             </Button>
+            <Button x:Name="button" Content="Button" Click="ButtonBase_OnClick" Grid.Column="1" Foreground="AliceBlue" HorizontalAlignment="Left" Margin="332,6,0,0" VerticalAlignment="Top" Width="75"/>
         </Grid>
         <Grid Grid.Row="1" Margin="5">
             <Grid.ColumnDefinitions>
@@ -56,7 +58,8 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <ListBox x:Name="TestItemListBox" Grid.Row="0" Margin="5"/>
+                    <ListBox x:Name="TestItemListBox" Grid.Row="0" Margin="5">
+                    </ListBox>
                     <Grid Grid.Row="1" Margin="5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -123,7 +126,8 @@
                             <WPF.UI:Dashboard.ContentTemplate>
                                 <DataTemplate>
                                     <StackPanel Margin="0,85,0,0" HorizontalAlignment="Center" Orientation="Vertical">
-                                        <TextBlock FontSize="18" Margin="0,4"  Text="电压"  TextAlignment="Center" /> <!--Text="{Binding Path=Text, ElementName=DashboardTitle2}"-->
+                                        <TextBlock FontSize="18" Margin="0,4"  Text="电压"  TextAlignment="Center" />
+                                        <!--Text="{Binding Path=Text, ElementName=DashboardTitle2}"-->
                                         <TextBlock Margin="0,4" HorizontalAlignment="Center" FontSize="26" Foreground="White"
                                            Text="{Binding Path=Text,
                                                           ElementName=dciboard_volate_value}" />
@@ -326,9 +330,9 @@
                             <ColumnDefinition></ColumnDefinition>
                             <ColumnDefinition></ColumnDefinition>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="5A" Visibility="Hidden" Name="Aoltcavalue"></TextBlock>
-                        <TextBlock Text="10.0A" Visibility="Hidden" Name="Boltcavalue"></TextBlock>
-                        <TextBlock Text="7.5A" Visibility="Hidden" Name="Coltcavalue"></TextBlock>
+                        <TextBlock Text="0A" Visibility="Hidden" Name="Aoltcavalue"></TextBlock>
+                        <TextBlock Text="0A" Visibility="Hidden" Name="Boltcavalue"></TextBlock>
+                        <TextBlock Text="0A" Visibility="Hidden" Name="Coltcavalue"></TextBlock>
                         <WPF.UI:Dashboard x:Name="Aoltcdashboard" Width="220" Height="220" HorizontalAlignment="Center" VerticalAlignment="Center"
                                    LongTickCount="11" Maximum="20" ShortTickCount="5" Skin="Resistance"
                                    Grid.Column="0" >
@@ -380,6 +384,110 @@
                     </Grid>
                 </GroupBox>
 
+                <Grid Grid.ColumnSpan="2" Name="Oltcgroupbox"  Margin="10" Background="#333337">
+                    <lvc:CartesianChart  DisableAnimations="True"   Name="control5"    DataClick="control5_DataClick" MouseDown="control5_MouseDown"  >
+                        <!--Series="{Binding LcCurrentVolate}"-->
+                        <lvc:CartesianChart.AxisX >
+                            <lvc:Axis    Foreground="White"    LabelFormatter="{Binding XFormatter}"   >
+                                <!--Title="&#x000A;电流"-->
+                                <lvc:Axis.Separator>
+                                    <lvc:Separator     Stroke="Gray" StrokeThickness="0.4"/>
+                                </lvc:Axis.Separator>
+                            </lvc:Axis>
+                        </lvc:CartesianChart.AxisX>
+                        <lvc:CartesianChart.AxisY>
+                            <lvc:Axis Foreground="White"  LabelFormatter="{Binding YFormatter}"   Title="电压">
+                                <lvc:Axis.Separator>
+                                    <lvc:Separator    Stroke="Gray" StrokeThickness="0.4"/>
+                                </lvc:Axis.Separator>
+                            </lvc:Axis>
+                        </lvc:CartesianChart.AxisY>
+                    </lvc:CartesianChart>
+
+                    <Canvas x:Name="canvs" Visibility="{Binding Path=Visibility, ElementName=control5}">
+                        <Line x:Name="line1" Stroke="Red" ></Line>
+                        <Line x:Name="line2" Stroke="Yellow"></Line>
+                        <Line x:Name="line3" Stroke="Green"></Line>
+                        <Line x:Name="line4" Stroke="Blue"></Line>
+                        <Expander Header="选项"  Canvas.Right="10" Canvas.Top="10" IsExpanded="True" BorderThickness="1" BorderBrush="Gray">
+                            <WrapPanel>
+                                <Expander  Background="#333337"   ExpandDirection="Right"  IsExpanded="False" BorderThickness="1" BorderBrush="Gray">
+                                    <Expander.HeaderTemplate>
+                                        <DataTemplate>
+                                            <StackPanel>
+                                                <TextBox BorderThickness="0">结</TextBox>
+                                                <TextBox BorderThickness="0">果</TextBox>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </Expander.HeaderTemplate>
+                                    <StackPanel>
+                                        <GroupBox Header="A相">
+                                            <WrapPanel>
+                                                <TextBox>过渡时间：</TextBox>
+                                                <TextBox Width="80" Name="A_time"></TextBox>
+                                                <TextBox>过渡电阻1：</TextBox>
+                                                <TextBox Width="80"  Name="A_resistance_1"></TextBox>
+                                                <TextBox>过渡电阻2：</TextBox>
+                                                <TextBox Width="80" Name="A_resistance_2"></TextBox>
+                                            </WrapPanel>
+                                        </GroupBox>
+                                        <GroupBox Header="B相">
+                                            <WrapPanel>
+                                                <TextBox>过渡时间：</TextBox>
+                                                <TextBox Width="80" Name="B_time"></TextBox>
+                                                <TextBox>过渡电阻1：</TextBox>
+                                                <TextBox Width="80"  Name="B_resistance_1"></TextBox>
+                                                <TextBox>过渡电阻2：</TextBox>
+                                                <TextBox Width="80" Name="B_resistance_2"></TextBox>
+                                            </WrapPanel>
+                                        </GroupBox>
+                                        <GroupBox Header="C相">
+                                            <WrapPanel>
+                                                <TextBox>过渡时间：</TextBox>
+                                                <TextBox Width="80" Name="C_time"></TextBox>
+                                                <TextBox>过渡电阻1：</TextBox>
+                                                <TextBox Width="80"  Name="C_resistance_1"></TextBox>
+                                                <TextBox>过渡电阻2：</TextBox>
+                                                <TextBox Width="80" Name="C_resistance_2"></TextBox>
+                                            </WrapPanel>
+                                        </GroupBox>
+                                    </StackPanel>
+                                </Expander>
+                                <StackPanel  Margin="5" Background="#333337">
+                                    <ComboBox Margin="0 1" Name="wavelocation"  Height="30" SelectionChanged="Wavelocation_OnSelectionChanged" Width="100" SelectedIndex="0" FontSize="16" Foreground="Green" >
+                                        <ComboBoxItem>A相波形</ComboBoxItem>
+                                        <ComboBoxItem>B相波形</ComboBoxItem>
+                                        <ComboBoxItem>C相波形</ComboBoxItem>
+                                        <ComboBoxItem Visibility="Collapsed">O相波形</ComboBoxItem>
+                                    </ComboBox>
+                                    <ComboBox Margin="0 1" Name="whichline"   Height="30" Width="100"  SelectedIndex="1" FontSize="16" Foreground="Red" >
+                                        <ComboBoxItem>RED</ComboBoxItem>
+                                        <ComboBoxItem>YELLOW</ComboBoxItem>
+                                        <ComboBoxItem>GREEN</ComboBoxItem>
+                                        <ComboBoxItem>BLUE</ComboBoxItem>
+                                    </ComboBox>
+                                    <Border Margin="0 2 0 0"  Width="98" CornerRadius="3" Height="25"   Background="Green"  MouseLeftButtonUp="UIElement_OnMouseLeftButtonUp">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Opacity" Value="0.7"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <TextBlock Text="确认保存" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"/>
+                                    </Border>
+
+                                    <Button Content="Test" Visibility="Collapsed" Foreground="White" Click="ButtonBase_OnClick"></Button>
+                                </StackPanel>
+
+                            </WrapPanel>
+
+                        </Expander>
+
+                    </Canvas>
+                </Grid>
 
 
                 <GroupBox Header="试验结果" Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Margin="5">
@@ -445,7 +553,10 @@
                 <GroupBox Header="工作状态" Grid.Row="1" Grid.Column="1" Margin="5">
                     <TextBlock x:Name="WorkingStatusLabel" Text="等待启动测量" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="LightSkyBlue" FontSize="25"/>
                 </GroupBox>
+
+
             </Grid>
         </Grid>
+        <!--<WPF.UI:Badge HorizontalAlignment="Left" Margin="1382,578,-296,0" Grid.Row="1" VerticalAlignment="Top" Width="100"/>-->
     </Grid>
 </Window>

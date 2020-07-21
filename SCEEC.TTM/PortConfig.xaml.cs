@@ -115,9 +115,12 @@ namespace SCEEC.TTM
                     OKButton.Opacity = 1;
                     CancelButton.Opacity = 1;
                     OKButton.Content = "重新连接";
-
                 });
+
+
             });
+
+
         }
     }
 }

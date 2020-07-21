@@ -36,7 +36,7 @@ namespace SCEEC.TTM
 
             LocationListBox.ItemsSource = WorkingSets.local.getLocationName();
             TransformerListBox.ItemsSource = WorkingSets.local.getTransformerSerialNo();
-            StartTcp();
+            //StartTcp();
         }
         private void Grid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -800,6 +800,11 @@ namespace SCEEC.TTM
         private void ReportListBox_TouchUp(object sender, TouchEventArgs e)
         {
             ExportButton_Click(null, null);
+        }
+
+        private void read(object sender, RoutedEventArgs e)
+        {
+         var b=   WorkingSets.local.Tz3310.GetWaveFormData();
         }
     }
 }

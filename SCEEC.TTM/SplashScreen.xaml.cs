@@ -125,8 +125,10 @@ namespace SCEEC.TTM
         {
             Application.Current.Dispatcher.Invoke(() => {
                 new PortConfig().ShowDialog();
-
             });
+
+
+
         }
 
         private void initport()

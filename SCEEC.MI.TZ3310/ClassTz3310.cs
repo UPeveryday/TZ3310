@@ -805,7 +805,7 @@ namespace SCEEC.MI.TZ3310
                 {
                     ParsingDaTa[j] = T2[j];//A
 
-                    }
+                }
 
 
             });
@@ -826,7 +826,7 @@ namespace SCEEC.MI.TZ3310
                 {
                     ParsingDaTa[j] = T2[j - 6002];//B
 
-                    }
+                }
 
             });
             t2.Start();
@@ -845,7 +845,7 @@ namespace SCEEC.MI.TZ3310
                 {
                     ParsingDaTa[j] = T2[j - 12004];//C
 
-                    }
+                }
 
             });
             t3.Start();
@@ -865,26 +865,23 @@ namespace SCEEC.MI.TZ3310
                 for (int j = 18006; j < 24008; j++)
                 {
                     ParsingDaTa[j] = T2[j - 18006];//BC
-                    }
+                }
             });
             t4.Start();
             Thread.Sleep(500);
             return ParsingDaTa;
         }
 
-        public short[] GetWaveFormData
+        public short[] GetWaveFormData()
         {
-            get
+            byte[] RecBuffer = new byte[48010];
+            var RecBuffer1 = sc.ReadPortsData(new byte[3] { 0x4f, 0X00, 0x4f }, RecBuffer, 48010, 800);
+            if (RecBuffer1.Length != 48010)
             {
-                byte[] RecBuffer = new byte[48010];
-                var RecBuffer1 = sc.ReadPortsData(new byte[3] { 0x4f, 0X00, 0x4f }, RecBuffer, 48010, 60);
-                if (RecBuffer1.Length != 48010)
-                {
-                    Thread.Sleep(2000);
-                    RecBuffer1 = sc.ReadPortsData(new byte[3] { 0x4f, 0X00, 0x4f }, RecBuffer, 48010);
-                }
-                return ParsingWaveFormData(RecBuffer1);
+                Thread.Sleep(2000);
+                RecBuffer1 = sc.ReadPortsData(new byte[3] { 0x4f, 0X00, 0x4f }, RecBuffer, 48010);
             }
+            return ParsingWaveFormData(RecBuffer1);
         }
 
 

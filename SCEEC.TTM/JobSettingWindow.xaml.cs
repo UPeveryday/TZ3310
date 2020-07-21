@@ -624,6 +624,14 @@ namespace SCEEC.TTM
                 LVWindingDCResistanceCheckBox.Visibility = Visibility.Visible;
             else
                 LVWindingDCResistanceCheckBox.Visibility = Visibility.Collapsed;
+
+
+            //
+            DCHvResistanceCurrentComboBox.Visibility = Visibility.Visible;
+            DCMvResistanceCurrentComboBox.Visibility = Visibility.Visible;
+            DCLvResistanceCurrentComboBox.Visibility = Visibility.Visible;
+            ZCWindingDCInsulationCheckBox.Visibility = Visibility.Visible;
+
         }
 
         private void WindingDCResistanceCheckBox_Unchecked(object sender, RoutedEventArgs e)
@@ -637,6 +645,12 @@ namespace SCEEC.TTM
             HVWindingDCResistanceCheckBox.Visibility = Visibility.Collapsed;
             MVWindingDCResistanceCheckBox.Visibility = Visibility.Collapsed;
             LVWindingDCResistanceCheckBox.Visibility = Visibility.Collapsed;
+
+            //DCHvResistanceCurrentComboBox
+            DCHvResistanceCurrentComboBox.Visibility = Visibility.Collapsed;
+            DCMvResistanceCurrentComboBox.Visibility = Visibility.Collapsed;
+            DCLvResistanceCurrentComboBox.Visibility = Visibility.Collapsed;
+            ZCWindingDCInsulationCheckBox.Visibility = Visibility.Collapsed;
         }
 
         private void closeWithConfirm()

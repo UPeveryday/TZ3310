@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using SCEEC.MI.TZ3310;
 using System.Data;
+using System.Net.NetworkInformation;
 
 namespace SCEEC.TTM
 {
@@ -75,6 +76,48 @@ namespace SCEEC.TTM
             LvPowerRatingTextBox.Text = ((double)r["powerratinglv"]).ToString();
             HvBushingCheckBox.IsChecked = (bool)r["bushing_hv_enabled"];
             MvBushingCheckBox.IsChecked = (bool)r["bushing_mv_enabled"];
+            LvBushingCheckBox.IsChecked = (bool)r["bushing_lv_enabled"];
+            if (HvBushingCheckBox.IsChecked == true)
+            {
+                if (r["hv_a_outfactory"] != null)
+                    Hv_A_OutFactoryId.Text = (string)r["hv_a_outfactory"];
+                if (r["hv_b_outfactory"] != null)
+                    Hv_B_OutFactoryId.Text = (string)r["hv_b_outfactory"];
+                if (r["hv_c_outfactory"] != null)
+                    Hv_C_OutFactoryId.Text = (string)r["hv_c_outfactory"];
+                if (r["hv_o_outfactory"] != null)
+                    Hv_O_OutFactoryId.Text = (string)r["hv_o_outfactory"];
+                if (r["hv_o_mp_enabled"] != null)
+                    Hv_o_mp.IsChecked = (bool)r["hv_o_mp_enabled"];
+            }
+            if (MvBushingCheckBox.IsChecked == true)
+            {
+                if (r["mv_a_outfactory"] != null)
+                    Mv_A_OutFactoryId.Text = (string)r["mv_a_outfactory"];
+                if (r["mv_b_outfactory"] != null)
+                    Mv_B_OutFactoryId.Text = (string)r["mv_b_outfactory"];
+                if (r["mv_c_outfactory"] != null)
+                    Mv_C_OutFactoryId.Text = (string)r["mv_c_outfactory"];
+                if (r["mv_o_outfactory"] != null)
+                    Mv_O_OutFactoryId.Text = (string)r["mv_o_outfactory"];
+                if (r["mv_o_mp_enabled"] != null)
+                Mv_O_HaveMp.IsChecked = (bool)r["mv_o_mp_enabled"];
+            }
+            if (LvBushingCheckBox.IsChecked == true)
+            {
+                if (r["lv_a_outfactory"] != null)
+                Lv_A_OutFactoryId.Text = (string)r["lv_a_outfactory"];
+                if (r["lv_b_outfactory"] != null)
+                Lv_B_OutFactoryId.Text = (string)r["lv_b_outfactory"];
+                if (r["lv_c_outfactory"] != null)
+                Lv_C_OutFactoryId.Text = (string)r["lv_c_outfactory"];
+                if (r["lv_o_outfactory"] != null)
+                Lv_O_OutFactoryId.Text = (string)r["lv_o_outfactory"];
+                if (r["lv_o_mp_enabled"] != null)
+                Lv_o_mp.IsChecked = (bool)r["lv_o_mp_enabled"];
+            }
+            coulpcombobox.SelectedIndex = (int)r["coulplingindex"];
+
             if (r["coupling"] != null)
                 coupling.IsChecked = (bool)r["coupling"];
             OLTCCheckBox.IsChecked = (((int)r["oltc_tapnum"]) > -1);
@@ -89,7 +132,7 @@ namespace SCEEC.TTM
                 OLTCModelTypeTextBox.Text = (string)r["oltc_modeltype"];
                 OLTCManufacturerTextBox.Text = (string)r["oltc_manufacturer"];
                 OLTCProductionYearTextBox.Text = (string)r["oltcproductionyear"];
-                OLTCTapMainNumLocationTextBox.Text =r["oltc_taplocation"].ToString();
+                OLTCTapMainNumLocationTextBox.Text = r["oltc_taplocation"].ToString();
             }
 
             HMImpVol.Text = Convertdata(rm["impedancevoltagehv"]);
@@ -222,6 +265,7 @@ namespace SCEEC.TTM
             r["powerratinglv"] = LvPowerRatingTextBox.Text;
             r["bushing_hv_enabled"] = HvBushingCheckBox.IsChecked;
             r["bushing_mv_enabled"] = MvBushingCheckBox.IsChecked;
+            r["bushing_lv_enabled"] = LvBushingCheckBox.IsChecked;
             r["coupling"] = coupling.IsChecked;
             if (OLTCCheckBox.IsChecked == true)
             {
@@ -248,6 +292,32 @@ namespace SCEEC.TTM
                 r["oltc_manufacturer"] = string.Empty;
                 r["oltcproductionyear"] = string.Empty;
             }
+            if (HvBushingCheckBox.IsChecked == true)
+            {
+                r["hv_a_outfactory"] = Hv_A_OutFactoryId.Text;
+                r["hv_b_outfactory"] = Hv_B_OutFactoryId.Text;
+                r["hv_c_outfactory"] = Hv_B_OutFactoryId.Text;
+                r["hv_o_outfactory"] = Hv_O_OutFactoryId.Text;
+                r["hv_o_mp_enabled"] = Hv_o_mp.IsChecked;
+            }
+            if (MvBushingCheckBox.IsChecked == true)
+            {
+                r["mv_a_outfactory"] = Mv_A_OutFactoryId.Text;
+                r["mv_b_outfactory"] = Mv_B_OutFactoryId.Text;
+                r["mv_c_outfactory"] = Mv_C_OutFactoryId.Text;
+                r["mv_o_outfactory"] = Mv_O_OutFactoryId.Text;
+                r["mv_o_mp_enabled"] = Mv_O_HaveMp.IsChecked;
+            }
+            if (LvBushingCheckBox.IsChecked == true)
+            {
+                r["lv_a_outfactory"] = Lv_A_OutFactoryId.Text;
+                r["lv_b_outfactory"] = Lv_B_OutFactoryId.Text;
+                r["lv_c_outfactory"] = Lv_C_OutFactoryId.Text;
+                r["lv_o_outfactory"] = Lv_O_OutFactoryId.Text;
+                r["lv_o_mp_enabled"] = Lv_o_mp.IsChecked;
+            }
+            r["coulplingindex"] = coulpcombobox.SelectedIndex;
+
             if (rows.Length > 0) r.EndEdit();
             else WorkingSets.local.Transformers.Rows.Add(r);
             WorkingSets.local.saveTransformer();
@@ -270,11 +340,16 @@ namespace SCEEC.TTM
         public TransformerSettingWindow(string serialNo = "")
         {
             InitializeComponent();
+
+            DataContext = this;
+
             locationComboBox.ItemsSource = WorkingSets.local.getLocationName();
             locationComboBox.SelectedIndex = 0;
             TransformerInfoInitial(serialNo);
             changed = false;
             this.serialno = serialNo;
+
+
         }
 
         private void Grid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -314,7 +389,9 @@ namespace SCEEC.TTM
             if (LvVoltageRatingTextBox == null) return;
             if (LvWindingConfigComboBox == null) return;
             if (LvWindingLabelComboBox == null) return;
-            changed = true;
+            if (MvBushingCheckBox == null) return;
+            if (LvBushingCheckBox == null) return;
+
             if (WindingNumComboBox.SelectedIndex == 1)
             {
                 LvPowerRatingLabel.Visibility = Visibility.Visible;
@@ -328,6 +405,26 @@ namespace SCEEC.TTM
                 if (LvWindingLabelComboBox.IsEnabled) LvWindingLabelComboBox.SelectedIndex = 11;
                 LvWindingLabelComboBox.Visibility = Visibility.Visible;
                 LVOLTCComboBoxItem.Visibility = Visibility.Visible;
+
+                twodockpanel1.Visibility = Visibility.Visible;
+                twodockpanel2.Visibility = Visibility.Visible;
+                twodockpanel3.Visibility = Visibility.Visible;
+                twodockpanel4.Visibility = Visibility.Visible;
+
+
+                controlcombobox();
+                LoadCombobox();
+
+                MvBushingCheckBox.Visibility = Visibility.Visible;
+                LvBushingCheckBox.Visibility = Visibility.Collapsed;
+                if (coulpcombobox != null)
+                {
+                    hv_lv_wind.Visibility = Visibility.Visible;
+                    hv_mv_wind.Visibility = Visibility.Visible;
+                    mv_lv_wind.Visibility = Visibility.Visible;
+                    coulpcombobox.SelectedIndex = 0;
+                }
+                ControlCoulpCombobox();
             }
             else
             {
@@ -342,7 +439,149 @@ namespace SCEEC.TTM
                 LvWindingLabelComboBox.SelectedIndex = -1;
                 LvWindingLabelComboBox.Visibility = Visibility.Collapsed;
                 LVOLTCComboBoxItem.Visibility = Visibility.Collapsed;
+                twodockpanel1.Visibility = Visibility.Collapsed;
+                twodockpanel2.Visibility = Visibility.Collapsed;
+                twodockpanel3.Visibility = Visibility.Collapsed;
+                twodockpanel4.Visibility = Visibility.Collapsed;
+
+                MvBushingCheckBox.Visibility = Visibility.Collapsed;
+                LvBushingCheckBox.Visibility = Visibility.Visible;
+
+                if (coulpcombobox != null)
+                {
+                    hv_lv_wind.Visibility = Visibility.Collapsed;
+                    hv_mv_wind.Visibility = Visibility.Collapsed;
+                    mv_lv_wind.Visibility = Visibility.Collapsed;
+                    coulpcombobox.SelectedIndex = 0;
+                }
+
             }
+
+            changed = true;
+        }
+
+        private void LoadCombobox()
+        {
+            if (MvWindingLabelComboBox == null) return;
+            if (LvWindingLabelComboBox == null) return;
+            var data = MvWindingLabelComboBox.Items[0] as ComboBoxItem;
+            if (data.Visibility == Visibility.Visible)
+            {
+                MvWindingLabelComboBox.SelectedIndex = 0;
+            }
+            else
+            {
+                MvWindingLabelComboBox.SelectedIndex = 1;
+            }
+
+            var data1 = LvWindingLabelComboBox.Items[0] as ComboBoxItem;
+            if (data1.Visibility == Visibility.Visible)
+            {
+                LvWindingLabelComboBox.SelectedIndex = 0;
+            }
+            else
+            {
+                LvWindingLabelComboBox.SelectedIndex = 1;
+            }
+        }
+
+        private void controlcombobox(int flag = 0)
+        {
+            if (HvWindingConfigComboBox == null) return;
+            if (MvWindingConfigComboBox == null) return;
+            if (LvWindingConfigComboBox == null) return;
+            if (MvWindingLabelComboBox == null) return;
+            if (LvWindingLabelComboBox == null) return;
+            if (WindingNumComboBox != null && WindingNumComboBox.SelectedIndex == 0)
+            {
+                foreach (var item in MvWindingLabelComboBox.Items)
+                {
+                    var da = item as ComboBoxItem;
+                    da.Visibility = Visibility.Visible;
+                }
+                return;
+            }
+            if (flag == 0 || flag == 1)
+            {
+                if (HvWindingConfigComboBox.SelectedValue != null && HvWindingConfigComboBox.SelectedValue.ToString().Split(':')[1].Trim().ToCharArray()[0].ToString().ToUpper() ==
+         MvWindingConfigComboBox.SelectedValue.ToString().Split(':')[1].Trim().ToCharArray()[0].ToString().ToUpper())
+                {
+                    int i = 0;
+                    foreach (var item in MvWindingLabelComboBox.Items)
+                    {
+                        var data = item as ComboBoxItem;
+                        if (i % 2 == 0)
+                        {
+                            data.Visibility = Visibility.Visible;
+
+                        }
+                        else
+                        {
+                            data.Visibility = Visibility.Collapsed;
+                        }
+                        i++;
+                    }
+                }
+                else
+                {
+                    int i = 0;
+                    foreach (var item in MvWindingLabelComboBox.Items)
+                    {
+                        var data = item as ComboBoxItem;
+                        if (i % 2 == 0)
+                        {
+                            data.Visibility = Visibility.Collapsed;
+                        }
+                        else
+                        {
+                            data.Visibility = Visibility.Visible;
+                        }
+                        i++;
+                    }
+
+                }
+            }
+            if (flag == 0 || flag == 2)
+            {
+                string[] lowdata = { "yn", "y", "d" };
+                if (HvWindingConfigComboBox.SelectedValue.ToString().Split(':')[1].Trim().ToCharArray()[0].ToString().ToUpper() ==
+             lowdata[LvWindingConfigComboBox.SelectedIndex].ToUpper().ToCharArray()[0].ToString())
+                {
+                    int i = 0;
+                    foreach (var item in LvWindingLabelComboBox.Items)
+                    {
+                        var data = item as ComboBoxItem;
+                        if (i % 2 == 0)
+                        {
+                            data.Visibility = Visibility.Visible;
+                        }
+                        else
+                        {
+                            data.Visibility = Visibility.Collapsed;
+                        }
+                        i++;
+                    }
+                }
+                else
+                {
+                    int i = 0;
+                    foreach (var item in LvWindingLabelComboBox.Items)
+                    {
+                        var data = item as ComboBoxItem;
+                        if (i % 2 == 0)
+                        {
+                            data.Visibility = Visibility.Collapsed;
+                        }
+                        else
+                        {
+                            data.Visibility = Visibility.Visible;
+                        }
+                        i++;
+                    }
+                }
+            }
+            LoadCombobox();
+            changed = true;
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
@@ -557,6 +796,262 @@ namespace SCEEC.TTM
             if (OLTCMulTapNumComboBox == null)
                 return;
 
+        }
+        private void TextChanged(object sender, SelectionChangedEventArgs e)
+        {
+            controlcombobox();
+
+
+            changed = true;
+        }
+
+        //private void coulpchanged()
+        //{
+        //    Hv_Mv.Visibility = Visibility.Collapsed;
+        //    Hv_Lv.Visibility = Visibility.Collapsed;
+        //    Mv_Lv.Visibility = Visibility.Collapsed;
+        //    AllWind.Visibility = Visibility.Collapsed;
+        //    bool zeroOrSixIsOk = false;
+        //    if (MvWindingLabelComboBox != null && WindingNumComboBox.SelectedIndex == 1)
+        //    {
+        //        if (MvWindingLabelComboBox.SelectedIndex.ToString().Trim() == "0" || MvWindingLabelComboBox.SelectedIndex.ToString().Trim() == "6")
+        //        {
+        //            zeroOrSixIsOk = true;
+        //        }
+        //        //高中自耦
+        //        if (zeroOrSixIsOk)
+        //            Hv_Mv.Visibility = Visibility.Visible;
+        //        else
+        //        {
+        //            Hv_Mv.Visibility = Visibility.Collapsed;
+        //            Hv_Lv.Visibility = Visibility.Collapsed;
+        //            Mv_Lv.Visibility = Visibility.Collapsed;
+        //            AllWind.Visibility = Visibility.Collapsed;
+        //        }
+        //    }
+
+        //    bool isexit = false;
+        //    if (LvWindingLabelComboBox != null && WindingNumComboBox.SelectedIndex == 1)
+        //    {
+
+        //        if (LvWindingLabelComboBox.SelectedIndex.ToString().Trim() == "0" || LvWindingLabelComboBox.SelectedIndex.ToString().Trim() == "6")
+        //        {
+        //            isexit = true;
+        //        }
+        //        //高低自耦
+        //        if (isexit)
+        //            Hv_Lv.Visibility = Visibility.Visible;
+        //        else
+        //        {
+        //            Hv_Lv.Visibility = Visibility.Collapsed;
+        //            Mv_Lv.Visibility = Visibility.Collapsed;
+        //            AllWind.Visibility = Visibility.Collapsed;
+        //        }
+        //        if (isexit && zeroOrSixIsOk)
+        //        {
+        //            Hv_Mv.Visibility = Visibility.Visible;
+        //            Hv_Lv.Visibility = Visibility.Visible;
+        //            Mv_Lv.Visibility = Visibility.Visible;
+        //            AllWind.Visibility = Visibility.Visible;
+        //        }
+        //    }
+        //}
+
+        private void Mv_selectchange(object sender, SelectionChangedEventArgs e)
+        {
+            controlcombobox(1);
+        }
+
+        private void Lv_change(object sender, SelectionChangedEventArgs e)
+        {
+            controlcombobox(2);
+        }
+
+        private void ControlCoulpCombobox()
+        {
+            bool MvIsContain = false;
+            bool LvIsContain = false;
+            bool Mulcontain = false;
+            if (hv_mv_wind != null && MvWindingLabelComboBox != null)
+            {
+                hv_mv_wind.Visibility = Visibility.Collapsed;
+                foreach (var item in MvWindingLabelComboBox.Items)
+                {
+                    var data = item as ComboBoxItem;
+                    if (data.Visibility == Visibility.Visible && (data.Content.ToString().Contains("0") || data.Content.ToString().Contains("6")))
+                    {
+                        MvIsContain = true;
+                        hv_mv_wind.Visibility = Visibility.Visible;
+                        break;
+                    }
+                }
+            }
+            if (hv_lv_wind != null && LvWindingLabelComboBox != null && LvWindingLabelComboBox.Visibility == Visibility.Visible)
+            {
+                hv_lv_wind.Visibility = Visibility.Collapsed;
+                foreach (var item in LvWindingLabelComboBox.Items)
+                {
+                    var data = item as ComboBoxItem;
+                    if (data.Visibility == Visibility.Visible && (data.Content.ToString().Contains("0") || data.Content.ToString().Contains("6")))
+                    {
+                        LvIsContain = true;
+                        hv_lv_wind.Visibility = Visibility.Visible;
+                        break;
+                    }
+                }
+            }
+            if (mv_lv_wind != null && MvWindingLabelComboBox != null && LvWindingLabelComboBox != null && LvWindingLabelComboBox.Visibility == Visibility.Visible)
+            {
+                mv_lv_wind.Visibility = Visibility.Collapsed;
+                var p = MvWindingLabelComboBox.SelectedIndex - LvWindingLabelComboBox.SelectedIndex;
+                if (p == 0 || p == 6 || p == -6)
+                {
+                    mv_lv_wind.Visibility = Visibility.Visible;
+                    Mulcontain = true;
+                }
+            }
+            if (hv_mv_wind != null && hv_lv_wind != null && mv_lv_wind != null && All_wind != null && MvIsContain && LvIsContain && Mulcontain)
+            {
+                hv_mv_wind.Visibility = Visibility.Visible;
+                hv_lv_wind.Visibility = Visibility.Visible;
+                mv_lv_wind.Visibility = Visibility.Visible;
+                All_wind.Visibility = Visibility.Visible;
+            }
+            changed = true;
+        }
+
+        private void Mv_label_change(object sender, SelectionChangedEventArgs e)
+        {
+            //if (MvWindingLabelComboBox == null) return;
+            //if (Hv_Mv == null) return;
+            //if (Hv_Lv == null) return;
+            //if (Mv_Lv == null) return;
+            //if (AllWind == null) return;
+            //coulpchanged();
+
+            ControlCoulpCombobox();
+        }
+
+        private void MvBushingCheckBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (WindingNumComboBox != null && WindingNumComboBox.SelectedIndex == 1)
+            {
+                MvBushingCheckBox.Visibility = Visibility.Visible;
+            }
+            if (WindingNumComboBox != null && WindingNumComboBox.SelectedIndex == 0)
+            {
+                MvBushingCheckBox.Visibility = Visibility.Collapsed;
+            }
+            if (MvBushingCheckBox != null && Mv_bushing_groupbox != null)
+            {
+                if ((bool)MvBushingCheckBox.IsChecked)
+                    Mv_bushing_groupbox.Visibility = Visibility.Visible;
+                else
+                    Mv_bushing_groupbox.Visibility = Visibility.Collapsed;
+            }
+            changed = true;
+
+        }
+
+        private void LvBushingCheckBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (WindingNumComboBox != null && WindingNumComboBox.SelectedIndex == 1)
+            {
+                LvBushingCheckBox.Visibility = Visibility.Collapsed;
+            }
+            if (WindingNumComboBox != null && WindingNumComboBox.SelectedIndex == 0)
+            {
+                LvBushingCheckBox.Visibility = Visibility.Visible;
+            }
+
+            if (LvBushingCheckBox != null && Lv_bushing_groupbox != null)
+            {
+                if ((bool)LvBushingCheckBox.IsChecked)
+                    Lv_bushing_groupbox.Visibility = Visibility.Visible;
+                else
+                    Lv_bushing_groupbox.Visibility = Visibility.Collapsed;
+            }
+            changed = true;
+
+        }
+
+        private void HvBushingCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            if (HvBushingCheckBox != null)
+                Hv_bushing_groupbox.Visibility = Visibility.Visible;
+            changed = true;
+        }
+
+        private void HvBushingCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (HvBushingCheckBox != null)
+                Hv_bushing_groupbox.Visibility = Visibility.Collapsed;
+            changed = true;
+
+        }
+        private void MvBushingCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+
+            if (MvBushingCheckBox != null)
+                Mv_bushing_groupbox.Visibility = Visibility.Visible;
+            changed = true;
+        }
+
+        private void MvBushingCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (MvBushingCheckBox != null)
+                Mv_bushing_groupbox.Visibility = Visibility.Collapsed;
+            changed = true;
+
+        }
+        private void LvBushingCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+
+            if (LvBushingCheckBox != null)
+                Lv_bushing_groupbox.Visibility = Visibility.Visible;
+            changed = true;
+        }
+
+        private void LvBushingCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (LvBushingCheckBox != null)
+                Lv_bushing_groupbox.Visibility = Visibility.Collapsed;
+            changed = true;
+
+        }
+
+        private void HvBushingCheckBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (HvBushingCheckBox != null && Hv_bushing_groupbox != null)
+            {
+                if ((bool)HvBushingCheckBox.IsChecked)
+                    Hv_bushing_groupbox.Visibility = Visibility.Visible;
+                else
+                    Hv_bushing_groupbox.Visibility = Visibility.Collapsed;
+            }
+
+            changed = true;
+        }
+
+        private void MvBushingCheckBox_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (MvBushingCheckBox != null && MvBushingCheckBox.Visibility == Visibility.Collapsed)
+            {
+                MvBushingCheckBox.IsChecked = false;
+            }
+        }
+
+        private void LvBushingCheckBox_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (LvBushingCheckBox != null && LvBushingCheckBox.Visibility == Visibility.Collapsed)
+            {
+                LvBushingCheckBox.IsChecked = false;
+            }
+        }
+
+        private void coulpcombobox_Loaded(object sender, RoutedEventArgs e)
+        {
+            ControlCoulpCombobox();
         }
     }
 }
