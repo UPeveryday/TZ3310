@@ -801,12 +801,10 @@ namespace SCEEC.MI.TZ3310
                     var Waveform = TZ3310.GetWaveFormData();//5s
                     if (Waveform != null)
                     {
-                        mi.Result = MeasurementResult.NewOLTCSwitchingCharacterResult(mi, new PhysicalVariable[3], new PhysicalVariable[3],
-                            new PhysicalVariable[3], Waveform, false, true);
+                        //mi.Result = MeasurementResult.NewOLTCSwitchingCharacterResult(mi, new PhysicalVariable[3], new PhysicalVariable[3],
+                        //    new PhysicalVariable[3], Waveform, false, true);
                         mi.Result.waves = Waveform;
                         Thread.Sleep(50);
-                        //new TTM.Form2(Waveform, WorkingSets.local.OlTcLable, Job.Information.GetHashCode()).ShowDialog();
-                        //mi.stateText = mi.Winding + "波形读取完成";
                         mi.state++;
                     }
                     else
@@ -821,39 +819,17 @@ namespace SCEEC.MI.TZ3310
                     {
                         mi.completed = true;
                         WorkingSets.local.IsCompeleteSaveWave = false;
+                        var c = WorkingSets.local.waveret;
+                        mi.Result = MeasurementResult.NewOLTCSwitchingCharacterResult(mi,
+                            new PhysicalVariable[3] { c.AOverTime,c.AOverResistanceOne,c.AOverResistanceTwo}, 
+                            new PhysicalVariable[3] { c.BOverTime, c.BOverResistanceOne, c.BOverResistanceTwo },
+                            new PhysicalVariable[3] { c.COverTime, c.COverResistanceOne, c.COverResistanceTwo },
+                            mi.Result.waves, false, true);
                     }
                     break;
             }
 
         }
-
-        //public static void OLTCSwitchingCharacter(ref MeasurementItemStruct mi, Transformer transformer, JobList Job)
-        //{
-        //    switch (mi.state)
-        //    {
-        //        case 0:
-        //            var Waveform = TZ3310.GetWaveFormData();//5s
-        //            mi.Result = MeasurementResult.NewOLTCSwitchingCharacterResult(mi, new PhysicalVariable[3], new PhysicalVariable[3],
-        //                new PhysicalVariable[3], Waveform, false, true);
-        //            mi.Result.waves = Waveform;
-        //            Thread.Sleep(50);
-        //            mi.state++;
-        //            break;
-        //        case 1:
-        //            if (WorkingSets.local.IsCompeleteSaveWave)
-        //            {
-        //                mi.completed = true;
-        //                WorkingSets.local.IsCompeleteSaveWave = false;//是否已经人工确定保存
-
-        //                WorkingSets.local.IsShowUi = false;//继续刷新UI
-        //            }
-        //            break;
-        //    }
-          
-           
-
-        //}
-
         public static void Information(ref MeasurementItemStruct mi, Transformer transformer, JobList Job)
         {
             mi.Result = MeasurementResult.NewInformation(mi, ConvertData(Job.Information.ToString()), true);

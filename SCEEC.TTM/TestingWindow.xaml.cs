@@ -594,8 +594,23 @@ namespace SCEEC.TTM
                 tbt1.Text = GetElevationMode(getYdata(data)) + "mΩ";
                 tb2.Text = GetElevationMode(getYdata(data2)) + "mΩ";
             }
+
             if (A_time.Text != "" && B_time.Text != "" && C_time.Text != "")
+            {
                 WorkingSets.local.IsCompeleteSaveWave = true;
+                WorkingSets.local.waveret=new WorkingDB.WaveResult
+                {
+                    AOverTime = A_time.Text,
+                    AOverResistanceOne = A_resistance_1.Text,
+                    AOverResistanceTwo = A_resistance_2.Text,
+                    BOverTime =B_time.Text,
+                    BOverResistanceOne = B_resistance_1.Text,
+                    BOverResistanceTwo = B_resistance_2.Text,
+                    COverTime = C_time.Text,
+                    COverResistanceOne = C_resistance_1.Text,
+                    COverResistanceTwo = C_resistance_2.Text
+                };
+            }
         }
 
         List<int> getYdata(IEnumerable<ObservablePoint> data)
@@ -689,4 +704,8 @@ namespace SCEEC.TTM
             InitCreateChart();
         }
     }
+
+
+
+
 }

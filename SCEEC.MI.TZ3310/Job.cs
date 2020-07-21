@@ -748,8 +748,6 @@ namespace SCEEC.MI.TZ3310
                         try { row["waves"] = System.Convert.ToBase64String(Array2Bytes(result.waves)); } catch { }
                 }
             }
-
-
             return row;
         }
 

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
+using SCEEC.Numerics;
 
 namespace SCEEC.MI.TZ3310
 {
@@ -188,8 +189,7 @@ namespace SCEEC.MI.TZ3310
         public SCEEC.MI.TZ3310.ClassTz3310 Tz3310;
 
         public bool IsCompeleteSaveWave = false;
-
-
+        public WaveResult waveret;
         public bool IsShowUi = false;
         public WorkingDB()
         {
@@ -401,6 +401,22 @@ namespace SCEEC.MI.TZ3310
                 AllId.Add(int.Parse(row["id"].ToString()));
             }
             return AllId;
+        }
+
+
+        public struct WaveResult
+        {
+            public PhysicalVariable AOverTime;
+            public PhysicalVariable AOverResistanceOne;
+            public PhysicalVariable AOverResistanceTwo;
+            public PhysicalVariable BOverTime;
+            public PhysicalVariable BOverResistanceOne;
+            public PhysicalVariable BOverResistanceTwo;
+            public PhysicalVariable COverTime;
+            public PhysicalVariable COverResistanceOne;
+            public PhysicalVariable COverResistanceTwo;
+            public string OLTcNum;
+            public string WaveName;
         }
 
         public int getLocationID(string name)
@@ -977,8 +993,6 @@ namespace SCEEC.MI.TZ3310
             return ls;
         }
 
-
-
         public TestingWorkerSender getTestResultsbyid(string s)
         {
             WorkingSets.local.refreshTestResults();
@@ -1028,13 +1042,6 @@ namespace SCEEC.MI.TZ3310
 
             return tws;
         }
-
-
-
-
-
-
-
         public TestingWorkerSender getTestResults1(string s)
         {
             WorkingSets.local.refreshTestResults();
