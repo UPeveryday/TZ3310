@@ -817,14 +817,15 @@ namespace SCEEC.MI.TZ3310
                 case 5:
                     if (WorkingSets.local.IsCompeleteSaveWave)
                     {
-                        mi.completed = true;
-                        WorkingSets.local.IsCompeleteSaveWave = false;
                         var c = WorkingSets.local.waveret;
                         mi.Result = MeasurementResult.NewOLTCSwitchingCharacterResult(mi,
                             new PhysicalVariable[3] { c.AOverTime,c.AOverResistanceOne,c.AOverResistanceTwo}, 
                             new PhysicalVariable[3] { c.BOverTime, c.BOverResistanceOne, c.BOverResistanceTwo },
                             new PhysicalVariable[3] { c.COverTime, c.COverResistanceOne, c.COverResistanceTwo },
                             mi.Result.waves, false, true);
+
+                        mi.completed = true;
+                        WorkingSets.local.IsCompeleteSaveWave = false;
                     }
                     break;
             }
@@ -848,7 +849,6 @@ namespace SCEEC.MI.TZ3310
         {
 
         }
-
 
         public static bool Closecurrent(int Idetify)
         {

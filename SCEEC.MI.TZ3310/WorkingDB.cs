@@ -1053,7 +1053,7 @@ namespace SCEEC.MI.TZ3310
             foreach (var r in rows)
             {
                 var ji = JobInformation.FromString((string)r["waves"]);
-                if ((ji.testingName + "(" + ji.testingTime.ToString("yyyy-MM-dd") + ")") == s)
+                if ((ji.testingName + "(" + ji.testingTime.ToString("yyyy-MM-dd") + ")") == s.Split('=')[0])
                 {
                     testid = (int)r["testid"];//原
                     testid = ji.GetHashCode();

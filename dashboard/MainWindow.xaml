@@ -9,7 +9,7 @@
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid Background="#333337">
+    <!--<Grid Background="#333337">
         <TextBlock x:Name="Aoltcavalue" Visibility="Hidden">400GΩ</TextBlock>
         
        
@@ -27,9 +27,9 @@
                     </StackPanel>
                 </DataTemplate>
             </WPF.UI:Dashboard.ContentTemplate>
-        </WPF.UI:Dashboard>
+        </WPF.UI:Dashboard>-->
 
-        <!--<lvc:CartesianChart  Name="control5"  Series="{Binding LcCurrentVolate}" SizeChanged="control5_SizeChanged"
+    <!--<lvc:CartesianChart  Name="control5"  Series="{Binding LcCurrentVolate}" SizeChanged="control5_SizeChanged"
                              >
             <lvc:CartesianChart.AxisX>
                 <lvc:Axis   Foreground="Black"   LabelFormatter="{Binding XFormatter}"   Title="&#x000A;电流">
@@ -50,8 +50,21 @@
            
             
         </lvc:CartesianChart>-->
-        <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="32,10,0,0" VerticalAlignment="Top" Width="75" Click="button_Click"/>
+    <!--<Button x:Name="button" Content="Button" HorizontalAlignment="Left" Margin="32,10,0,0" VerticalAlignment="Top" Width="75" Click="button_Click"/>
+        <GridSplitter x:Name="gridSplitter" HorizontalAlignment="Left" Height="100" Margin="192,256,0,0" VerticalAlignment="Top" Width="5"/>-->
 
 
+    <!--</Grid>-->
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <GridSplitter Width="5"  Foreground="Aquamarine" Grid.Column="0" Background="Aqua"></GridSplitter>
+        <Button></Button>
+        <Button Grid.Column="0" Width="200"></Button>
+        <Button Grid.Column="2"  Width="200"></Button>
+        <ToolBarPanel HorizontalAlignment="Left" Height="242" Margin="47,119,0,0" VerticalAlignment="Top" Width="341" Grid.ColumnSpan="2"/>
     </Grid>
 </Window>

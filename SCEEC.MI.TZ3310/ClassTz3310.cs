@@ -797,17 +797,13 @@ namespace SCEEC.MI.TZ3310
                 for (int i = 0; i < 6000; i++)
                 {
                     T2[i] = BitConverter.ToInt16(T1, i * 2);
-
                 }
                 T2[6000] = T1[12000];
                 T2[6001] = T1[12001];
                 for (int j = 0; j < 6002; j++)
                 {
                     ParsingDaTa[j] = T2[j];//A
-
                 }
-
-
             });
 
             t1.Start();

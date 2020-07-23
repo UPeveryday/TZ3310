@@ -548,18 +548,29 @@ namespace SCEEC.TTM
             LcCurrentVolate.Add(t1);
             //  XFormatter = val => (val).ToString("N2") + "A";
             YFormatter = val => (val).ToString("N2") + " V";
-            Application.Current.Dispatcher.Invoke(() =>
+            this.Dispatcher.InvokeAsync((delegate
             {
                 if (control5.Series != null)
                 {
-                    control5.Series.Clear();
+                    //     control5.Series.Clear();
                     control5.Series = LcCurrentVolate;
                 }
-            });
+
+            }));
+      
         }
 
         private void UIElement_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
+            foreach (var item in points)
+            {
+                if (item == null)
+                {
+                    MessageBox.Show("需要完成四个游标", "警告", MessageBoxButton.OK);
+                    return;
+                }
+            }
+
             if (points.Any(o => o != null))
             {
                 clearline();
@@ -598,19 +609,30 @@ namespace SCEEC.TTM
             if (A_time.Text != "" && B_time.Text != "" && C_time.Text != "")
             {
                 WorkingSets.local.IsCompeleteSaveWave = true;
-                WorkingSets.local.waveret=new WorkingDB.WaveResult
+                WorkingSets.local.waveret = new WorkingDB.WaveResult
                 {
                     AOverTime = A_time.Text,
                     AOverResistanceOne = A_resistance_1.Text,
                     AOverResistanceTwo = A_resistance_2.Text,
-                    BOverTime =B_time.Text,
+                    BOverTime = B_time.Text,
                     BOverResistanceOne = B_resistance_1.Text,
                     BOverResistanceTwo = B_resistance_2.Text,
                     COverTime = C_time.Text,
                     COverResistanceOne = C_resistance_1.Text,
                     COverResistanceTwo = C_resistance_2.Text
                 };
+
+                A_time.Text = "";
+                A_resistance_1.Text = "";
+                A_resistance_2.Text = "";
+                B_time.Text = "";
+                B_resistance_1.Text = "";
+                B_resistance_2.Text = "";
+                C_time.Text = "";
+                C_resistance_1.Text = "";
+                C_resistance_2.Text = "";
             }
+          
         }
 
         List<int> getYdata(IEnumerable<ObservablePoint> data)

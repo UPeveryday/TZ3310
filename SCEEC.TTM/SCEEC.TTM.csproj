@@ -109,12 +109,14 @@
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UIAutomationProvider" />
     <Reference Include="WindowsBase">
       <Private>True</Private>
     </Reference>
     <Reference Include="PresentationCore">
       <Private>True</Private>
     </Reference>
+    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
