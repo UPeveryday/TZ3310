@@ -6,6 +6,7 @@ using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using SCEEC.Numerics;
+using log4net;
 
 namespace SCEEC.MI.TZ3310
 {
@@ -191,6 +192,9 @@ namespace SCEEC.MI.TZ3310
         public bool IsCompeleteSaveWave = false;
         public WaveResult waveret;
         public bool IsShowUi = false;
+
+
+        public ILog log = null; 
         public WorkingDB()
         {
             server = "localhost";

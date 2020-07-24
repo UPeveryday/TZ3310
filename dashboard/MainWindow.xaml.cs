@@ -13,65 +13,26 @@ namespace dashboard
         public MainWindow()
         {
             InitializeComponent();
-            
-            
+            //    log4net.Config.XmlConfigurator.Configure();
 
-
-            this.DataContext = this;
-
-            InitCreateChart();
-
-
-
+            byte[] data = { 0x65, 0x55, 0x22 };
+            GetBytestring(data);
         }
 
-        public Func<double, string> XFormatter { get; set; }
-        public Func<double, string> YFormatter { get; set; }
-        public SeriesCollection LcCurrentVolate { get; set; }
-        public ChartValues<ObservablePoint> TanEleVolatevalue { get; set; } = new ChartValues<ObservablePoint>();
-        public void InitCreateChart()
+        string GetBytestring(byte[] data)
         {
-            LineSeries t1 = new LineSeries
+            string ret = string.Empty;
+            for (int i = 0; i < data.Length; i++)
             {
-                StrokeThickness = 2,
-                Stroke = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(28, 142, 196)),
-                Fill = System.Windows.Media.Brushes.Transparent,
-                LineSmoothness = 10,//0为折现样式
-                PointGeometrySize = 0,
-                PointForeground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(34, 46, 49)),
-                Values = TanEleVolatevalue
-            };
-            LcCurrentVolate = new SeriesCollection { };
-            LcCurrentVolate.Add(t1);
-            XFormatter = val => (val).ToString("N3") + "A";
-            YFormatter = val => (val).ToString("N3") + " V";
-        }
-
-        private async void button_Click(object sender, RoutedEventArgs e)
-        {
-            for (int i = 0; i < 60; i++)
-            {
-
-                if (i < 12)
-                {
-                    TanEleVolatevalue.Add(new ObservablePoint(i, 1000));
-                }
-                if (i >= 12 && i < 24)
-                    TanEleVolatevalue.Add(new ObservablePoint(i, 100));
-                if (i >= 24 && i < 36)
-                    TanEleVolatevalue.Add(new ObservablePoint(i, 1000));
-                if (i >= 36 && i < 48)
-                    TanEleVolatevalue.Add(new ObservablePoint(i, 100));
-                if (i >= 48)
-                    TanEleVolatevalue.Add(new ObservablePoint(i, 1000));
-
+                ret += "0X" + Convert.ToString(data[i],16) + "  ";
             }
+            return ret;
         }
 
-        private void control5_SizeChanged(object sender, SizeChangedEventArgs e)
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            //var he = control5.ActualHeight;
-            //var we = control5.ActualWidth;
+            App.log.Info("sssss");
         }
     }
 }

@@ -63,8 +63,8 @@
         </Grid.ColumnDefinitions>
         <GridSplitter Width="5"  Foreground="Aquamarine" Grid.Column="0" Background="Aqua"></GridSplitter>
         <Button></Button>
-        <Button Grid.Column="0" Width="200"></Button>
-        <Button Grid.Column="2"  Width="200"></Button>
-        <ToolBarPanel HorizontalAlignment="Left" Height="242" Margin="47,119,0,0" VerticalAlignment="Top" Width="341" Grid.ColumnSpan="2"/>
+        <Button Grid.Column="0" Width="200" Visibility="Collapsed"></Button>
+        <Button Grid.Column="2"  Width="200" Height="50" Click="Button_Click_1">sadsadsa</Button>
+        <ToolBarPanel HorizontalAlignment="Left" Height="242"  Visibility="Collapsed" Margin="47,119,0,0" VerticalAlignment="Top" Width="341" Grid.ColumnSpan="2"/>
     </Grid>
 </Window>

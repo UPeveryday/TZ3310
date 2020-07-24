@@ -6,6 +6,7 @@ using System.Globalization;
 //using ChangeData;
 using System.Collections;
 using System.Threading;
+using SCEEC.MI.TZ3310;
 
 namespace SCEEC.NET
 {
@@ -123,26 +124,26 @@ namespace SCEEC.NET
         /// <param name="stopBits">停止位</param>
         public void setSerialPort(string comPortName, int baudRate, int dataBits, int stopBits)
         {
-                if (_seriaPort.IsOpen)
-                    _seriaPort.Close();
-                _seriaPort.PortName = comPortName;
-                _seriaPort.BaudRate = baudRate;
-                _seriaPort.Parity = Parity.None;
-                _seriaPort.DataBits = dataBits;
-                _seriaPort.StopBits = (StopBits)stopBits;
-                _seriaPort.Handshake = Handshake.None; 
-                _seriaPort.RtsEnable = false;
-                _seriaPort.ReadTimeout = 2000;
-                _seriaPort.NewLine = "/r/n";
-                // _seriaPort.NewLine = "NONE";
-                _seriaPort.ReadBufferSize = 70000;
-                _seriaPort.WriteBufferSize = 70000;
+            if (_seriaPort.IsOpen)
+                _seriaPort.Close();
+            _seriaPort.PortName = comPortName;
+            _seriaPort.BaudRate = baudRate;
+            _seriaPort.Parity = Parity.None;
+            _seriaPort.DataBits = dataBits;
+            _seriaPort.StopBits = (StopBits)stopBits;
+            _seriaPort.Handshake = Handshake.None;
+            _seriaPort.RtsEnable = false;
+            _seriaPort.ReadTimeout = 2000;
+            _seriaPort.NewLine = "/r/n";
+            // _seriaPort.NewLine = "NONE";
+            _seriaPort.ReadBufferSize = 70000;
+            _seriaPort.WriteBufferSize = 70000;
 
-                //_seriaPort.ReceivedBytesThreshold
-                // _seriaPort.ReceivedBytesThreshold = 1024;
-                // _seriaPort.NewLine = "#";
+            //_seriaPort.ReceivedBytesThreshold
+            // _seriaPort.ReceivedBytesThreshold = 1024;
+            // _seriaPort.NewLine = "#";
 
-                setSerialPort();
+            setSerialPort();
 
         }
         #endregion
@@ -312,6 +313,8 @@ namespace SCEEC.NET
                     ReceiveEventFlag = true;//关闭接收事件
                     _seriaPort.DiscardInBuffer();//清空接收缓冲区     
                     _seriaPort.Write(SendData, 0, SendData.Length);
+                    if (SCEEC.Data.Logger.log != null)
+                        SCEEC.Data.Logger.log.Info("Send:" + XmlConfig.GetBytestring(SendData));
                     int num = 0, ret = 0;
                     System.Threading.Thread.Sleep(10);
                     ReceiveEventFlag = false;//打开事件
@@ -333,6 +336,8 @@ namespace SCEEC.NET
 
                     }
 
+                    if (SCEEC.Data.Logger.log != null)
+                        SCEEC.Data.Logger.log.Info("Rec:" + XmlConfig.GetBytestring(ReceiveData));
                     return ret;
 
                 }
@@ -353,6 +358,8 @@ namespace SCEEC.NET
                     ReceiveEventFlag = true;//关闭接收事件
                     _seriaPort.DiscardInBuffer();//清空接收缓冲区     
                     _seriaPort.Write(SendData, 0, SendData.Length);
+                    if (SCEEC.Data.Logger.log != null)
+                        SCEEC.Data.Logger.log.Info("Send:" + XmlConfig.GetBytestring(SendData));
                     int num = 0, ret = 0;
                     //System.Threading.Thread.Sleep(10);
                     //ReceiveEventFlag = false;//打开事件
@@ -373,7 +380,8 @@ namespace SCEEC.NET
                         ret = _seriaPort.Read(ReceiveData, 0, _seriaPort.BytesToRead);
 
                     }
-
+                    if (SCEEC.Data.Logger.log != null)
+                        SCEEC.Data.Logger.log.Info("Rec:" + XmlConfig.GetBytestring(ReceiveData));
                     ReceiveEventFlag = true;
                     return ret;
 
@@ -397,7 +405,7 @@ namespace SCEEC.NET
         public byte[] ReadPortsData(byte[] SendData, byte[] RecData, int RecDataLength, int Timeout)
         {
             byte[] q = new byte[4] { 0x5e, 0x14, 0x07, 0xc0 };
-            float b = BitConverter.ToSingle(q,0);
+            float b = BitConverter.ToSingle(q, 0);
 
             if (_seriaPort.IsOpen)
             {
@@ -406,6 +414,8 @@ namespace SCEEC.NET
                 Thread.Sleep(10);
                 _seriaPort.DiscardInBuffer();//清空接收缓冲区     
                 if (SendData.Length != 0) _seriaPort.Write(SendData, 0, SendData.Length);
+                if (SCEEC.Data.Logger.log != null)
+                    SCEEC.Data.Logger.log.Info("Send:" + XmlConfig.GetBytestring(SendData));
                 if (RecDataLength == 0) return null;
                 if (RecDataLength != -1)
                 {
@@ -435,7 +445,14 @@ namespace SCEEC.NET
                         {
                             offset += SingalReadDataLength;
                             if (RecData.Length == RecDataLength)
+                            {
+                                if (SCEEC.Data.Logger.log != null)
+                                    SCEEC.Data.Logger.log.Info("Wave:" + XmlConfig.GetBytestring(RecData));
                                 return RecData;
+
+                            }
+
+
                             Thread.Sleep(100);
                         }
                     }

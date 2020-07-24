@@ -30,7 +30,6 @@ namespace SCEEC.TTM
         {
             InitializeComponent();
 
-
             (new SplashScreen()).ShowDialog();
             //(new LoginWindow()).ShowDialog();
 
@@ -590,9 +589,13 @@ namespace SCEEC.TTM
                 JobListBox.SelectedIndex = JobListBox.Items.IndexOf(jobHelper.jobName);
             }
         }
-
+     
         private void ExportButton_Click(object sender, RoutedEventArgs e)
         {
+
+
+
+
             InsertDataTodatabase.UpdataDatabase(TestListBox.SelectedItem.ToString());/* }*/
             InsertDataTodatabase.ShowExport(TestListBox.SelectedItem.ToString());
         }
@@ -805,6 +808,11 @@ namespace SCEEC.TTM
         private void read(object sender, RoutedEventArgs e)
         {
          var b=   WorkingSets.local.Tz3310.GetWaveFormData();
+        }
+
+        private void button1_Click(object sender, RoutedEventArgs e)
+        {
+            SCEEC.Data.Logger.log.Info("Data");
         }
     }
 }

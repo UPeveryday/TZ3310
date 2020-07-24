@@ -840,9 +840,7 @@ namespace SCEEC.MI.TZ3310
                 for (int j = 12004; j < 18006; j++)
                 {
                     ParsingDaTa[j] = T2[j - 12004];//C
-
                 }
-
             });
             t3.Start();
 

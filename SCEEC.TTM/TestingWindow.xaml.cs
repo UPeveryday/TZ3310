@@ -542,10 +542,12 @@ namespace SCEEC.TTM
                 LineSmoothness = 10,//0为折现样式
                 PointGeometrySize = 0,
                 PointForeground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(34, 46, 49)),
-                Values = TanEleVolatevalue
+                Values = TanEleVolatevalue,
             };
             LcCurrentVolate = new SeriesCollection { };
+            
             LcCurrentVolate.Add(t1);
+
             //  XFormatter = val => (val).ToString("N2") + "A";
             YFormatter = val => (val).ToString("N2") + " V";
             this.Dispatcher.InvokeAsync((delegate
