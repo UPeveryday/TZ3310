@@ -385,18 +385,18 @@
                 </GroupBox>
 
                 <Grid Grid.ColumnSpan="2" Name="Oltcgroupbox"  Margin="10" Background="#333337">
-                    <lvc:CartesianChart  DisableAnimations="True"   Margin="0 10 0 0" Name="control5"    DataClick="control5_DataClick" MouseDown="control5_MouseDown"  >
-                        <lvc:CartesianChart.AxisX >
-                            <lvc:Axis    Foreground="White"   Position="RightTop"  LabelFormatter="{Binding XFormatter}"   >
-                                <lvc:Axis.Separator>
-                                    <lvc:Separator     Stroke="Gray" StrokeThickness="0.4"/>
-                                </lvc:Axis.Separator>
-                            </lvc:Axis>
-                        </lvc:CartesianChart.AxisX>
-                        <lvc:CartesianChart.AxisY >
-                            <lvc:Axis Foreground="White" Position="LeftBottom"     LabelFormatter="{Binding YFormatter}"   Title="电阻">
+                    <lvc:CartesianChart   DisableAnimations="True"  Margin="0 10 0 0" Name="control5"    DataClick="control5_DataClick" MouseDown="control5_MouseDown"  >
+                        <lvc:CartesianChart.AxisX  >
+                            <lvc:Axis    Foreground="White"    Position="RightTop"   DisableAnimations="True"  LabelFormatter="{Binding XFormatter}"   >
                                 <lvc:Axis.Separator>
                                     <lvc:Separator   Stroke="Gray" StrokeThickness="0.4"/>
+                                </lvc:Axis.Separator>
+                            </lvc:Axis>
+                        </lvc:CartesianChart.AxisX >
+                        <lvc:CartesianChart.AxisY  >
+                            <lvc:Axis Foreground="White"   Position="LeftBottom"  DisableAnimations="True"  LabelFormatter="{Binding YFormatter}"   Title="电阻">
+                                <lvc:Axis.Separator>
+                                    <lvc:Separator    Stroke="Gray" StrokeThickness="0.4"/>
                                 </lvc:Axis.Separator>
                             </lvc:Axis>
                         </lvc:CartesianChart.AxisY>

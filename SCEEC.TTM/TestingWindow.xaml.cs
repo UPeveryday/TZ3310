@@ -307,15 +307,15 @@ namespace SCEEC.TTM
                 }
                 for (int s = start; s < end; s++)
                 {
-                    if (waves[6000].ToString() == "1")
+                    if (waves[end].ToString() == "1")
                         waves[s] = (short)(waves[s] * 500d / 32768d);
-                    if (waves[6000].ToString() == "2")
+                    if (waves[end].ToString() == "2")
                         waves[s] = (short)(waves[s] * 1000d / 32768d);
-                    if (waves[6000].ToString() == "3")
+                    if (waves[end].ToString() == "3")
                         waves[s] = (short)(waves[s] * 5000d / 32768d);
-                    if (waves[6000].ToString() == "4")
+                    if (waves[end].ToString() == "4")
                         waves[s] = (short)(waves[s] * 10000d / 32768d);
-                    if (waves[6000].ToString() == "5")
+                    if (waves[end].ToString() == "5")
                         waves[s] = (short)(waves[s] * 50000d / 32768d);
                     ret[i].Add(new ObservablePoint { X = s - 6002 * i + 1, Y = waves[s] });
                 }
