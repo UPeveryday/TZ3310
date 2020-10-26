@@ -20,15 +20,7 @@ namespace test
 
         private void button1_Click(object sender, EventArgs e)
         {
-            try
-            {
-                //DoReport.Run(ReportOperator.Design, "1869295007");
-                DoReport.Run(ReportOperator.Design, "-1037363139");
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+          
         }
     }
 }

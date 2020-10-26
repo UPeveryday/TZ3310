@@ -1034,7 +1034,7 @@ namespace SCEEC.MI.TZ3310
         }
         public static void UpdataDatabase(string ResultName)
         {
-            WorkingSets.local.DeleteAllExportTable(ResultName);//删除原表数据
+          //  WorkingSets.local.DeleteAllExportTable(ResultName);//删除原表数据
             CreateTableHead(ResultName);//创建新表头，表头哈希代码不同需要新的表头检索
             CreateParameterInformation(ResultName);
             CreateSampleInformation(ResultName);

@@ -84,6 +84,10 @@
       <Project>{69ABFCE5-0E0D-49E1-8972-90ABFE8CD9C4}</Project>
       <Name>HNReport</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SCEEC.Numerics\SCEEC.Numerics.csproj">
+      <Project>{9a4b3d86-6679-4d42-a5f3-f917dedf2261}</Project>
+      <Name>SCEEC.Numerics</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

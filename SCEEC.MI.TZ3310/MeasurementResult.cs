@@ -14,7 +14,7 @@ namespace SCEEC.MI.TZ3310
         public readonly PhysicalVariable[] values;
         public readonly DateTime recordTime;
         public readonly bool processing;
-        public readonly short[] waves;
+        public  short[] waves;
         public readonly bool readyToTrigger;
         public readonly short[] Usermessage;
 

@@ -6,11 +6,22 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Collections.Specialized;
 using System.Configuration;
+using log4net;
 
 namespace SCEEC.MI.TZ3310
 {
     public static class XmlConfig
     {
+
+        public static string GetBytestring(byte[] data)
+        {
+            string ret = string.Empty;
+            for (int i = 0; i < data.Length; i++)
+            {
+                ret += "0X" + Convert.ToString(data[i], 16) + "  ";
+            }
+            return ret;
+        }
         /// <summary>
         /// 更新ADD节点的值
         /// </summary>
