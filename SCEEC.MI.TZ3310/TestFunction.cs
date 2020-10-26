@@ -169,7 +169,7 @@ namespace SCEEC.MI.TZ3310
                             }
                             else
                             {
-                                //  mi.failed = true;
+                                 mi.failed = true;
                                 mi.completed = true;
                                 mi.stateText = mi.Winding + "错误类型：" + Recbuffer[0].ToString();
                             }
@@ -186,8 +186,6 @@ namespace SCEEC.MI.TZ3310
                                 PhysicalVariable[] Current = { NumericsConverter.Text2Value(Recbuffer1[1]), NumericsConverter.Text2Value(Recbuffer1[4]), NumericsConverter.Text2Value(Recbuffer1[7]) };
                                 PhysicalVariable[] Resistance = { NumericsConverter.Text2Value(Recbuffer1[2]), NumericsConverter.Text2Value(Recbuffer1[5]), NumericsConverter.Text2Value(Recbuffer1[8]) };
                                 mi.Result = MeasurementResult.NewDCResistanceResult(mi, Voltage, Current, Resistance, false);
-                                #region
-                                #endregion
                                 if (WorkingSets.local.IsStable == true)
                                 {
                                     WorkingSets.local.IsStable = false;
@@ -203,56 +201,17 @@ namespace SCEEC.MI.TZ3310
                     case 3:
                         string[] Recbuffer2 = TZ3310.ReadTestData(Parameter.TestKind.直流电阻);
                         Thread.Sleep(150);
-
                         if (Recbuffer2 != null)
                         {
-                           
-                                Thread.Sleep(150);
-                                if (sender.MeasurementItems.Length != (sender.CurrentItemIndex + 1))
-                                {
-                                    if (sender.MeasurementItems[sender.CurrentItemIndex + 1].Winding != WindingType.HV ||
-                                   sender.MeasurementItems[sender.CurrentItemIndex + 1].Terimal != sender.MeasurementItems[sender.CurrentItemIndex].Terimal ||
-                                   mi.WindingConfig != TransformerWindingConfigName.Yn ||
-                                   sender.MeasurementItems[sender.CurrentItemIndex].Winding != WindingType.HV ||
-                                  sender.MeasurementItems[sender.CurrentItemIndex + 1].WindingConfig != TransformerWindingConfigName.Yn)
-                                    {
-                                        if (Recbuffer2[Recbuffer2.Length - 1] == "1")
-                                        {
-                                            mi.stateText = mi.Winding + "直流电阻测试完成";
-                                            if (!WorkingSets.local.FDEND)
-                                            {
-                                                TZ3310.ShutDownOutCurrent(0);
-                                                    WorkingSets.local.FDEND = true;
-                                            }
-                                            else
-                                            {
-                                                string[] readdata = TZ3310.ReadTestData(Parameter.TestKind.读取放电数据);
-                                                if (readdata[0] == "2")
-                                                {
-                                                    WorkingSets.local.FDEND = false;
-                                                    Thread.Sleep(1000);
-                                                    mi.stateText = mi.Winding + "直流电阻放电完成";
-                                                    mi.completed = true;
-                                                }
-                                                // mi.stateText = mi.Winding + "直流电阻正在放电..";
 
-                                            }
-                                        }
-                                        else
-                                        {
-                                            mi.failed = true;
-                                            mi.completed = true;
-                                            mi.stateText = mi.Winding + "错误类型：" + Recbuffer2[0].ToString();//临时
-
-                                        }
-                                    }
-                                    else
-                                    {
-                                        mi.completed = true;
-                                        mi.stateText = "直流电阻测试完成";
-                                    }
-                                }
-                                else
+                            Thread.Sleep(150);
+                            if (sender.MeasurementItems.Length != (sender.CurrentItemIndex + 1))
+                            {
+                                if (sender.MeasurementItems[sender.CurrentItemIndex + 1].Winding != WindingType.HV ||
+                               sender.MeasurementItems[sender.CurrentItemIndex + 1].Terimal != sender.MeasurementItems[sender.CurrentItemIndex].Terimal ||
+                               mi.WindingConfig != TransformerWindingConfigName.Yn ||
+                               sender.MeasurementItems[sender.CurrentItemIndex].Winding != WindingType.HV ||
+                              sender.MeasurementItems[sender.CurrentItemIndex + 1].WindingConfig != TransformerWindingConfigName.Yn)
                                 {
                                     if (Recbuffer2[Recbuffer2.Length - 1] == "1")
                                     {
@@ -278,13 +237,57 @@ namespace SCEEC.MI.TZ3310
                                     }
                                     else
                                     {
+                                        string[] readdata = TZ3310.ReadTestData(Parameter.TestKind.读取放电数据);
+                                        if (readdata[0] == "2")
+                                        {
+                                            Thread.Sleep(200);
+                                            mi.stateText = mi.Winding + "直流电阻放电完成";
+                                        }
                                         mi.failed = true;
                                         mi.completed = true;
                                         mi.stateText = mi.Winding + "错误类型：" + Recbuffer2[0].ToString();//临时
 
                                     }
                                 }
- 
+                                else
+                                {
+                                    mi.completed = true;
+                                    mi.stateText = "直流电阻测试完成";
+                                }
+                            }
+                            else
+                            {
+                                if (Recbuffer2[Recbuffer2.Length - 1] == "1")
+                                {
+                                    mi.stateText = mi.Winding + "直流电阻测试完成";
+                                    if (!WorkingSets.local.FDEND)
+                                    {
+                                        TZ3310.ShutDownOutCurrent(0);
+                                        WorkingSets.local.FDEND = true;
+                                    }
+                                    else
+                                    {
+                                        string[] readdata = TZ3310.ReadTestData(Parameter.TestKind.读取放电数据);
+                                        if (readdata[0] == "2")
+                                        {
+                                            WorkingSets.local.FDEND = false;
+                                            Thread.Sleep(1000);
+                                            mi.stateText = mi.Winding + "直流电阻放电完成";
+                                            mi.completed = true;
+                                        }
+                                        // mi.stateText = mi.Winding + "直流电阻正在放电..";
+
+                                    }
+                                }
+                                else
+                                {
+                                    mi.failed = true;
+                                    mi.completed = true;
+                                    mi.stateText = mi.Winding + "错误类型：" + Recbuffer2[0].ToString();//临时
+
+                                }
+                            }
+
                             //if (sender.MeasurementItems[sender.CurrentItemIndex + 1].Winding != WindingType.HV && sender.MeasurementItems[sender.CurrentItemIndex + 1].Terimal != sender.MeasurementItems[sender.CurrentItemIndex].Terimal && mi.WindingConfig != TransformerWindingConfigName.Yn)
                             //{
                             //    if (Recbuffer2[Recbuffer2.Length - 1] == "1")
@@ -385,128 +388,82 @@ namespace SCEEC.MI.TZ3310
                         break;
                     case 2:
                         string[] Recbuffer1 = TZ3310.ReadTestData(Parameter.TestKind.直流电阻);
-                        Thread.Sleep(150);
-                        try
+                        if (Recbuffer1 != null)
                         {
-                            if (Recbuffer1 != null)
+                            if (Recbuffer1[Recbuffer1.Length - 1] == "0")
                             {
-                                if (Recbuffer1[Recbuffer1.Length - 1] == "0")
+                                PhysicalVariable[] Voltage = { Recbuffer1[0], Recbuffer1[3], Recbuffer1[6] };
+                                PhysicalVariable[] Current = { Recbuffer1[1], Recbuffer1[4], Recbuffer1[7] };
+                                PhysicalVariable[] Resistance = { Recbuffer1[2], Recbuffer1[5], Recbuffer1[8] };
+                                mi.Result = MeasurementResult.NewDCResistanceResult(mi, Voltage, Current, Resistance, false);
+                                if (mi.WindingConfig == TransformerWindingConfigName.Y || mi.WindingConfig == TransformerWindingConfigName.D)
                                 {
-                                    PhysicalVariable[] Voltage = { Recbuffer1[0], Recbuffer1[3], Recbuffer1[6] };
-                                    PhysicalVariable[] Current = { Recbuffer1[1], Recbuffer1[4], Recbuffer1[7] };
-                                    PhysicalVariable[] Resistance = { Recbuffer1[2], Recbuffer1[5], Recbuffer1[8] };
-                                    mi.Result = MeasurementResult.NewDCResistanceResult(mi, Voltage, Current, Resistance, false);
-                                    if (mi.WindingConfig == TransformerWindingConfigName.Y || mi.WindingConfig == TransformerWindingConfigName.D)
+                                    if (WorkingSets.local.IsStable == true)
                                     {
-                                        if (WorkingSets.local.IsStable == true)
-                                        {
-                                            if (WorkingSets.local.IsSingalTest < 3)
-                                            {
-                                                mi.Result = MeasurementResult.NewDCResistanceResult(mi, Voltage, Current, Resistance, true);
-                                                TZ3310.InterRuptMe(Parameter.CommanTest.判断直流电阻稳定状态);
-                                                TZ3310.ShutDownOutCurrent(0);
-                                                Thread.Sleep(300);
-                                                WorkingSets.local.IsStable = false;
-                                                WorkingSets.local.IsSingalTest++;
-                                                string tpd = string.Empty;
-                                                if (WorkingSets.local.IsSingalTest == 0)
-                                                    tpd = "A0";
-                                                if (WorkingSets.local.IsSingalTest == 1)
-                                                    tpd = "B0";
-                                                if (WorkingSets.local.IsSingalTest == 2)
-                                                    tpd = "C0";
-                                                mi.stateText = "等待" + tpd + "确认稳定...";//临时
-                                                WorkingSets.local.IsVisible = true;
-                                            }
-                                            else
-                                            {
-                                                mi.state++;
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (WorkingSets.local.IsStable == true)
+                                        if (WorkingSets.local.IsSingalTest < 3)
                                         {
                                             mi.Result = MeasurementResult.NewDCResistanceResult(mi, Voltage, Current, Resistance, true);
                                             TZ3310.InterRuptMe(Parameter.CommanTest.判断直流电阻稳定状态);
-
+                                            TZ3310.ShutDownOutCurrent(0);
+                                            Thread.Sleep(300);
                                             WorkingSets.local.IsStable = false;
-                                            mi.stateText = "确定" + mi.Winding + "直流电阻稳定成功";
+                                            WorkingSets.local.IsSingalTest++;
+                                            string tpd = string.Empty;
+                                            if (WorkingSets.local.IsSingalTest == 0)
+                                                tpd = "A0";
+                                            if (WorkingSets.local.IsSingalTest == 1)
+                                                tpd = "B0";
+                                            if (WorkingSets.local.IsSingalTest == 2)
+                                                tpd = "C0";
+                                            mi.stateText = "等待" + tpd + "确认稳定...";//临时
+                                            WorkingSets.local.IsVisible = true;
+                                        }
+                                        else
+                                        {
                                             mi.state++;
                                         }
                                     }
-
-                                }
-                                else if (Recbuffer1[Recbuffer1.Length - 1] == "1")
-                                {
-                                    mi.state++;
-                                    mi.stateText = "直流电阻测试完成";
                                 }
                                 else
                                 {
-                                    mi.failed = true;
-                                    mi.completed = true;
-                                    mi.stateText = mi.Winding + "错误类型" + Recbuffer1[0].ToString();
+                                    if (WorkingSets.local.IsStable == true)
+                                    {
+                                        mi.Result = MeasurementResult.NewDCResistanceResult(mi, Voltage, Current, Resistance, true);
+                                        TZ3310.InterRuptMe(Parameter.CommanTest.判断直流电阻稳定状态);
+
+                                        WorkingSets.local.IsStable = false;
+                                        mi.stateText = "确定" + mi.Winding + "直流电阻稳定成功";
+                                        mi.state++;
+                                    }
                                 }
+
+                            }
+                            else if (Recbuffer1[Recbuffer1.Length - 1] == "1")
+                            {
+                                mi.state++;
+                                mi.stateText = "直流电阻测试完成";
+                            }
+                            else
+                            {
+                                mi.failed = true;
+                                mi.completed = true;
+                                mi.stateText = mi.Winding + "错误类型" + Recbuffer1[0].ToString();
                             }
                         }
-                        catch
-                        {
 
-                        }
 
                         break;
                     case 3:
                         string[] Recbuffer2 = TZ3310.ReadTestData(Parameter.TestKind.直流电阻);
-                        try
+
+                        Thread.Sleep(150);
+                        if (sender.MeasurementItems.Length != (sender.CurrentItemIndex + 1))
                         {
-                            Thread.Sleep(150);
-                            if (sender.MeasurementItems.Length != (sender.CurrentItemIndex + 1))
-                            {
-                                if (sender.MeasurementItems[sender.CurrentItemIndex + 1].Winding != WindingType.HV ||
-                               sender.MeasurementItems[sender.CurrentItemIndex + 1].Terimal != sender.MeasurementItems[sender.CurrentItemIndex].Terimal ||
-                               mi.WindingConfig != TransformerWindingConfigName.Yn ||
-                               sender.MeasurementItems[sender.CurrentItemIndex].Winding != WindingType.HV ||
-                              sender.MeasurementItems[sender.CurrentItemIndex + 1].WindingConfig != TransformerWindingConfigName.Yn)
-                                {
-                                    if (Recbuffer2[Recbuffer2.Length - 1] == "1")
-                                    {
-                                        mi.stateText = mi.Winding + "直流电阻测试完成";
-                                        if (!WorkingSets.local.FDEND)
-                                        {
-                                            TZ3310.ShutDownOutCurrent(0);
-                                            WorkingSets.local.FDEND = true;
-                                        }
-                                        else
-                                        {
-                                            string[] readdata = TZ3310.ReadTestData(Parameter.TestKind.读取放电数据);
-                                            if (readdata[0] == "2")
-                                            {
-                                                WorkingSets.local.FDEND = false;
-                                                Thread.Sleep(1000);
-                                                mi.stateText = mi.Winding + "直流电阻放电完成";
-                                                mi.completed = true;
-                                            }
-                                            // mi.stateText = mi.Winding + "直流电阻正在放电..";
-
-                                        }
-                                    }
-                                    else
-                                    {
-                                        mi.failed = true;
-                                        mi.completed = true;
-                                        mi.stateText = mi.Winding + "错误类型：" + Recbuffer2[0].ToString();//临时
-
-                                    }
-                                }
-                                else
-                                {
-                                    mi.completed = true;
-                                    mi.stateText = "直流电阻测试完成";
-                                }
-                            }
-                            else
+                            if (sender.MeasurementItems[sender.CurrentItemIndex + 1].Winding != WindingType.HV ||
+                           sender.MeasurementItems[sender.CurrentItemIndex + 1].Terimal != sender.MeasurementItems[sender.CurrentItemIndex].Terimal ||
+                           mi.WindingConfig != TransformerWindingConfigName.Yn ||
+                           sender.MeasurementItems[sender.CurrentItemIndex].Winding != WindingType.HV ||
+                          sender.MeasurementItems[sender.CurrentItemIndex + 1].WindingConfig != TransformerWindingConfigName.Yn)
                             {
                                 if (Recbuffer2[Recbuffer2.Length - 1] == "1")
                                 {
@@ -514,6 +471,7 @@ namespace SCEEC.MI.TZ3310
                                     if (!WorkingSets.local.FDEND)
                                     {
                                         TZ3310.ShutDownOutCurrent(0);
+                                        Thread.Sleep(2000);
                                         WorkingSets.local.FDEND = true;
                                     }
                                     else
@@ -538,13 +496,48 @@ namespace SCEEC.MI.TZ3310
 
                                 }
                             }
-
+                            else
+                            {
+                                mi.completed = true;
+                                mi.stateText = "直流电阻测试完成";
+                            }
                         }
-                        catch
+                        else
                         {
+                            if (Recbuffer2[Recbuffer2.Length - 1] == "1")
+                            {
+                                mi.stateText = mi.Winding + "直流电阻测试完成";
+                                if (!WorkingSets.local.FDEND)
+                                {
+                                    TZ3310.ShutDownOutCurrent(0);
+                                    WorkingSets.local.FDEND = true;
+                                }
+                                else
+                                {
+                                    string[] readdata = TZ3310.ReadTestData(Parameter.TestKind.读取放电数据);
+                                    if (readdata[0] == "2")
+                                    {
+                                        WorkingSets.local.FDEND = false;
+                                        Thread.Sleep(300);
+                                        mi.stateText = mi.Winding + "直流电阻放电完成";
+                                        mi.completed = true;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                string[] readdata = TZ3310.ReadTestData(Parameter.TestKind.读取放电数据);
+                                if (readdata[0] == "2")
+                                {
+                                    Thread.Sleep(200);
+                                    mi.stateText = mi.Winding + "直流电阻放电完成";
+                                }
+                                mi.failed = true;
+                                mi.completed = true;
+                                mi.stateText = mi.Winding + "错误类型：" + Recbuffer2[0].ToString();//临时
 
+                            }
                         }
-
                         break;
                 }
             }
@@ -720,7 +713,8 @@ namespace SCEEC.MI.TZ3310
             {
                 case 0:
 
-                    byte[] TestKindData = TZ3310.SetPraYzfj(Parameter.YzfjWindingKind.Yn型, yzfjStation, ChangeValueToNeed.GetOLtcNum(mi), GetParameter.GetPraDCResistanceCurrentOLTCSpa(mi, Job), 5, 5, 0);
+                 byte[] TestKindData = TZ3310.SetPraYzfj(Parameter.YzfjWindingKind.Yn型, yzfjStation, ChangeValueToNeed.GetOLtcNum(mi), GetParameter.GetPraDCResistanceCurrentOLTCSpa(mi, Job), 5, 5, 0);
+                    //byte[] TestKindData = TZ3310.SetPraYzfj(Parameter.YzfjWindingKind.Yn型, yzfjStation, ChangeValueToNeed.GetOLtcNum(mi), Parameter.YzfjCurrent._3_A, 5, 5, 0);
                     Thread.Sleep(100);
                     WorkingSets.local.OlTcLable = mi.TapLabel[0] + mi.TapLabel[1];
                     TZ3310.StartTest(TestKindData);
@@ -804,8 +798,9 @@ namespace SCEEC.MI.TZ3310
                         mi.Result = MeasurementResult.NewOLTCSwitchingCharacterResult(mi, new PhysicalVariable[3], new PhysicalVariable[3],
                             new PhysicalVariable[3], Waveform, false, true);
                         Thread.Sleep(50);
-                        new TTM.Form2(Waveform, WorkingSets.local.OlTcLable, Job.Information.GetHashCode()).ShowDialog();
-                        mi.stateText = mi.Winding + "波形读取完成";
+                        //new TTM.Form2(Waveform, WorkingSets.local.OlTcLable, Job.Information.GetHashCode()).ShowDialog();
+                        //mi.stateText = mi.Winding + "波形读取完成";
+
                         mi.state++;
                     }
                     else
@@ -816,7 +811,11 @@ namespace SCEEC.MI.TZ3310
                     }
                     break;
                 case 5:
-                    mi.completed = true;
+                    if (WorkingSets.local.IsCompeleteSaveWave)
+                    {
+                        mi.completed = true;
+                        WorkingSets.local.IsCompeleteSaveWave = false;
+                    }
                     break;
             }
 

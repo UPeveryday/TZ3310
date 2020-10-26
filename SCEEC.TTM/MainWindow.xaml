@@ -158,7 +158,7 @@
                 </StackPanel>
             </Button>
             <TextBlock Text="报告列表" FontSize="18" Margin="20,10,20,0" Grid.Column="4" Grid.Row="2"/>
-            <ListBox x:Name="ReportListBox" TouchUp="ReportListBox_TouchUp" Margin="20,10,20,10" MinHeight="240" FontSize="22" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Visible" Grid.Column="4" Grid.Row="3" MouseDoubleClick="ExportList_MouseDoubleClick" SelectionChanged="ExportList_SelectionChanged"/>
+            <ListBox x:Name="ReportListBox"  Margin="20,10,20,10" MinHeight="240" FontSize="22" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Visible" Grid.Column="4" Grid.Row="3" MouseDoubleClick="ExportList_MouseDoubleClick" /> <!--SelectionChanged="ExportList_SelectionChanged"-->
             <Button x:Name="openReportButton" Margin="20,10,20,20" Visibility="Hidden" Height="26.8" Grid.Column="4" Grid.Row="4">
                 <TextBlock Text="打开报告" FontSize="18"/>
             </Button>

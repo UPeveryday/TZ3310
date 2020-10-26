@@ -16,6 +16,7 @@ namespace SCEEC.MI.TZ3310
 
         public static MeasurementResult DoMeasurement(ref MeasurementItemStruct mi, Transformer transformer, JobList Job, TestingWorkerSender sender)
         {
+         
             switch (mi.Function)
             {
                 case MeasurementFunction.DCInsulation:
@@ -37,7 +38,7 @@ namespace SCEEC.MI.TZ3310
                     TestFunction.OLTCSwitchingCharacter(ref mi, transformer, Job);
                     break;
                 case MeasurementFunction.Information:
-                    TestFunction.Information(ref mi, transformer, Job);
+                    TestFunction.Information(ref mi, transformer, Job); 
                     break;
                 case MeasurementFunction.DCCharge://充电
                     break;
@@ -57,7 +58,8 @@ namespace SCEEC.MI.TZ3310
             return null;
         }
 
-
+        //重做 failed 试验 
+        //D型做三次的问题
 
         public static void DoWork(ref TestingWorkerSender sender)
         {

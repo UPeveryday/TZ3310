@@ -12,7 +12,7 @@ namespace SCEEC.TTM
     public static class Measurement
     {
         public static void DoWork(ref TestingWorkerSender sender)
-        {
+        {  
 
             MeasurementInterface.DoWork(ref sender);
             if ((sender.MeasurementItems[sender.CurrentItemIndex].completed) && (!sender.MeasurementItems[sender.CurrentItemIndex].failed))

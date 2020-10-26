@@ -186,6 +186,9 @@ namespace SCEEC.MI.TZ3310
         public bool IsVisible { get; set; } = false;
         public bool IsVisible1 { get; set; } = true;
         public SCEEC.MI.TZ3310.ClassTz3310 Tz3310;
+
+        public bool IsCompeleteSaveWave = false;
+        public bool Testwave = false;
         public WorkingDB()
         {
             server = "localhost";

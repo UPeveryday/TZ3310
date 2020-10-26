@@ -69,7 +69,7 @@
         </Grid>
         <Grid Grid.Row="1" Margin="5">
             <ListBox>
-                <ListBoxItem>
+                <ListBoxItem >
                     <GroupBox Header="变压器主体" Grid.Row="0">
                         <Grid Margin="5">
                             <Grid.ColumnDefinitions>
@@ -89,6 +89,7 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
                             <TextBlock Text="出厂序号: " Grid.Row="0" Grid.Column="0" Margin="5"/>
@@ -99,7 +100,7 @@
                                     <ComboBoxItem Content="单相"/>
                                     <ComboBoxItem Content="三相" IsSelected="True"/>
                                 </ComboBox>
-                                <ComboBox x:Name="WindingNumComboBox" SelectionChanged="WindingNumComboBox_SelectionChanged">
+                                <ComboBox x:Name="WindingNumComboBox" Width="80" SelectionChanged="WindingNumComboBox_SelectionChanged">
                                     <ComboBoxItem Content="双绕组"/>
                                     <ComboBoxItem Content="三绕组" IsSelected="True"/>
                                 </ComboBox>
@@ -114,48 +115,48 @@
                             </WrapPanel>
                             <TextBlock Text="联结组标号:" Grid.Row="3" Grid.Column="0" Margin="5"/>
                             <WrapPanel Grid.Row="3" Grid.Column="1" Margin="2.5">
-                                <ComboBox x:Name="HvWindingConfigComboBox" SelectionChanged="TextChanged">
+                                <ComboBox x:Name="HvWindingConfigComboBox" SelectionChanged="TextChanged" RenderTransformOrigin="2.679,0.621">
                                     <ComboBoxItem Content="YN" IsSelected="True"/>
                                     <ComboBoxItem Content="Y"/>
                                     <ComboBoxItem Content="D"/>
                                 </ComboBox>
-                                <ComboBox x:Name="MvWindingConfigComboBox" SelectionChanged="TextChanged">
+                                <ComboBox x:Name="MvWindingConfigComboBox" SelectionChanged="Mv_selectchange">
                                     <ComboBoxItem Content="yn" IsSelected="True"/>
                                     <ComboBoxItem Content="y"/>
                                     <ComboBoxItem Content="d"/>
                                 </ComboBox>
-                                <ComboBox x:Name="MvWindingLabelComboBox" SelectionChanged="TextChanged">
-                                    <ComboBoxItem Content="0" IsSelected="True"/>
-                                    <ComboBoxItem Content="1"/>
-                                    <ComboBoxItem Content="2"/>
-                                    <ComboBoxItem Content="3"/>
-                                    <ComboBoxItem Content="4"/>
-                                    <ComboBoxItem Content="5"/>
-                                    <ComboBoxItem Content="6"/>
-                                    <ComboBoxItem Content="7"/>
-                                    <ComboBoxItem Content="8"/>
-                                    <ComboBoxItem Content="9"/>
-                                    <ComboBoxItem Content="10"/>
+                                <ComboBox x:Name="MvWindingLabelComboBox" SelectionChanged="Mv_label_change"  >
+                                    <ComboBoxItem Content="0"   Visibility="Collapsed"/>
+                                    <ComboBoxItem Content="1"  IsSelected="True"/>
+                                    <ComboBoxItem Content="2"  Visibility="Collapsed"/>
+                                    <ComboBoxItem Content="3" />
+                                    <ComboBoxItem Content="4" Visibility="Collapsed"/>
+                                    <ComboBoxItem Content="5" />
+                                    <ComboBoxItem Content="6" Visibility="Collapsed"/>
+                                    <ComboBoxItem Content="7" />
+                                    <ComboBoxItem Content="8" Visibility="Collapsed"/>
+                                    <ComboBoxItem Content="9" />
+                                    <ComboBoxItem Content="10" Visibility="Collapsed" />
                                     <ComboBoxItem Content="11"/>
                                 </ComboBox>
-                                <ComboBox x:Name="LvWindingConfigComboBox" SelectionChanged="TextChanged">
+                                <ComboBox x:Name="LvWindingConfigComboBox" SelectionChanged="Lv_change">
                                     <ComboBoxItem Content="yn"/>
                                     <ComboBoxItem Content="y"/>
-                                    <ComboBoxItem Content="d" IsSelected="True"/>
+                                    <ComboBoxItem Content="d"  IsSelected="True" />
                                 </ComboBox>
-                                <ComboBox x:Name="LvWindingLabelComboBox" SelectionChanged="TextChanged">
-                                    <ComboBoxItem Content="0"/>
-                                    <ComboBoxItem Content="1"/>
-                                    <ComboBoxItem Content="2"/>
-                                    <ComboBoxItem Content="3"/>
-                                    <ComboBoxItem Content="4"/>
-                                    <ComboBoxItem Content="5"/>
-                                    <ComboBoxItem Content="6"/>
-                                    <ComboBoxItem Content="7"/>
-                                    <ComboBoxItem Content="8"/>
-                                    <ComboBoxItem Content="9"/>
-                                    <ComboBoxItem Content="10"/>
-                                    <ComboBoxItem Content="11" IsSelected="True"/>
+                                <ComboBox x:Name="LvWindingLabelComboBox" SelectionChanged="Mv_label_change">
+                                    <ComboBoxItem Content="0" />
+                                    <ComboBoxItem Content="1"   Visibility="Collapsed"/>
+                                    <ComboBoxItem Content="2" />
+                                    <ComboBoxItem Content="3" Visibility="Collapsed"/>
+                                    <ComboBoxItem Content="4" />
+                                    <ComboBoxItem Content="5" Visibility="Collapsed" />
+                                    <ComboBoxItem Content="6" />
+                                    <ComboBoxItem Content="7" Visibility="Collapsed"/>
+                                    <ComboBoxItem Content="8" />
+                                    <ComboBoxItem Content="9" Visibility="Collapsed"/>
+                                    <ComboBoxItem Content="10"  IsSelected="True" />
+                                    <ComboBoxItem Content="11" Visibility="Collapsed"/>
                                 </ComboBox>
                             </WrapPanel>
                             <TextBlock Text="额定电压: " Grid.Row="4" Grid.Column="0" Margin="5"/>
@@ -176,8 +177,6 @@
                                 <TextBox x:Name="LvPowerRatingTextBox" Text="120" Width="40" TextChanged="TextChanged"/>
                                 <TextBlock Text=" MVA"/>
                             </WrapPanel>
-                            <TextBlock Text="耦合变压器:" Grid.Row="5" Grid.Column="3" Margin="5"/>
-                            <CheckBox  Grid.Row="5" x:Name="coupling" Grid.Column="6" Height="25" Margin="50,0"  Checked="TextChanged" Unchecked="TextChanged" Content="耦合变压器"></CheckBox>
                             <TextBlock Text="位置: " Grid.Row="0" Grid.Column="3" />
                             <ComboBox x:Name="locationComboBox" Grid.Row="0" Grid.Column="4" Margin="2" SelectionChanged="TextChanged"/>
                             <TextBlock Text="型号: " Grid.Row="1" Grid.Column="3" Margin="5"/>
@@ -189,16 +188,137 @@
                             <TextBlock Text="资产号: " Grid.Row="4" Grid.Column="3" Margin="5"/>
                             <TextBox x:Name="AssetSystemCodeTextBox" Grid.Row="4" Grid.Column="4" Margin="5" TextChanged="TextChanged"/>
 
+                            <TextBlock  Text="耦合变压器:" Grid.Row="6" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="0" Margin="5"/>
+                            <CheckBox   Visibility="Hidden" Grid.Row="5" x:Name="coupling" Grid.Column="6" Height="25" Margin="50,0"  Checked="TextChanged" Unchecked="TextChanged" Content="耦合变压器"></CheckBox>
+
+
+                            <!--<StackPanel  x:Name="ThreeStacpanelVisible"   Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="4">
+                                <CheckBox    Height="25"  Margin="5" IsChecked="True">无自耦绕组</CheckBox>
+                                <CheckBox    Height="25"  Margin="5" Visibility="Collapsed" Name="Hv_Mv">高-中自耦绕组</CheckBox>
+                                <CheckBox Height="25" Margin="5"  Visibility="Collapsed"  Name="Mv_Lv">中-低自耦绕组</CheckBox>
+                                <CheckBox  Height="25" Margin="5"  Visibility="Collapsed" Name="Hv_Lv">高-低自耦绕组</CheckBox>
+                                <CheckBox  Height="25" Margin="5"  Visibility="Collapsed"  Name="AllWind">所有绕组自耦</CheckBox>
+                            </StackPanel>
+                            <WrapPanel    x:Name="TwoStacpanelVisible"  Visibility="Collapsed"  Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="4">
+                                <CheckBox Height="25" Margin="5" IsChecked="True">无自耦绕组</CheckBox>
+                                <CheckBox Height="25" Margin="5">绕组自耦</CheckBox>
+                            </WrapPanel>-->
+                            <ComboBox Name="coulpcombobox" Loaded="coulpcombobox_Loaded"  Grid.Row="6" Grid.Column="1" Width="150" HorizontalAlignment="Left" Margin="5 0" SelectedIndex="0">
+                                <ComboBoxItem>无自耦绕组</ComboBoxItem>
+                                <ComboBoxItem Name="hv_mv_wind"  >高-中自耦绕组</ComboBoxItem>
+                                <ComboBoxItem Name="mv_lv_wind"  >中-低自耦绕组</ComboBoxItem>
+                                <ComboBoxItem Name="hv_lv_wind"   >高-低自耦绕组</ComboBoxItem>
+                                <ComboBoxItem Name="All_wind"      >所有绕组自耦</ComboBoxItem>
+                            </ComboBox>
+                         
+
                         </Grid>
                     </GroupBox>
 
                 </ListBoxItem>
                 <ListBoxItem>
                     <GroupBox Header="套管" Width="690">
+                        <StackPanel>
                         <WrapPanel Margin="5">
-                            <CheckBox x:Name="HvBushingCheckBox" Content="高压侧" Height="25" Margin="5,5,20,5" Checked="TextChanged" Unchecked="TextChanged"/>
-                            <CheckBox x:Name="MvBushingCheckBox" Content="中压侧" Height="25" Margin="20,5,20,5" Checked="TextChanged" Unchecked="TextChanged"/>
+                            <CheckBox x:Name="HvBushingCheckBox"  Loaded="HvBushingCheckBox_Loaded" Content="高压侧" Height="25" Margin="5,5,20,5" Checked="HvBushingCheckBox_Checked" Unchecked="HvBushingCheckBox_Unchecked"/>
+                                <CheckBox x:Name="MvBushingCheckBox" IsVisibleChanged="MvBushingCheckBox_IsVisibleChanged" Loaded="MvBushingCheckBox_Loaded" Content="中压侧" Height="25" Margin="20,5,20,5" Checked="MvBushingCheckBox_Checked" Unchecked="MvBushingCheckBox_Unchecked"/>
+                            <!--暂时未添加数据库-->
+                                <CheckBox x:Name="LvBushingCheckBox" IsVisibleChanged="LvBushingCheckBox_IsVisibleChanged" Loaded="LvBushingCheckBox_Loaded"  Content="低压侧" Height="25" Margin="20,5,20,5" Checked="LvBushingCheckBox_Checked" Unchecked="LvBushingCheckBox_Unchecked"/>
                         </WrapPanel>
+                            <TextBlock Visibility="Collapsed" x:Name="HVOrMv" Text="高压"></TextBlock>
+                            <GroupBox  x:Name="Hv_bushing_groupbox">
+                                <GroupBox.Header>
+                                    <WrapPanel>
+                                        <TextBlock Text="{Binding Path=Text, ElementName=HVOrMv}"></TextBlock>
+                                        <TextBlock>套管</TextBlock>
+                                    </WrapPanel>
+                                </GroupBox.Header>
+                                <StackPanel  Margin="10 5">
+                                    <WrapPanel Margin="0 5">
+                                        <TextBlock Text="{Binding Path=Text, ElementName=HVOrMv}"></TextBlock>
+                                        <TextBlock>套管A出厂序号：</TextBlock>
+                                        <TextBox  x:Name="Hv_A_OutFactoryId" Width="150" BorderThickness="0 0 0 1" Background="Transparent"></TextBox>
+                                        <TextBlock>。</TextBlock>
+                                    </WrapPanel>
+                                    <WrapPanel>
+                                        <TextBlock Text="{Binding Path=Text, ElementName=HVOrMv}"></TextBlock>
+
+                                        <TextBlock>套管B出厂序号：</TextBlock>
+                                        <TextBox  x:Name="Hv_B_OutFactoryId" Width="150" BorderThickness="0 0 0 1" Background="Transparent"></TextBox>
+                                        <TextBlock>。</TextBlock>
+                                    </WrapPanel>
+                                    <WrapPanel Margin="0 5">
+                                        <TextBlock Text="{Binding Path=Text, ElementName=HVOrMv}"></TextBlock>
+                                        <TextBlock>套管C出厂序号：</TextBlock>
+                                        <TextBox  x:Name="Hv_C_OutFactoryId" Width="150" BorderThickness="0 0 0 1" Background="Transparent"></TextBox>
+                                        <TextBlock>。</TextBlock>
+                                    </WrapPanel>
+                                    <WrapPanel>
+                                        <TextBlock Text="{Binding Path=Text, ElementName=HVOrMv}"></TextBlock>
+                                        <TextBlock>套管O出厂序号：</TextBlock>
+                                        <TextBox  x:Name="Hv_O_OutFactoryId" Width="150" BorderThickness="0 0 0 1" Background="Transparent"></TextBox>
+                                        <TextBlock></TextBlock>
+                                        <CheckBox   x:Name="Hv_o_mp" Margin="10 0 0 0" Content="是否有末屏。" Height="20"></CheckBox>
+                                        
+                                    </WrapPanel>
+                                </StackPanel>
+                            </GroupBox>
+
+                            <GroupBox Header="中压套管" Name="Mv_bushing_groupbox">
+                                <StackPanel  Margin="10 5">
+                                    <WrapPanel Margin="0 5">
+                                        <TextBlock>中压套管A出厂序号：</TextBlock>
+                                        <TextBox  x:Name="Mv_A_OutFactoryId" Width="150" BorderThickness="0 0 0 1" Background="Transparent"></TextBox>
+                                        <TextBlock>。</TextBlock>
+                                    </WrapPanel>
+                                    <WrapPanel>
+                                        <TextBlock>中压套管B出厂序号：</TextBlock>
+                                        <TextBox  x:Name="Mv_B_OutFactoryId"  Width="150" BorderThickness="0 0 0 1" Background="Transparent"></TextBox>
+                                        <TextBlock>。</TextBlock>
+                                    </WrapPanel>
+                                    <WrapPanel Margin="0 5">
+                                        <TextBlock>中压套管C出厂序号：</TextBlock>
+                                        <TextBox  x:Name="Mv_C_OutFactoryId"  Width="150" BorderThickness="0 0 0 1" Background="Transparent"></TextBox>
+                                        <TextBlock>。</TextBlock>
+                                    </WrapPanel>
+                                    <WrapPanel>
+                                        <TextBlock>中压套管O出厂序号：</TextBlock>
+                                        <TextBox  x:Name="Mv_O_OutFactoryId"  Width="150" BorderThickness="0 0 0 1" Background="Transparent"></TextBox>
+                                        <TextBlock></TextBlock>
+                                        <CheckBox  x:Name="Mv_O_HaveMp"  Margin="10 0 0 0" Content="是否有末屏。" Height="20"></CheckBox>
+
+                                    </WrapPanel>
+                                </StackPanel>
+                            </GroupBox>
+                            <GroupBox Header="低压套管"  Name="Lv_bushing_groupbox">
+                                <StackPanel  Margin="10 5">
+                                    <WrapPanel Margin="0 5">
+                                        <TextBlock>低压套管A出厂序号：</TextBlock>
+                                        <TextBox  x:Name="Lv_A_OutFactoryId"  Width="150" BorderThickness="0 0 0 1" Background="Transparent"></TextBox>
+                                        <TextBlock>。</TextBlock>
+                                    </WrapPanel>
+                                    <WrapPanel>
+                                        <TextBlock>低压套管B出厂序号：</TextBlock>
+                                        <TextBox  x:Name="Lv_B_OutFactoryId"  Width="150" BorderThickness="0 0 0 1" Background="Transparent"></TextBox>
+                                        <TextBlock>。</TextBlock>
+                                    </WrapPanel>
+                                    <WrapPanel Margin="0 5">
+                                        <TextBlock>低压套管C出厂序号：</TextBlock>
+                                        <TextBox  x:Name="Lv_C_OutFactoryId"  Width="150" BorderThickness="0 0 0 1" Background="Transparent"></TextBox>
+                                        <TextBlock>。</TextBlock>
+                                    </WrapPanel>
+                                    <WrapPanel>
+                                        <TextBlock>低压套管O出厂序号：</TextBlock>
+                                        <TextBox  x:Name="Lv_O_OutFactoryId"  Width="150" BorderThickness="0 0 0 1" Background="Transparent"></TextBox>
+                                        <TextBlock></TextBlock>
+                                        <CheckBox x:Name="Lv_o_mp" Margin="10 0 0 0" Content="是否有末屏。" Height="20"></CheckBox>
+
+                                    </WrapPanel>
+                                </StackPanel>
+                            </GroupBox>
+
+
+                        </StackPanel>
                     </GroupBox>
 
                 </ListBoxItem>
@@ -212,13 +332,12 @@
                             <WrapPanel Margin="5,5,20,5" Grid.Row="0" Grid.Column="0">
                                 <CheckBox x:Name= "OLTCCheckBox" Content="具有 有载分接开关" Height="25" Checked="OLTCCheckBox_Checked" Unchecked="OLTCCheckBox_Unchecked"/>
                                 <WrapPanel x:Name="OLTCMainTapWrapPanel">
-                                    <TextBlock Text=":  具有"/>
-                                    <TextBox x:Name="OLTCTapMainNumTextBox" Text="1" Width="30" TextAlignment="Right" Margin="5,0,5,0" PreviewTextInput="OLTCTapMainNumTextBox_PreviewTextInput" LostKeyboardFocus="OLTCTapMainNumTextBox_LostKeyboardFocus"/>
-                                    <TextBlock Text="个主分接,"/>
-
-                                    <TextBlock Text="主分接位置"/>
-                                    <TextBox x:Name="OLTCTapMainNumLocationTextBox" Text="1" Width="30" TextAlignment="Right" Margin="5,0,5,0" PreviewTextInput="OLTCTapMainNumTextBox_PreviewTextInput" LostKeyboardFocus="OLTCTapMainNumLocationTextBox_LostKeyboardFocus"/>
-                                    <TextBlock Text="分接处。"/>
+                                    <TextBlock  Text=":  具有"/>
+                                    <TextBox    x:Name="OLTCTapMainNumTextBox" Text="1" Width="30" TextAlignment="Right" Margin="5,0,5,0" PreviewTextInput="OLTCTapMainNumTextBox_PreviewTextInput" LostKeyboardFocus="OLTCTapMainNumTextBox_LostKeyboardFocus"/>
+                                    <TextBlock    Text="个主分接,"/>
+                                    <TextBlock   Text="主分接位置"/>
+                                    <TextBox  Visibility="Collapsed"  x:Name="OLTCTapMainNumLocationTextBox" Text="1" Width="30" TextAlignment="Right" Margin="5,0,5,0" PreviewTextInput="OLTCTapMainNumTextBox_PreviewTextInput" LostKeyboardFocus="OLTCTapMainNumLocationTextBox_LostKeyboardFocus"/>
+                                    <TextBlock  Visibility="Collapsed"  Text="分接处。"/>
                                 </WrapPanel>
                             </WrapPanel>
                             <Grid x:Name="OLTCGrid" Grid.Row="1" Visibility="Collapsed">
@@ -268,7 +387,7 @@
                                     </ComboBox>
 
 
-<TextBlock Text="×" Margin="0,5,0,5"/>
+                                    <TextBlock Text="×" Margin="0,5,0,5"/>
                                     <ComboBox x:Name="OLTCStepComboBox" Margin="2.5" SelectionChanged="TextChanged">
                                         <ComboBoxItem Content="0.50%"/>
                                         <ComboBoxItem Content="1.00%"/>
@@ -320,7 +439,7 @@
                                         </Border>
                                     </DataTemplate>
                                 </GroupBox.HeaderTemplate>
-                                <Grid Grid.Row="0" Margin="10">
+                                <!--<Grid Grid.Row="0" Margin="10">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="1*"/>
                                         <RowDefinition Height="1*"/>
@@ -338,7 +457,22 @@
 
                                     <TextBlock Grid.Column="0" Grid.Row="2" Text="中——低" Foreground="White" VerticalAlignment="Center" Margin="5" />
                                     <local:TextBoxNumber  Margin="15,0,0,0" Grid.Column="1" Grid.Row="2"  HorizontalAlignment="Stretch"  Height="30"  x:Name="MLImpVol"   VerticalAlignment="Center" />
-                                </Grid>
+                                </Grid>-->
+                                <StackPanel>
+                                    <DockPanel Margin="3"  Name="twodockpanel1">
+                                        <TextBlock Grid.Column="0" Grid.Row="0" Text="高——中" Foreground="White" VerticalAlignment="Center" Margin="5" />
+                                        <local:TextBoxNumber Margin="15,0,0,0" Grid.Column="1" Grid.Row="0"  HorizontalAlignment="Stretch"  Height="30"  x:Name="HMImpVol"  VerticalAlignment="Center" />
+                                    </DockPanel>
+                                    <DockPanel Margin="3">
+                                        <TextBlock Grid.Column="0" Grid.Row="1" Text="高——低" Foreground="White" VerticalAlignment="Center" Margin="5" />
+                                        <local:TextBoxNumber Margin="15,0,0,0"  Grid.Column="1" Grid.Row="1"  HorizontalAlignment="Stretch"  Height="30"  x:Name="HLImpVol"    VerticalAlignment="Center" />
+                                    </DockPanel>
+                                    <DockPanel Margin="3"   Name="twodockpanel2">
+
+                                        <TextBlock Grid.Column="0" Grid.Row="2" Text="中——低" Foreground="White" VerticalAlignment="Center" Margin="5" />
+                                        <local:TextBoxNumber  Margin="15,0,0,0" Grid.Column="1" Grid.Row="2"  HorizontalAlignment="Stretch"  Height="30"  x:Name="MLImpVol"   VerticalAlignment="Center" />
+                                    </DockPanel>
+                                </StackPanel>
                             </GroupBox>
 
                             <GroupBox  Margin="10,3,3,3" Grid.Row="0" Grid.Column="1" Foreground="White" BorderThickness="0.6">
@@ -355,7 +489,7 @@
                                         </Border>
                                     </DataTemplate>
                                 </GroupBox.HeaderTemplate>
-                                <Grid Grid.Row="0" Margin="10">
+                                <!--<Grid Grid.Row="0" Margin="10">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="1*"/>
                                         <RowDefinition Height="1*"/>
@@ -373,7 +507,22 @@
 
                                     <TextBlock Grid.Column="0" Grid.Row="2" Text="中——低" Foreground="White" VerticalAlignment="Center" Margin="5" />
                                     <local:TextBoxNumber Margin="15,0,0,0"  Grid.Column="1" Grid.Row="2"  HorizontalAlignment="Stretch"  Height="30"   x:Name="MLLoadLoss"     VerticalAlignment="Center" />
-                                </Grid>
+                                </Grid>-->
+
+                                <StackPanel>
+                                    <DockPanel Margin="3"   Name="twodockpanel3">
+                                        <TextBlock Grid.Column="0" Grid.Row="0" Text="高——中" Foreground="White" VerticalAlignment="Center" Margin="5" />
+                                        <local:TextBoxNumber Margin="15,0,0,0"  Grid.Column="1" Grid.Row="0"  HorizontalAlignment="Stretch"  Height="30" x:Name="HMLoadLoss" VerticalAlignment="Center" />
+                                    </DockPanel >
+                                    <DockPanel Margin="3">
+                                        <TextBlock Grid.Column="0" Grid.Row="1" Text="高——低" Foreground="White" VerticalAlignment="Center" Margin="5" />
+                                        <local:TextBoxNumber  Margin="15,0,0,0" Grid.Column="1" Grid.Row="1"  HorizontalAlignment="Stretch"  Height="30"   x:Name="HLLoadLoss"  VerticalAlignment="Center" />
+                                    </DockPanel>
+                                    <DockPanel Margin="3"   Name="twodockpanel4">
+                                        <TextBlock Grid.Column="0" Grid.Row="2" Text="中——低" Foreground="White" VerticalAlignment="Center" Margin="5" />
+                                        <local:TextBoxNumber Margin="15,0,0,0"  Grid.Column="1" Grid.Row="2"  HorizontalAlignment="Stretch"  Height="30"   x:Name="MLLoadLoss"     VerticalAlignment="Center" />
+                                    </DockPanel>
+                                </StackPanel>
                             </GroupBox>
 
                             <GroupBox  Margin="3,3,10,3" Grid.Row="1" Grid.Column="0" Foreground="White" BorderThickness="0.6">
@@ -451,6 +600,6 @@
                 <TextBlock Text="取消" Margin="20,10,20,10"/>
             </Button>
         </Grid>
-       
+
     </Grid>
 </Window>

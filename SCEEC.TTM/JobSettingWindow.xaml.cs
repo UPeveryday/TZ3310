@@ -44,12 +44,14 @@ namespace SCEEC.TTM
 
             if (currentTransformer.WindingNum != 3)
             {
-                LVWindingDCInsulationCheckBox.IsChecked = false;
-                LVWindingCapacitanceCheckBox.IsChecked = false;
-                LVWindingDCResistanceCheckBox.IsChecked = false;
-                LVWindingDCInsulationCheckBox.Visibility = Visibility.Collapsed;
-                LVWindingCapacitanceCheckBox.Visibility = Visibility.Collapsed;
-                LVWindingDCResistanceCheckBox.Visibility = Visibility.Collapsed;
+                
+                MVWindingDCInsulationCheckBox.IsChecked = false;
+                MVWindingCapacitanceCheckBox.IsChecked = false;
+                MVWindingDCResistanceCheckBox.IsChecked = false;
+                DCMvResistanceCurrentComboBox.Visibility = Visibility.Collapsed;
+                MVWindingDCInsulationCheckBox.Visibility = Visibility.Collapsed;
+                MVWindingCapacitanceCheckBox.Visibility = Visibility.Collapsed;
+                MVWindingDCResistanceCheckBox.Visibility = Visibility.Collapsed;
             }
 
             if ((!currentTransformer.Bushing.HVContained) && (!currentTransformer.Bushing.MVContained))
@@ -624,6 +626,14 @@ namespace SCEEC.TTM
                 LVWindingDCResistanceCheckBox.Visibility = Visibility.Visible;
             else
                 LVWindingDCResistanceCheckBox.Visibility = Visibility.Collapsed;
+
+
+            //
+            DCHvResistanceCurrentComboBox.Visibility = Visibility.Visible;
+            DCMvResistanceCurrentComboBox.Visibility = Visibility.Visible;
+            DCLvResistanceCurrentComboBox.Visibility = Visibility.Visible;
+            ZCWindingDCInsulationCheckBox.Visibility = Visibility.Visible;
+
         }
 
         private void WindingDCResistanceCheckBox_Unchecked(object sender, RoutedEventArgs e)
@@ -637,6 +647,12 @@ namespace SCEEC.TTM
             HVWindingDCResistanceCheckBox.Visibility = Visibility.Collapsed;
             MVWindingDCResistanceCheckBox.Visibility = Visibility.Collapsed;
             LVWindingDCResistanceCheckBox.Visibility = Visibility.Collapsed;
+
+            //DCHvResistanceCurrentComboBox
+            DCHvResistanceCurrentComboBox.Visibility = Visibility.Collapsed;
+            DCMvResistanceCurrentComboBox.Visibility = Visibility.Collapsed;
+            DCLvResistanceCurrentComboBox.Visibility = Visibility.Collapsed;
+            ZCWindingDCInsulationCheckBox.Visibility = Visibility.Collapsed;
         }
 
         private void closeWithConfirm()

@@ -336,9 +336,10 @@ namespace SCEEC.NET
                     return ret;
 
                 }
-                catch //(Exception ex)
+                catch 
                 {
                     // throw ex;
+                    _seriaPort.Open();
                 }
             }
             return -1;
@@ -381,6 +382,7 @@ namespace SCEEC.NET
                 catch //(Exception ex)
                 {
                     ReceiveEventFlag = true;
+                    _seriaPort.Open();
                     // throw ex;
                 }
             }

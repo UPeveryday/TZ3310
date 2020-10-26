@@ -11,7 +11,7 @@ namespace SCEEC.MI.TZ3310
     {
         public static string TestInstruments = "TZ3500";//仪器名称
                                                         // public static string InstrumentNumber = "370001";
-        public static string InstrumentNumber = WorkingSets.local.MethonID;
+        public static string InstrumentNumber = "370001";
         private static void CreateSampleInformation(string ResultName)
         {
             var tws = WorkingSets.local.getTestResults(ResultName);
@@ -79,7 +79,7 @@ namespace SCEEC.MI.TZ3310
         }
         private static void CreateTestResult(string ResultName)
         {
-            var tws = WorkingSets.local.getTestResults1(ResultName);
+            var tws = WorkingSets.local.getTestResultsbyid(ResultName);
             if (tws.MeasurementItems != null)
             {
                 int ms = tws.MeasurementItems.Length;
@@ -295,8 +295,18 @@ namespace SCEEC.MI.TZ3310
                                             rowLow["a-b_75"] = ChangeValueToNeed.DcResistans_To_75(tws.MeasurementItems[i].Result.values[2]);
                                             rowLow["b-c"] = tws.MeasurementItems[i + 1].Result.values[5].OriginText;
                                             rowLow["b-c_75"] = ChangeValueToNeed.DcResistans_To_75(tws.MeasurementItems[i + 1].Result.values[5]);
-                                            rowLow["c-a"] = tws.MeasurementItems[i + 2].Result.values[8].OriginText;
-                                            rowLow["c-a_75"] = ChangeValueToNeed.DcResistans_To_75(tws.MeasurementItems[i + 2].Result.values[8]);
+                                            if (tws.MeasurementItems[i + 2].Result!=null)
+                                            {
+                                                rowLow["c-a"] = tws.MeasurementItems[i + 2].Result.values[8].OriginText;
+                                                rowLow["c-a_75"] = ChangeValueToNeed.DcResistans_To_75(tws.MeasurementItems[i + 2].Result.values[8]);
+
+                                            }
+                                            else
+                                            {
+                                                rowLow["c-a"] = "0";
+                                                rowLow["c-a_75"] = "0";
+                                            }
+
                                             rowLow["TestCode"] = tws.job.Information.GetHashCode();
                                             rowLow["unbalance"] = ChangeValueToNeed.UnBalance(Convert.ToDouble(tws.MeasurementItems[i].Result.values[2].value) * 310 / 255,
                                                 Convert.ToDouble(tws.MeasurementItems[i + 1].Result.values[5].value) * 310 / 255,
@@ -446,11 +456,11 @@ namespace SCEEC.MI.TZ3310
                     rowResultBushingDCInsulation["InstrumentNumber"] = "370001";
                     rowResultBushingCapacitance["InstrumentNumber"] = "370001";
 
-                    rowMResult["ProjectConclusions"] = "ProjectConclusions";
-                    rowLowResult["ProjectConclusions"] = "ProjectConclusions";
-                    rowHighResult["ProjectConclusions"] = "ProjectConclusions";
-                    rowResultBushingDCInsulation["ProjectConclusions"] = "ProjectConclusions";
-                    rowResultBushingCapacitance["ProjectConclusions"] = "ProjectConclusions";
+                    rowMResult["ProjectConclusions"] = "";
+                    rowLowResult["ProjectConclusions"] = "";
+                    rowHighResult["ProjectConclusions"] = "";
+                    rowResultBushingDCInsulation["ProjectConclusions"] = "";
+                    rowResultBushingCapacitance["ProjectConclusions"] = "";
 
 
                     rowMResult["TestCode"] = tws.job.Information.GetHashCode();
@@ -688,8 +698,6 @@ namespace SCEEC.MI.TZ3310
                                         CapacitanceRowBushingCapacitance["C"] = tws.MeasurementItems[i].Result.values[3];
                                         CnRowBushingCapacitance["C"] = tws.MeasurementItems[i].Result.values[2];
                                     }
-
-
                                 }
                                 if (tws.MeasurementItems[i].Winding == WindingType.LV)
                                 {
@@ -991,7 +999,7 @@ namespace SCEEC.MI.TZ3310
         public static void ShowExport(string ResultName)
         {
             var tws = WorkingSets.local.getTestResults(ResultName);
-            HNReport.DoReport.Run(HNReport.ReportOperator.Design, tws.job.Information.GetHashCode().ToString(), "配电变压器（上海）");
+            HNReport.DoReport.Run(HNReport.ReportOperator.Design, tws.job.Information.GetHashCode().ToString(), "配电变压器");
         }
         /// <summary>
         /// 处理波形数据库问题

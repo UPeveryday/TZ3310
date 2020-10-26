@@ -143,16 +143,16 @@
                     <Expander Header="绕组导通性能试验" IsExpanded="True">
                         <StackPanel Margin="20,5,5,5">
                             <CheckBox x:Name="WindingDCResistanceCheckBox" Content="绕组直流电阻" IsChecked="True" Height="25" Margin="5" Checked="WindingDCResistanceCheckBox_Checked" Unchecked="WindingDCResistanceCheckBox_Unchecked"/>
-                            <StackPanel Margin="35,0,0,0">
+                            <StackPanel Margin="35,0,0,0" Name="Wind_Dcresistance_Enabled">
                                 <WrapPanel>
-                                    <TextBlock Text="测试电流: " Margin="5"/>
-                                    <ComboBox x:Name="DCResistanceCurrentComboBox" SelectionChanged="DCResistanceCurrentComboBox_SelectionChanged" SelectedIndex="0">
+                                    <TextBlock Text="测试电流: " Margin="5" Visibility="Collapsed"/>
+                                    <ComboBox x:Name="DCResistanceCurrentComboBox"  Visibility="Collapsed" SelectionChanged="DCResistanceCurrentComboBox_SelectionChanged" SelectedIndex="0">
                                         <ComboBoxItem Content="1 A"/>
                                         <ComboBoxItem Content="5 A"/>
                                         <ComboBoxItem Content="15 A"/>
                                     </ComboBox>
                                 </WrapPanel>
-                                <WrapPanel>
+                                <WrapPanel >
                                     <CheckBox x:Name="HVWindingDCResistanceCheckBox" Content="高压绕组" IsChecked="True" Height="25" Margin="5" Checked="JobChanged" Unchecked="JobChanged"/>
                                     <ComboBox x:Name="DCHvResistanceCurrentComboBox" SelectedIndex="0">
                                         <ComboBoxItem Content="1 A"/>
@@ -172,8 +172,7 @@
                                         <ComboBoxItem Content="1 A"/>
                                         <ComboBoxItem Content="5 A"/>
                                     </ComboBox>
-                                    <CheckBox x:Name="ZCWindingDCInsulationCheckBox"  Content="注磁" IsChecked="False" Height="25" Margin="5" Checked="JobChanged" Unchecked="JobChanged"/>
-
+                                    <CheckBox x:Name="ZCWindingDCInsulationCheckBox"   Content="注磁" IsChecked="False" Height="25" Margin="5" Checked="JobChanged" Unchecked="JobChanged"/>
                                 </WrapPanel>
                             </StackPanel>
                         </StackPanel>
@@ -184,7 +183,7 @@
                         <StackPanel Margin="20,5,5,5">
                             <WrapPanel>
                                 <TextBlock Text="测试电压: " Margin="5"/>
-                                <ComboBox x:Name="BushingDCInsulationTestVoltageComboBox" SelectedIndex="9">
+                                <ComboBox x:Name="BushingDCInsulationTestVoltageComboBox" SelectedIndex="5">
                                     <ComboBoxItem Content="0.25kV"/>
                                     <ComboBoxItem Content="0.5kV"/>
                                     <ComboBoxItem Content="1.0kV"/>
@@ -236,6 +235,16 @@
                             <WrapPanel x:Name="OLTCRangeWrapPanel" Margin="35,0,0,0">
                                 <TextBlock Text="试验位置范围: 主分接 +"/>
                                 <!--±-->
+                                <ComboBox  LostKeyboardFocus="OLTCRangeTextBox_LostKeyboardFocus" PreviewTextInput="OLTCRangeTextBox_PreviewTextInput" InputMethod.IsInputMethodEnabled="False">
+                                    <ComboBoxItem>1</ComboBoxItem>
+                                    <ComboBoxItem>2</ComboBoxItem>
+                                    <ComboBoxItem>3</ComboBoxItem>
+                                    <ComboBoxItem>4</ComboBoxItem>
+                                    <ComboBoxItem>5</ComboBoxItem>
+                                    <ComboBoxItem>6</ComboBoxItem>
+                                    <ComboBoxItem>7</ComboBoxItem>
+                                    <ComboBoxItem>8</ComboBoxItem>
+                                </ComboBox>
                                 <TextBox x:Name="OLTCRangeTextBox" Text="8" MinWidth="30" TextAlignment="Right" LostKeyboardFocus="OLTCRangeTextBox_LostKeyboardFocus" PreviewTextInput="OLTCRangeTextBox_PreviewTextInput" InputMethod.IsInputMethodEnabled="False"/>
                                 <TextBlock Text="至-"/>
                                 <TextBox x:Name="OLTCRangeMulTextBox" Text="8" MinWidth="30" TextAlignment="Right" LostKeyboardFocus="OLTCRangeTextBox_LostKeyboardFocus" PreviewTextInput="OLTCRangemulTextBox_PreviewTextInput" InputMethod.IsInputMethodEnabled="False"/>

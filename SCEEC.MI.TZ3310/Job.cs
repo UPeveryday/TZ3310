@@ -608,7 +608,7 @@ namespace SCEEC.MI.TZ3310
         public string Text;
         public bool completed = false;
         public bool failed = false;
-        internal int state = 0;
+        public int state = 0;
         internal string stateText = string.Empty;
         private MeasurementResult result;
 
