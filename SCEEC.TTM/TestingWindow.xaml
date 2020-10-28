@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SCEEC.TTM"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         xmlns:WPF.UI="clr-namespace:ZdfFlatUI;assembly=WPF.UI"
+        xmlns:cht="clr-namespace:ChartsWave;assembly=ChartsWave"
         mc:Ignorable="d"
         Style="{DynamicResource WizardForm}"
         Title="变压器现场综合测试系统管理器"  Icon="icon.ico"
@@ -320,7 +320,7 @@
                     </Grid>
                 </GroupBox>
 
-                <GroupBox x:Name="oltcgroupbox" Header="实时测量" Grid.Row="0" Grid.ColumnSpan="2" Margin="5">
+                <GroupBox x:Name="oltcgroupbox" Header="" Grid.Row="0" Grid.ColumnSpan="2" Margin="0">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition></ColumnDefinition>
@@ -376,8 +376,6 @@
                                 </DataTemplate>
                             </WPF.UI:Dashboard.ContentTemplate>
                         </WPF.UI:Dashboard>
-
-
                     </Grid>
                 </GroupBox>
 
@@ -387,110 +385,9 @@
                         <RowDefinition></RowDefinition>
                         <RowDefinition></RowDefinition>
                     </Grid.RowDefinitions>
-                    <lvc:CartesianChart  Visibility="Collapsed"   Name="control5" DisableAnimations="True"  DataClick="control5_DataClick" MouseDown="control5_MouseDown" Series="{Binding LcCurrentVolate}" >
-                        <lvc:CartesianChart.AxisX >
-                            <lvc:Axis   MinValue="0" Foreground="White"    LabelFormatter="{Binding XFormatter}"   ><!--Title="&#x000A;电流"-->
-                                <lvc:Axis.Separator>
-                                    <lvc:Separator     Stroke="Gray" StrokeThickness="0.4"/>
-                                </lvc:Axis.Separator>
-                            </lvc:Axis>
-                        </lvc:CartesianChart.AxisX>
-                        <lvc:CartesianChart.AxisY>
-                            <lvc:Axis Foreground="White"  LabelFormatter="{Binding YFormatter}"   Title="电阻">
-                                <lvc:Axis.Separator>
-                                    <lvc:Separator    Stroke="Gray" StrokeThickness="0.4"/>
-                                </lvc:Axis.Separator>
-                            </lvc:Axis>
-                        </lvc:CartesianChart.AxisY>
-                    </lvc:CartesianChart>
-                    <lvc:CartesianChart Name="chart_a" Grid.Row="0" DisableAnimations="True" >
-                        <lvc:CartesianChart.AxisX >
-                            <lvc:Axis   MinValue="0" Foreground="White"    LabelFormatter="{Binding XFormatter}"   >
-                                <!--Title="&#x000A;电流"-->
-                                <lvc:Axis.Separator>
-                                    <lvc:Separator     Stroke="Gray" StrokeThickness="0.4"/>
-                                </lvc:Axis.Separator>
-                            </lvc:Axis>
-                        </lvc:CartesianChart.AxisX>
-                        <lvc:CartesianChart.AxisY >
-                            <lvc:Axis Foreground="White" LabelFormatter="{Binding YFormatter}"   >
-                                <lvc:Axis.Separator>
-                                    <lvc:Separator    Stroke="Gray" StrokeThickness="0.4"/>
-                                </lvc:Axis.Separator>
-                            </lvc:Axis>
-                        </lvc:CartesianChart.AxisY>
-                    </lvc:CartesianChart>
-                    <lvc:CartesianChart Name="chart_b" Grid.Row="1" DisableAnimations="True" >
-                        <lvc:CartesianChart.AxisX >
-                            <lvc:Axis   MinValue="0" Foreground="White"    LabelFormatter="{Binding XFormatter}"   >
-                                <!--Title="&#x000A;电流"-->
-                                <lvc:Axis.Separator>
-                                    <lvc:Separator     Stroke="Gray" StrokeThickness="0.4"/>
-                                </lvc:Axis.Separator>
-                            </lvc:Axis>
-                        </lvc:CartesianChart.AxisX>
-                        <lvc:CartesianChart.AxisY>
-                            <lvc:Axis Foreground="White"  LabelFormatter="{Binding YFormatter}"   >
-                                <lvc:Axis.Separator>
-                                    <lvc:Separator    Stroke="Gray" StrokeThickness="0.4"/>
-                                </lvc:Axis.Separator>
-                            </lvc:Axis>
-                        </lvc:CartesianChart.AxisY>
-                    </lvc:CartesianChart>
-                    <lvc:CartesianChart  Name="chart_c" Grid.Row="2" DisableAnimations="True" >
-                        <lvc:CartesianChart.AxisX >
-                            <lvc:Axis   MinValue="0" Foreground="White"    LabelFormatter="{Binding XFormatter}"   >
-                                <!--Title="&#x000A;电流"-->
-                                <lvc:Axis.Separator>
-                                    <lvc:Separator     Stroke="Gray" StrokeThickness="0.4"/>
-                                </lvc:Axis.Separator>
-                            </lvc:Axis>
-                        </lvc:CartesianChart.AxisX>
-                        <lvc:CartesianChart.AxisY>
-                            <lvc:Axis Foreground="White"    LabelFormatter="{Binding YFormatter}"   >
-                                <lvc:Axis.Separator>
-                                    <lvc:Separator    Stroke="Gray" StrokeThickness="0.4"/>
-                                </lvc:Axis.Separator>
-                            </lvc:Axis>
-                        </lvc:CartesianChart.AxisY>
-                    </lvc:CartesianChart>
-                    
-                    <Canvas x:Name="canvs"  Visibility="{Binding Path=Visibility, ElementName=control5}">
-                        <Line x:Name="line1" Stroke="Red" ></Line>
-                        <Line x:Name="line2" Stroke="Yellow"></Line>
-                        <Line x:Name="line3" Stroke="Green"></Line>
-                        <Line x:Name="line4" Stroke="Blue"></Line>
-                        <Expander Header="选项"  Canvas.Right="10" Canvas.Top="10" IsExpanded="True" BorderThickness="1" BorderBrush="Gray">
-                            <StackPanel  Margin="5" Background="#333337">
-                                <ComboBox Margin="0 1" Name="wavelocation"  Width="80" SelectedIndex="0" FontSize="12" Foreground="Green" >
-                                    <ComboBoxItem>A相波形</ComboBoxItem>
-                                    <ComboBoxItem>B相波形</ComboBoxItem>
-                                    <ComboBoxItem>C相波形</ComboBoxItem>
-                                    <ComboBoxItem>O相波形</ComboBoxItem>
-                                </ComboBox>
-                                <ComboBox Margin="0 1" Name="whichline"  Width="80" SelectedIndex="1" FontSize="12" Foreground="Red" >
-                                    <ComboBoxItem>RED</ComboBoxItem>
-                                    <ComboBoxItem>YELLOW</ComboBoxItem>
-                                    <ComboBoxItem>GREEN</ComboBoxItem>
-                                    <ComboBoxItem>BLUE</ComboBoxItem>
-                                </ComboBox>
-                               
-                                <Border Margin="0 2 0 0"  Width="78" Height="15" Background="Green"  MouseLeftButtonUp="UIElement_OnMouseLeftButtonUp">
-                                    <Border.Style>
-                                        <Style TargetType="Border">
-                                            <Style.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter Property="Opacity" Value="0.7"/>
-                                                </Trigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Border.Style>
-                                    <TextBlock Text="确认保存" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10"/>
-                                </Border>
-                            </StackPanel>
-                        </Expander>
-               
-                    </Canvas>
+                    <cht:ChartWave Grid.Row="0"  Name="chartWave" ></cht:ChartWave>
+                    <cht:ChartWave  Grid.Row="1" Name="chartWave2" ></cht:ChartWave>
+                    <cht:ChartWave Grid.Row="2"  Name="chartWave3" ></cht:ChartWave>
                 </Grid>
                 
 

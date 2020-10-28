@@ -235,7 +235,7 @@
                             <WrapPanel x:Name="OLTCRangeWrapPanel" Margin="35,0,0,0">
                                 <TextBlock Text="试验位置范围: 主分接 +"/>
                                 <!--±-->
-                                <ComboBox  LostKeyboardFocus="OLTCRangeTextBox_LostKeyboardFocus" PreviewTextInput="OLTCRangeTextBox_PreviewTextInput" InputMethod.IsInputMethodEnabled="False">
+                                <ComboBox Visibility="Collapsed"  LostKeyboardFocus="OLTCRangeTextBox_LostKeyboardFocus" PreviewTextInput="OLTCRangeTextBox_PreviewTextInput" InputMethod.IsInputMethodEnabled="False">
                                     <ComboBoxItem>1</ComboBoxItem>
                                     <ComboBoxItem>2</ComboBoxItem>
                                     <ComboBoxItem>3</ComboBoxItem>

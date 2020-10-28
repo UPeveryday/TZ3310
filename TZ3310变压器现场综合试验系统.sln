@@ -36,6 +36,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test", "test\test.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dashboard", "dashboard\dashboard.csproj", "{48605E7D-74B5-44FE-BD62-15CC07582E2B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChartsWave", "C:\Users\My\source\repos\ChartsWave\ChartsWave.csproj", "{8FD338FB-007B-4786-BD83-998DB488A5CE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -330,12 +332,32 @@ Global
 		{48605E7D-74B5-44FE-BD62-15CC07582E2B}.Release|x64.Build.0 = Release|Any CPU
 		{48605E7D-74B5-44FE-BD62-15CC07582E2B}.Release|x86.ActiveCfg = Release|Any CPU
 		{48605E7D-74B5-44FE-BD62-15CC07582E2B}.Release|x86.Build.0 = Release|Any CPU
+		{8FD338FB-007B-4786-BD83-998DB488A5CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FD338FB-007B-4786-BD83-998DB488A5CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FD338FB-007B-4786-BD83-998DB488A5CE}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{8FD338FB-007B-4786-BD83-998DB488A5CE}.Debug|ARM.Build.0 = Debug|Any CPU
+		{8FD338FB-007B-4786-BD83-998DB488A5CE}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{8FD338FB-007B-4786-BD83-998DB488A5CE}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{8FD338FB-007B-4786-BD83-998DB488A5CE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8FD338FB-007B-4786-BD83-998DB488A5CE}.Debug|x64.Build.0 = Debug|Any CPU
+		{8FD338FB-007B-4786-BD83-998DB488A5CE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8FD338FB-007B-4786-BD83-998DB488A5CE}.Debug|x86.Build.0 = Debug|Any CPU
+		{8FD338FB-007B-4786-BD83-998DB488A5CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FD338FB-007B-4786-BD83-998DB488A5CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FD338FB-007B-4786-BD83-998DB488A5CE}.Release|ARM.ActiveCfg = Release|Any CPU
+		{8FD338FB-007B-4786-BD83-998DB488A5CE}.Release|ARM.Build.0 = Release|Any CPU
+		{8FD338FB-007B-4786-BD83-998DB488A5CE}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{8FD338FB-007B-4786-BD83-998DB488A5CE}.Release|ARM64.Build.0 = Release|Any CPU
+		{8FD338FB-007B-4786-BD83-998DB488A5CE}.Release|x64.ActiveCfg = Release|Any CPU
+		{8FD338FB-007B-4786-BD83-998DB488A5CE}.Release|x64.Build.0 = Release|Any CPU
+		{8FD338FB-007B-4786-BD83-998DB488A5CE}.Release|x86.ActiveCfg = Release|Any CPU
+		{8FD338FB-007B-4786-BD83-998DB488A5CE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		VisualSVNWorkingCopyRoot = .
 		SolutionGuid = {27FD4F3B-5243-4585-9612-825A7CB20798}
+		VisualSVNWorkingCopyRoot = .
 	EndGlobalSection
 EndGlobal

@@ -169,7 +169,7 @@ namespace SCEEC.MI.TZ3310
                             }
                             else
                             {
-                                 mi.failed = true;
+                                mi.failed = true;
                                 mi.completed = true;
                                 mi.stateText = mi.Winding + "错误类型：" + Recbuffer[0].ToString();
                             }
@@ -712,8 +712,7 @@ namespace SCEEC.MI.TZ3310
             switch (mi.state)
             {
                 case 0:
-
-                 byte[] TestKindData = TZ3310.SetPraYzfj(Parameter.YzfjWindingKind.Yn型, yzfjStation, ChangeValueToNeed.GetOLtcNum(mi), GetParameter.GetPraDCResistanceCurrentOLTCSpa(mi, Job), 5, 5, 0);
+                    byte[] TestKindData = TZ3310.SetPraYzfj(Parameter.YzfjWindingKind.Yn型, yzfjStation, ChangeValueToNeed.GetOLtcNum(mi), GetParameter.GetPraDCResistanceCurrentOLTCSpa(mi, Job), 5, 5, 0);
                     //byte[] TestKindData = TZ3310.SetPraYzfj(Parameter.YzfjWindingKind.Yn型, yzfjStation, ChangeValueToNeed.GetOLtcNum(mi), Parameter.YzfjCurrent._3_A, 5, 5, 0);
                     Thread.Sleep(100);
                     WorkingSets.local.OlTcLable = mi.TapLabel[0] + mi.TapLabel[1];
@@ -792,15 +791,12 @@ namespace SCEEC.MI.TZ3310
                     break;
 
                 case 4:
-                    var Waveform = TZ3310.GetWaveFormData;//5s
+                    short[] Waveform = TZ3310.GetWaveFormData();//5s
                     if (Waveform != null)
                     {
+                        WorkingSets.local.Testwave = false;
                         mi.Result = MeasurementResult.NewOLTCSwitchingCharacterResult(mi, new PhysicalVariable[3], new PhysicalVariable[3],
                             new PhysicalVariable[3], Waveform, false, true);
-                        Thread.Sleep(50);
-                        //new TTM.Form2(Waveform, WorkingSets.local.OlTcLable, Job.Information.GetHashCode()).ShowDialog();
-                        //mi.stateText = mi.Winding + "波形读取完成";
-
                         mi.state++;
                     }
                     else

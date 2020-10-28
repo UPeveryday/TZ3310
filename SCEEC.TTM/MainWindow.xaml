@@ -180,7 +180,7 @@
                 </StackPanel>
             </Button>
             <Button Visibility="Collapsed" x:Name="button" Content="Button" Foreground="Red" Click="read" Grid.Column="6" HorizontalAlignment="Left" Margin="80,164,0,0" Grid.Row="3" VerticalAlignment="Top" Width="75"/>
-            <Button x:Name="button1" Foreground="Red" Content="Button" Click="button1_Click" Grid.Column="6" HorizontalAlignment="Left" Margin="80,159,0,0" Grid.Row="3" VerticalAlignment="Top" Width="75"/>
+            <Button x:Name="button1" Foreground="Red" Content="Button"  Grid.Column="6" HorizontalAlignment="Left" Margin="80,159,0,0" Grid.Row="3" VerticalAlignment="Top" Width="75"/>
         </Grid>
     </Grid>
 </Window>
