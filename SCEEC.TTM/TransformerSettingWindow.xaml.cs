@@ -749,20 +749,20 @@ namespace SCEEC.TTM
         {
             if (!Microsoft.VisualBasic.Information.IsNumeric(OLTCTapMainNumTextBox.Text))
             {
-                MessageBox.Show("请输入变压器主分接数，应为1或3。", "变压器管理器", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                MessageBox.Show("请输入变压器主分接数，应为1/3/5。", "变压器管理器", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 OLTCTapMainNumTextBox.Focus();
                 return;
             }
             if (OLTCTapMainNumTextBox.Text.IndexOf('.') > -1)
             {
-                MessageBox.Show("请输入变压器主分接数，应为1或3。", "变压器管理器", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                MessageBox.Show("请输入变压器主分接数，应为1/3/5。", "变压器管理器", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 OLTCTapMainNumTextBox.Focus();
                 return;
             }
             int OLTCTapMainNum = int.Parse(OLTCTapMainNumTextBox.Text);
-            if ((OLTCTapMainNum != 1) && (OLTCTapMainNum != 3))
+            if ((OLTCTapMainNum != 1) && (OLTCTapMainNum != 3) && (OLTCTapMainNum != 5))
             {
-                MessageBox.Show("请输入变压器主分接数，应为1或3。", "变压器管理器", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                MessageBox.Show("请输入变压器主分接数，应为1/3/5。", "变压器管理器", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 OLTCTapMainNumTextBox.Focus();
                 return;
             }

@@ -130,7 +130,6 @@ namespace SCEEC.TTM
                         if (windowTesting.inited == true)
                         {
                             windowTesting.Show();
-                            windowTesting.Outstata += WindowTesting_Outstata;
                             windowTesting.StartButton_Click(null, null);
                         }
                     });

@@ -332,6 +332,7 @@ namespace SCEEC.NET
                     }
                     else
                     {
+                        _seriaPort.Write(new byte[] { 0x01,0x00,0x01}, 0, 3);
                         ret = _seriaPort.Read(ReceiveData, 0, _seriaPort.BytesToRead);
 
                     }

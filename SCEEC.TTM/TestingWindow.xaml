@@ -81,9 +81,9 @@
             </GroupBox>
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="350"/>
+                    <RowDefinition  Height="3*"/>
                     <RowDefinition Height="0.75*"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -388,12 +388,13 @@
                     <cht:ChartWave Grid.Row="0"  Name="chartWave" ></cht:ChartWave>
                     <cht:ChartWave  Grid.Row="1" Name="chartWave2" ></cht:ChartWave>
                     <cht:ChartWave Grid.Row="2"  Name="chartWave3" ></cht:ChartWave>
+                    
+                    
                 </Grid>
                 
 
                 <GroupBox Header="试验结果" Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Margin="5">
-                    <ListBox x:Name="ResultListBox" Margin="5" FontSize="12">
-
+                        <ListBox x:Name="ResultListBox" Margin="5" FontSize="12">
                     </ListBox>
                 </GroupBox>
                 <GroupBox Header="试验控制" Grid.Row="2" Grid.Column="1" Margin="5">

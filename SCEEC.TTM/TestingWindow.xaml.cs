@@ -40,7 +40,7 @@ namespace SCEEC.TTM
         {
             InitializeComponent();
             this.DataContext = this;
-          
+
 
 
             currentJob = WorkingSets.local.getJob(transformerSerialNo, jobName);
@@ -90,7 +90,7 @@ namespace SCEEC.TTM
 
 
         }
-       
+
 
         private void TestingWorker_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -184,8 +184,6 @@ namespace SCEEC.TTM
                 {
                     if (status.MeasurementItems[status.CurrentItemIndex].Function == MeasurementFunction.DCResistance)
                     {
-
-
                         SetgroupboxVisible(Whichgroupbox.DCR);
                         if (status.MeasurementItems[status.CurrentItemIndex].Result.values[2].value != null)
                             A_resistance_dashboad.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[2].value;
@@ -264,8 +262,6 @@ namespace SCEEC.TTM
                             }
                         }
                     }
-
-
                 }
             }
             progressBar.Value = status.ProgressPercent;
@@ -273,9 +269,7 @@ namespace SCEEC.TTM
             WorkingSets.local.status = status;
             GC.Collect();
         }
-       
 
-        public event RefreshStata Outstata;
         private void TestingWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             var status = e.UserState as TestingWorkerSender;
@@ -339,86 +333,67 @@ namespace SCEEC.TTM
             }
         }
 
-
-        private void StopButton_Click(object sender, EventArgs e)
-        {
-            TestingWorker.CancelAsync();
-
-        }
-
         public void StartButton_Click(object sender, MouseButtonEventArgs e)
         {
-
-            //if (!WaveThread.IsAlive)
-            //{
-            //    WaveThread.IsBackground = true;
-            //    WaveThread.Start();
-            //}
-
             if (!TestingWorker.IsBusy)
             {
-                TestingWorker.RunWorkerAsync(worker);
-                //if (worker.MeasurementItems[worker.CurrentItemIndex].Function == MeasurementFunction.Information)
-                //    StarText.Text = "确认稳定";
-                //else if (worker.MeasurementItems[worker.CurrentItemIndex].Function == MeasurementFunction.DCResistance)
-                //    StarText.Text = "确认稳定";
-            }
-
-
-
-        }
-        private void Redo()
-        {
-            if (!TestingWorker.IsBusy)
-            {
-                worker.CurrentItemIndex = 0;
                 TestingWorker.RunWorkerAsync(worker);
             }
         }
 
-        Thread WaveThread = new Thread(() =>
-        {
-            int i = 0;
-            while (true)
-            {
-                if (WorkingSets.local.ShowWaveForm)
-                {
-                    Form2 f2 = new Form2(WorkingSets.local.WaveFormSwicth, WorkingSets.local.OlTcLable);
-                    f2.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-                    f2.ShowDialog();
-                    WorkingSets.local.ShowWaveForm = false;
-                    Thread.Sleep(500);
-                    Bitmap bit = new Bitmap((int)f2.Width, (int)f2.Height);//实例化一个和窗体一样大的bitmap
-                    Graphics g = Graphics.FromImage(bit);
-                    g.CompositingQuality = CompositingQuality.HighQuality;//质量设为最高
-                    g.CopyFromScreen((int)f2.Left + 10, (int)f2.Top + 5, 0, 0, new System.Drawing.Size((int)f2.Width - 20, (int)f2.Height - 20));//保存整个窗体为图片
-                    bit.Save("WaveFormImage" + i.ToString() + ".png");//默认保存格式为PNG，保存成jpg格式质量不是很好
-                    i++;
-                }
-            }
-        });
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             Refresh();
         }
-        public bool ISStop { get; set; } = false;
         private void StopButton_Click(object sender, MouseButtonEventArgs e)
         {
-            WorkingStatusLabel.Text = "已经停止测量，\t\n如需重测请点击开始测量";
-            WorkingSets.local.IsCancer = true;
-            TestingWorker.CancelAsync();
+            //WorkingStatusLabel.Text = "已经停止测量，\t\n如需重测请点击开始测量";
+            //WorkingSets.local.IsCancer = true;
+            //TestingWorker.CancelAsync();
+            string name = worker.MeasurementItems[2].TapLabel[0] + "-" + worker.MeasurementItems[2].TapLabel[1];
+            SaveFrameworkElementToImage(Oltcgroupbox, worker.job.Information.GetHashCode().ToString(), name);
         }
 
         private void ConfireIsOk_Click(object sender, MouseButtonEventArgs e)
         {
-            WorkingSets.local.IsStable = true;
-            WorkingSets.local.IsVisible = false;
-            ConfireIsOk.Visibility = Visibility.Collapsed;
+            if (worker.MeasurementItems[worker.CurrentItemIndex].Function == MeasurementFunction.OLTCSwitchingCharacter)
+            {
+                WorkingSets.local.IsVisible = false;
+                ConfireIsOk.Visibility = Visibility.Collapsed;
+                worker.MeasurementItems[worker.CurrentItemIndex].Result.values =
+                    new PhysicalVariable[] { chartWave.R1Ret, chartWave.R2Ret, chartWave.R1AndR2Ret,
+                        chartWave2.R1Ret, chartWave2.R2Ret, chartWave2.R1AndR2Ret, chartWave3.R1Ret,
+                        chartWave3.R2Ret, chartWave2.R1AndR2Ret };
+                string name = worker.MeasurementItems[worker.CurrentItemIndex].TapLabel[0] + "-" + worker.MeasurementItems[worker.CurrentItemIndex].TapLabel[1];
+                SaveFrameworkElementToImage(Oltcgroupbox, worker.job.Information.GetHashCode().ToString(), name);
+
+                WorkingSets.local.IsCompeleteSaveWave = true;
+            }
+
+            if (worker.MeasurementItems[worker.CurrentItemIndex].Function == MeasurementFunction.DCResistance)
+            {
+                WorkingSets.local.IsStable = true;
+                WorkingSets.local.IsVisible = false;
+                ConfireIsOk.Visibility = Visibility.Collapsed;
+            }
         }
-      
-        private void UIElement_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+
+        public void SaveFrameworkElementToImage(FrameworkElement ui, string filelocation, string filename)
         {
-            WorkingSets.local.IsCompeleteSaveWave = true;
+            System.IO.FileStream ms = new System.IO.FileStream(filename, System.IO.FileMode.Create);
+            System.Windows.Media.Imaging.RenderTargetBitmap bmp = new System.Windows.Media.Imaging.RenderTargetBitmap
+                ((int)ui.ActualWidth, (int)ui.ActualHeight, 96d, 96d, System.Windows.Media.PixelFormats.Pbgra32);
+            bmp.Render(ui);
+            System.Windows.Media.Imaging.JpegBitmapEncoder encoder = new System.Windows.Media.Imaging.JpegBitmapEncoder();
+            encoder.Frames.Add(System.Windows.Media.Imaging.BitmapFrame.Create(bmp));
+            encoder.Save(ms);
+            ms.Close();
+            string fs = "C:\\waveimgs\\"+ filelocation;
+            if (!File.Exists(fs))
+            {
+                Directory.CreateDirectory(fs);
+            }
+            File.Copy(filename, fs + "\\" + filename + ".jpg", true);
         }
     }
 

@@ -11,7 +11,7 @@ namespace SCEEC.MI.TZ3310
     public class MeasurementResult : IComparable<MeasurementResult>
     {
         public readonly MeasurementFunction Function;
-        public readonly PhysicalVariable[] values;
+        public  PhysicalVariable[] values;
         public readonly DateTime recordTime;
         public readonly bool processing;
         public  short[] waves;
