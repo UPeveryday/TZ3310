@@ -812,6 +812,14 @@ namespace SCEEC.MI.TZ3310
             mi.Terimal = new WindingTerimal[2] { terimal1, terimal2 };
             return mi;
         }
+        public static MeasurementItemStruct CreateDCResistanceMeasurementItem(WindingType winding, WindingTerimal terimal1, WindingTerimal terimal2, string ChangerLabel)
+        {
+            MeasurementItemStruct mi = new MeasurementItemStruct(MeasurementFunction.DCResistance);
+            mi.Winding = winding;
+            mi.Terimal = new WindingTerimal[2] { terimal1, terimal2 };
+            mi.TapLabel = new string[1] { ChangerLabel }; ;
+            return mi;
+        }
 
         public static MeasurementItemStruct CreateOtherMeasurementItem(int kind)
         {

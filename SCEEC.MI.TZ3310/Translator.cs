@@ -363,16 +363,13 @@ namespace SCEEC.MI.TZ3310
 
             if (jobList.OLTC.Enabled)
             {
-                int range = jobList.OLTC.Range > TapNum ? TapNum : jobList.OLTC.Range;
-                int mulrange = jobList.OLTC.MulRange > mulTapNum ? mulTapNum : jobList.OLTC.MulRange;
-
-                int lowest = 1;
-                int highest = range + mulrange+1;
-
-                miList.Add(MeasurementItemStruct.CreateText("使用直阻与有载分接试验模块："));
-                for (int i = lowest; i < highest; i++)
+                int lowest = TapLocation - jobList.OLTC.MulRange;
+                int highest = TapLocation + jobList.OLTC.Range;
+                if (jobList.OLTC.SwitchingCharacter)
                 {
-                    if (jobList.OLTC.SwitchingCharacter)
+                    miList.Add(MeasurementItemStruct.CreateText("使用直阻与有载分接试验模块："));
+
+                    for (int i = lowest; i < highest; i++)
                     {
                         getStartAndEndMessage(i, TapLocation, TapMainNum, jobList, miList);
                         if (i != TapLocation && i != TapLocation - 1 || TapMainNum <= 1)
@@ -383,11 +380,7 @@ namespace SCEEC.MI.TZ3310
                                 miList.Add(MeasurementItemStruct.CreateOLTCSwitchingCharacterMeasurementItem(jobList.Transformer.OLTC.WindingPosition, i.ToString(), (i + 1).ToString(), jobList.Transformer.WindingConfig.MV));
                         }
                     }
-                }
-                for (int i = highest; i > lowest; i--)
-                {
-
-                    if (jobList.OLTC.SwitchingCharacter)
+                    for (int i = highest; i > lowest; i--)
                     {
                         getStartAndEndMessageReserver(i, TapLocation, TapMainNum, jobList, miList);
                         if (i != TapLocation && i != TapLocation + 1 || TapMainNum <= 1)
@@ -399,23 +392,62 @@ namespace SCEEC.MI.TZ3310
                         }
                     }
                 }
-                for (int i = lowest; i <= highest; i++)
+                if (jobList.OLTC.DCResistance)
                 {
-                    if (jobList.OLTC.DCResistance)
+                    if (!OltcLocationIsDorYn(jobList))
                     {
-                        if (TapMainNum > 1 && i == TapLocation)
+                        for (int i = lowest; i <= highest; i++)
                         {
-                            for (int j = 0; j < TapMainNum; j++)
+                            if (TapMainNum > 1 && i == TapLocation)
                             {
-                                miList.Add(MeasurementItemStruct.CreateDCResistanceMeasurementItem(jobList.Transformer.OLTC.WindingPosition, i.ToString() + ((char)('A' + j)).ToString()));
+                                for (int j = 0; j < TapMainNum; j++)
+                                {
+                                    miList.Add(MeasurementItemStruct.CreateDCResistanceMeasurementItem(jobList.Transformer.OLTC.WindingPosition, i.ToString() + ((char)('A' + j)).ToString()));
+                                }
                             }
-                        }
-                        else
-                        {
-                            miList.Add(MeasurementItemStruct.CreateDCResistanceMeasurementItem(jobList.Transformer.OLTC.WindingPosition, i.ToString()));
+                            else
+                                miList.Add(MeasurementItemStruct.CreateDCResistanceMeasurementItem(jobList.Transformer.OLTC.WindingPosition, i.ToString()));
                         }
                     }
+                    else
+                    {
+                        for (int p = 0; p < 3; p++)
+                        {
+                            for (int i = lowest; i <= highest; i++)
+                            {
+                                WindingTerimal firstTerminal = WindingTerimal.A;
+                                WindingTerimal SecondTerminal = WindingTerimal.B;
+                                if(p==0)
+                                {
+                                    firstTerminal = WindingTerimal.A;
+                                    SecondTerminal = WindingTerimal.B;
+                                }
+                                else if(p==1)
+                                {
+                                    firstTerminal = WindingTerimal.B;
+                                    SecondTerminal = WindingTerimal.C;
+                                }
+                                else
+                                {
+                                    firstTerminal = WindingTerimal.C;
+                                    SecondTerminal = WindingTerimal.A;
+                                }
+
+                                if (TapMainNum > 1 && i == TapLocation)
+                                {
+                                    for (int j = 0; j < TapMainNum; j++)
+                                    {
+                                        miList.Add(MeasurementItemStruct.CreateDCResistanceMeasurementItem(jobList.Transformer.OLTC.WindingPosition,firstTerminal,SecondTerminal,i.ToString()));
+                                    }
+                                }
+                                else
+                                    miList.Add(MeasurementItemStruct.CreateDCResistanceMeasurementItem(jobList.Transformer.OLTC.WindingPosition, firstTerminal,SecondTerminal,i.ToString()));
+                            }
+                        }
+                    }
+
                 }
+
             }
             if (jobList.DCResistance.Enabled)
             {
@@ -554,7 +586,51 @@ namespace SCEEC.MI.TZ3310
         }
 
 
+        private static bool OltcLocationIsDorYn(JobList jobList)
+        {
+            if (jobList.Transformer.PhaseNum == 3)
+            {
+                if (jobList.Transformer.OLTC.WindingPosition == WindingType.HV)
+                {
+                    if (jobList.Transformer.WindingConfig.HV == TransformerWindingConfigName.Y || jobList.Transformer.WindingConfig.HV == TransformerWindingConfigName.D)
+                        return true;
+                    else
+                        return false;
+                }
+                else if (jobList.Transformer.OLTC.WindingPosition == WindingType.MV)
+                {
+                    if (jobList.Transformer.WindingConfig.MV == TransformerWindingConfigName.Y || jobList.Transformer.WindingConfig.MV == TransformerWindingConfigName.D)
+                        return true;
+                    else
+                        return false;
+                }
+                else
+                {
+                    if (jobList.Transformer.WindingConfig.LV == TransformerWindingConfigName.Y || jobList.Transformer.WindingConfig.LV == TransformerWindingConfigName.D)
+                        return true;
+                    else
+                        return false;
+                }
+            }
+            else
+            {
+                if (jobList.Transformer.OLTC.WindingPosition == WindingType.HV)
+                {
+                    if (jobList.Transformer.WindingConfig.HV == TransformerWindingConfigName.Y || jobList.Transformer.WindingConfig.HV == TransformerWindingConfigName.D)
+                        return true;
+                    else
+                        return false;
+                }
+                else
+                {
+                    if (jobList.Transformer.WindingConfig.MV == TransformerWindingConfigName.Y || jobList.Transformer.WindingConfig.MV == TransformerWindingConfigName.D)
+                        return true;
+                    else
+                        return false;
+                }
+            }
 
+        }
 
         private static void getStartAndEndMessage(int i, int TapLocation, int TapMainNum, JobList jobList, List<MeasurementItemStruct> miList)
         {

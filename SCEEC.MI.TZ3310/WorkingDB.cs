@@ -189,6 +189,7 @@ namespace SCEEC.MI.TZ3310
 
         public bool IsCompeleteSaveWave = false;
         public bool Testwave = false;
+        public bool TestDCI = false;
         public WorkingDB()
         {
             server = "localhost";

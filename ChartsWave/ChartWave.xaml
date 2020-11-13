@@ -7,7 +7,7 @@
              xmlns:local="clr-namespace:ChartsWave"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" >
-    <Grid Background="White">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition Width="0.2*"></ColumnDefinition>
@@ -20,67 +20,71 @@
                 <Line x:Name="HoverXLine" Stroke="BlueViolet" ></Line>
                 <Line x:Name="HoverYLine" Stroke="BlueViolet" ></Line>
 
-                <TextBlock x:Name="t1" Foreground="Green"></TextBlock>
-                <TextBlock x:Name="t2" Foreground="Green"></TextBlock>
-                <TextBlock x:Name="t3" Foreground="Green"></TextBlock>
-                <TextBlock x:Name="t4" Foreground="Green"></TextBlock>
-                <Line x:Name="Hover1" Stroke="Red" ></Line>
-                <Line x:Name="Hover2" Stroke="Red" ></Line>
-                <Line x:Name="Hover3" Stroke="Red" ></Line>
-                <Line x:Name="Hover4" Stroke="Red" ></Line>
-              
+                <TextBlock x:Name="t1" Foreground="Gray"></TextBlock>
+                <TextBlock x:Name="t2" Foreground="Gray"></TextBlock>
+                <TextBlock x:Name="t3" Foreground="Gray"></TextBlock>
+                <TextBlock x:Name="t4" Foreground="Gray"></TextBlock>
+                <Line x:Name="Hover1"  Stroke="Red" ></Line>
+                <Line x:Name="Hover2"  Stroke="Red" ></Line>
+                <Line x:Name="Hover3"  Stroke="Red" ></Line>
+                <Line x:Name="Hover4"  Stroke="Red" ></Line>
+
+
             </Canvas>
-            <lvc:CartesianChart Margin="5"    MouseLeave="chart_wave_MouseLeave"
- SizeChanged="chart_wave_SizeChanged" UpdaterTick="chart_wave_UpdaterTick"  DataHover="chart_wave_DataHover"  Name="chart_wave"  DisableAnimations="True" >
+            <lvc:CartesianChart Margin="5"  Loaded="chart_wave_Loaded"  MouseLeave="chart_wave_MouseLeave"
+ SizeChanged="chart_wave_SizeChanged" UpdaterTick="chart_wave_UpdaterTick"  DataHover="chart_wave_DataHover"  Name="chart_wave"  DisableAnimations="True" RenderTransformOrigin="0.5,0.5" >
                 <lvc:CartesianChart.AxisX >
-                    <lvc:Axis   MinValue="0"     LabelFormatter="{Binding XFormatter}"   >
+                    <lvc:Axis   MinValue="0" LabelFormatter="{Binding XFormatter}"   >
                         <lvc:Axis.Separator>
                             <lvc:Separator     Stroke="Gray" StrokeThickness="0.4"/>
                         </lvc:Axis.Separator>
                     </lvc:Axis>
                 </lvc:CartesianChart.AxisX>
-                <lvc:CartesianChart.AxisY  >
-                    <lvc:Axis    LabelFormatter="{Binding YFormatter}"   >
-                        <lvc:Axis.Separator>
-                            <lvc:Separator     Stroke="Gray" StrokeThickness="0.4"/>
+                <lvc:CartesianChart.AxisY   >
+                    <lvc:Axis  Name="Yaxis"   LabelFormatter="{Binding YFormatter}" ShowLabels="True">
+                        <lvc:Axis.Separator >
+                            <lvc:Separator   Name="YaxisSpe"  Stroke="Gray" StrokeThickness="0.4"/>
                         </lvc:Axis.Separator>
                     </lvc:Axis>
                 </lvc:CartesianChart.AxisY>
             </lvc:CartesianChart>
-
         </Grid>
 
         <GroupBox  Grid.Column="1" Header="测量结果">
-            <StackPanel>
-                <DockPanel>
-                    <Label Content="t₁:" VerticalAlignment="Center"  Width="30"></Label>
-                    <TextBox TextAlignment="Center" Text="{Binding t1Ret ,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  VerticalAlignment="Center" BorderThickness="0 0 0 1" BorderBrush="SeaGreen"></TextBox>
-                </DockPanel>
-                <DockPanel>
-                    <Label Content="t₂:" VerticalAlignment="Center"  Width="30"></Label>
-                    <TextBox TextAlignment="Center" Text="{Binding t2Ret,UpdateSourceTrigger=PropertyChanged}"  VerticalAlignment="Center" BorderThickness="0 0 0 1" BorderBrush="SeaGreen"></TextBox>
-                </DockPanel>
-                <DockPanel>
-                    <Label Content="t₃:" VerticalAlignment="Center"  Width="30"></Label>
-                    <TextBox TextAlignment="Center"  Text="{Binding t3Ret,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" BorderThickness="0 0 0 1" BorderBrush="SeaGreen"></TextBox>
-                </DockPanel>
-                <DockPanel>
-                    <Label Content="t₄:" VerticalAlignment="Center"  Width="30"></Label>
-                    <TextBox TextAlignment="Center" Text="{Binding t4Ret,UpdateSourceTrigger=PropertyChanged}"  VerticalAlignment="Center" BorderThickness="0 0 0 1" BorderBrush="SeaGreen"></TextBox>
-                </DockPanel>
-                <DockPanel>
-                    <Label Content="R₁:" VerticalAlignment="Center"  Width="30"></Label>
-                    <TextBox TextAlignment="Center" Text="{Binding R1Ret,UpdateSourceTrigger=PropertyChanged}"  VerticalAlignment="Center" BorderThickness="0 0 0 1" BorderBrush="SeaGreen"></TextBox>
-                </DockPanel>
-                <DockPanel>
-                    <Label Content="R₂:" VerticalAlignment="Center"  Width="30"></Label>
-                    <TextBox TextAlignment="Center" Text="{Binding R2Ret,UpdateSourceTrigger=PropertyChanged}"  VerticalAlignment="Center" BorderThickness="0 0 0 1" BorderBrush="SeaGreen"></TextBox>
-                </DockPanel>
-                <DockPanel>
-                    <Label Content="R₁||₂:" VerticalAlignment="Center"  Width="60"></Label>
-                    <TextBox TextAlignment="Center" Text="{Binding R1AndR2Ret,UpdateSourceTrigger=PropertyChanged}"  VerticalAlignment="Center" BorderThickness="0 0 0 1" BorderBrush="SeaGreen"></TextBox>
-                </DockPanel>
-            </StackPanel>
+            <ScrollViewer x:Name="scrList" Margin="0" VerticalScrollBarVisibility="Auto" >
+                <StackPanel>
+
+
+                    <DockPanel>
+                        <Label Content="T₁:"  VerticalAlignment="Center"  Width="35"></Label>
+                        <TextBox  TextAlignment="Left"  Text="{Binding t1Ret ,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  VerticalAlignment="Center" BorderThickness="0 0 0 1" BorderBrush="SeaGreen"></TextBox>
+                    </DockPanel>
+                    <DockPanel>
+                        <Label Content="T₂:" VerticalAlignment="Center"  Width="35"></Label>
+                        <TextBox TextAlignment="Left" Text="{Binding t2Ret,UpdateSourceTrigger=PropertyChanged}"  VerticalAlignment="Center" BorderThickness="0 0 0 1" BorderBrush="SeaGreen"></TextBox>
+                    </DockPanel>
+                    <DockPanel>
+                        <Label Content="T₃:" VerticalAlignment="Center"  Width="35"></Label>
+                        <TextBox TextAlignment="Left"  Text="{Binding t3Ret,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" BorderThickness="0 0 0 1" BorderBrush="SeaGreen"></TextBox>
+                    </DockPanel>
+                    <DockPanel>
+                        <Label Content="T:" VerticalAlignment="Center"  Width="35"></Label>
+                        <TextBox TextAlignment="Left" Text="{Binding t4Ret,UpdateSourceTrigger=PropertyChanged}"  VerticalAlignment="Center" BorderThickness="0 0 0 1" BorderBrush="SeaGreen"></TextBox>
+                    </DockPanel>
+                    <DockPanel>
+                        <Label Content="R₁:" VerticalAlignment="Center"  Width="35"></Label>
+                        <TextBox TextAlignment="Left" Text="{Binding R1Ret,UpdateSourceTrigger=PropertyChanged}"  VerticalAlignment="Center" BorderThickness="0 0 0 1" BorderBrush="SeaGreen"></TextBox>
+                    </DockPanel>
+                    <DockPanel>
+                        <Label Content="R₂:" VerticalAlignment="Center"  Width="35"></Label>
+                        <TextBox TextAlignment="Left" Text="{Binding R2Ret,UpdateSourceTrigger=PropertyChanged}"  VerticalAlignment="Center" BorderThickness="0 0 0 1" BorderBrush="SeaGreen"></TextBox>
+                    </DockPanel>
+                    <DockPanel>
+                        <Label Content="R₁||₂:" VerticalAlignment="Center"  Width="35"></Label>
+                        <TextBox TextAlignment="Left" Text="{Binding R1AndR2Ret,UpdateSourceTrigger=PropertyChanged}"  VerticalAlignment="Center" BorderThickness="0 0 0 1" BorderBrush="SeaGreen"></TextBox>
+                    </DockPanel>
+                </StackPanel>
+            </ScrollViewer>
         </GroupBox>
     </Grid>
 </UserControl>

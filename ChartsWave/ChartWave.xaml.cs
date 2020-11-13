@@ -15,6 +15,7 @@ using LiveCharts.Charts;
 using LiveCharts.Dtos;
 using System.ComponentModel;
 using Newtonsoft.Json;
+using MathNet.Numerics.Distributions;
 
 namespace ChartsWave
 {
@@ -40,7 +41,7 @@ namespace ChartsWave
                 var temp = value.ToArray();
                 for (int i = 0; i < value.Count(); i++)
                 {
-                    ObservablePoint p = new ObservablePoint {X= temp[i].X, Y=Math.Round(temp[i].Y,3) };
+                    ObservablePoint p = new ObservablePoint { X = temp[i].X, Y = Math.Round(temp[i].Y, 3) };
                     data.Add(p);
                 }
                 DrawWave(data);
@@ -76,64 +77,49 @@ namespace ChartsWave
             return (GearedValues<ObservablePoint>)baseValue;
         }
 
-        private int cutSkip = 0;
-        private int cutTake = 6000;
-
-        private GearedValues<ObservablePoint> CutWave(GearedValues<ObservablePoint> wave, int cutHeaderLever = 400)
+        //private int cutSkip = 0;
+        //private int cutTake = 6000;
+        public int cutTake
         {
-            double needSelectData = (wave.Select(x => x.Y).Max() + wave.Select(x => x.Y).Min()) / 2;
-            var points = wave.Where(x => x.Y >= needSelectData * 0.95 && x.Y <= needSelectData * 1.05);
-            var temp = points.ToArray();
-            double Xmin = 0.00;
-            double Ymin = 300.00;
-            for (int i = 1; i < points.Count(); i++)
-            {
-                if (temp[i].X > temp[i - 1].X * 1.5 || temp[i].X < temp[i - 1].X * 0.5)
-                {
-                    if (points.ToArray()[i - 1].X > points.ToArray()[i].X)
-                    {
-                        Xmin = points.ToArray()[i].X;
-                        Ymin = Xmin = points.ToArray()[i - 1].X;
-                    }
-                    else
-                    {
-                        Ymin = points.ToArray()[i].X;
-                        Xmin = points.ToArray()[i - 1].X;
-                    }
-                }
-            }
-            int skip = 0;
-            int take = 0;
-            if (Xmin < 20)
-            {
-                skip = 0;
-            }
-            else
-            {
-                skip = (int)(Xmin * 20 - cutHeaderLever);
-            }
+            get { return (int)GetValue(cutTakeProperty); }
+            set { SetValue(cutTakeProperty, value); }
+        }
 
-            if (Ymin > 280)
-            {
-                take = (int)((300 - Xmin) * 20);
-            }
-            else
-            {
-                take = (int)((Ymin - Xmin) * 20 + cutHeaderLever);
-            }
+        // Using a DependencyProperty as the backing store for cutTake.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty cutTakeProperty =
+            DependencyProperty.Register("cutTake", typeof(int), typeof(ChartWave), new PropertyMetadata(0, null, takeBack));
 
-            cutSkip = skip; cutTake = take;
-            GearedValues<ObservablePoint> data = new GearedValues<ObservablePoint>();
-            data.AddRange(wave.Skip(skip).Take(take));
-            return data;
+        private static object takeBack(DependencyObject d, object baseValue)
+        {
+            return (int)baseValue;
 
         }
 
+        public int cutSkip
+        {
+            get { return (int)GetValue(cutSkipProperty); }
+            set { SetValue(cutSkipProperty, value); }
+        }
 
-        public int TimeTest { get; set; } = 0;
+        // Using a DependencyProperty as the backing store for cutSkip.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty cutSkipProperty =
+            DependencyProperty.Register("cutSkip", typeof(int), typeof(ChartWave), new PropertyMetadata(0, null, cutBack));
+
+        private static object cutBack(DependencyObject d, object baseValue)
+        {
+            return (int)baseValue;
+        }
+
+        private GearedValues<ObservablePoint> CutWave(GearedValues<ObservablePoint> wave, int cutHeaderLever = 400)
+        {
+            GearedValues<ObservablePoint> data = new GearedValues<ObservablePoint>();
+            data.AddRange(wave.Skip(cutSkip).Take(cutTake));
+            return data;
+        }
+
+
         private void DrawFourLine(GearedValues<ObservablePoint> schart, GearedValues<ObservablePoint> sundata)
         {
-            TimeTest++;
             double needSelectData = (sundata.Select(x => x.Y).Max() + sundata.Select(x => x.Y).Min()) / 2;
 
             var points = sundata.Where(x => x.Y >= needSelectData * 0.95 && x.Y <= needSelectData * 1.05);
@@ -189,12 +175,12 @@ namespace ChartsWave
 
             var centerValue = (centerPoints.Select(x => x.Y).Max() + centerPoints.Select(x => x.Y).Min()) / 2;
 
-            var pointsCenter = centerPoints.Where(x => x.Y >= centerValue * 0.95 && x.Y <= centerValue * 1.05);
+            var pointsCenter = centerPoints.Where(x => x.Y >= centerValue * 0.98 && x.Y <= centerValue * 1.02);
             if (pointsCenter.Count() >= 2)
             {
                 var pointsArray = pointsCenter.ToArray();
-                ObservablePoint xfirst = new ObservablePoint { X= pointsArray[0].X - skiptime ,Y= pointsArray[0].Y };
-                ObservablePoint xend = new ObservablePoint { X= pointsArray[pointsCenter.Count() - 1].X - skiptime ,Y= pointsArray[pointsCenter.Count() - 1].Y };
+                ObservablePoint xfirst = new ObservablePoint { X = pointsArray[0].X - skiptime, Y = pointsArray[0].Y };
+                ObservablePoint xend = new ObservablePoint { X = pointsArray[pointsCenter.Count() - 1].X - skiptime, Y = pointsArray[pointsCenter.Count() - 1].Y };
                 //导致无线循环
                 //   pointsArray[pointsCenter.Count() - 1].X = pointsArray[pointsCenter.Count() - 1].X - skiptime;
                 twopoint[1] = xfirst;
@@ -228,25 +214,29 @@ namespace ChartsWave
         {
             if (ret.Length == 4)
             {
-                t1Ret = ret[0].X.ToString() + "ms";
-                t2Ret = ret[1].X.ToString() + "ms";
-                t3Ret = ret[2].X.ToString() + "ms";
-                t4Ret = ret[3].X.ToString() + "ms";
+                t1Ret = (ret[1].X - ret[0].X).ToString("N2") + " ms";
+                t2Ret = (ret[2].X - ret[1].X).ToString("N2") + " ms";
+                t3Ret = (ret[3].X - ret[2].X).ToString("N2") + " ms";
+                t4Ret = (ret[3].X - ret[0].X).ToString("N2") + " ms";
 
-                var arr1 = shortWave.Skip((int)(ret[0].X / 300 * 6000)).Take((int)((ret[1].X - ret[0].X) / 300 * 6000)).Select(x => Math.Round(x.Y, 4));
-                var arr2 = shortWave.Skip((int)(ret[2].X / 300 * 6000)).Take((int)((ret[3].X - ret[2].X) / 300 * 6000)).Select(x => Math.Round(x.Y, 4));
-                var arr3 = shortWave.Skip((int)(ret[1].X / 300 * 6000)).Take((int)((ret[2].X - ret[1].X) / 300 * 6000)).Select(x => Math.Round(x.Y, 4));
+                var arr1 = shortWave.Skip((int)(ret[0].X / 300 * 6000)).Take((int)((ret[1].X - ret[0].X) / 300 * 6000)).Select(x => Math.Round(x.Y, 2));
+                var arr2 = shortWave.Skip((int)(ret[2].X / 300 * 6000)).Take((int)((ret[3].X - ret[2].X) / 300 * 6000)).Select(x => Math.Round(x.Y, 2));
+                var arr3 = shortWave.Skip((int)(ret[1].X / 300 * 6000)).Take((int)((ret[2].X - ret[1].X) / 300 * 6000)).Select(x => Math.Round(x.Y, 2));
 
-
+                //double r1 = LogNormal.Estimate(arr1).Mean;
+                //double r2 = LogNormal.Estimate(arr2).Mean;
+                //double r3 = LogNormal.Estimate(arr3).Mean;
 
                 double r1 = GetElevationMode(arr1.ToList());
                 double r2 = GetElevationMode(arr2.ToList());
-                double r3 = GetElevationMode(arr3.ToList());
+                //double r3 = GetElevationMode(arr3.ToList());
+                double r3 = LogNormal.Estimate(arr3).Mean;
 
-                R1Ret = r1.ToString() + "Ω";
-                R2Ret = r2.ToString() + "Ω";
+                //var sss = new MathNet.Numerics.Differentiation.NumericalDerivative(20, 2);
+                R1Ret = r1.ToString("N2") + " Ω";
+                R2Ret = r2.ToString("N2") + " Ω";
 
-                R1AndR2Ret = r3 .ToString("N4")+ "Ω"; ;
+                R1AndR2Ret = r3.ToString("N2") + " Ω"; ;
 
             }
         }
@@ -327,12 +317,29 @@ namespace ChartsWave
             }
         }
 
-
+        private double maxVal;
+        private double minVal;
 
         private void DrawWave(GearedValues<ObservablePoint> data)
         {
+            var max = Math.Round(data.Select(x => x.Y).Max() + 0.1, 1);
+            var min = Math.Round(data.Select(x => x.Y).Min() - 0.1, 1);
+            maxVal = Yaxis.MaxValue = max;
+            minVal = Yaxis.MinValue = min;
             XFormatter = val => (val).ToString() + "ms";
-            YFormatter = val => (val).ToString() + "Ω";
+            YFormatter = val =>
+            {
+                return Math.Round((maxVal - Math.Abs(val - minVal)), 2).ToString() + "Ω";
+            };
+            GearedValues<ObservablePoint> tempdata = new GearedValues<ObservablePoint>();
+            tempdata.AddRange(data.Select(x =>
+            {
+                x.Y = Math.Round(maxVal - Math.Abs(x.Y - minVal), 2);
+                return x;
+            }));
+            var pt = tempdata.Select(x => x.Y);
+            var dt = data.Select(x => x.Y);
+            YaxisSpe.Step = (maxVal - minVal) / 5;
             series = new SeriesCollection();
             series.Add(new GLineSeries
             {
@@ -342,7 +349,7 @@ namespace ChartsWave
                 LineSmoothness = 10,//0为折现样式
                 PointGeometrySize = 0,
                 PointForeground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(34, 46, 49)),
-                Values = data
+                Values = tempdata
             });
             chart_wave.Series = series;
         }
@@ -383,11 +390,11 @@ namespace ChartsWave
             HoverXLine.Y2 = ActualHeight - 25;
 
             HoverYLine.X1 = 35;
-            HoverYLine.X2 = ActualWidth *0.83;
+            HoverYLine.X2 = ActualWidth * 0.83;
             HoverYLine.Y1 = mouselocation.Y;
             HoverYLine.Y2 = mouselocation.Y;
 
-        //    var asPixels = chart_wave.ConvertToPixels(chartPoint.AsPoint());
+            //    var asPixels = chart_wave.ConvertToPixels(chartPoint.AsPoint());
         }
 
         private void chart_wave_UpdaterTick(object sender)
@@ -406,7 +413,10 @@ namespace ChartsWave
             HoverYLine.Visibility = System.Windows.Visibility.Collapsed;
         }
 
-
+        private void chart_wave_Loaded(object sender, RoutedEventArgs e)
+        {
+            var p = chart_wave.AxisY.Max();
+        }
     }
 
     //移动游标类

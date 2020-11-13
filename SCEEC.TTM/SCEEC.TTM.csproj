@@ -162,6 +162,9 @@
     <Compile Include="UCOrderSet.xaml.cs">
       <DependentUpon>UCOrderSet.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UMessageBox.xaml.cs">
+      <DependentUpon>UMessageBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WSCoreInsu.xaml.cs">
       <DependentUpon>WSCoreInsu.xaml</DependentUpon>
     </Compile>
@@ -228,6 +231,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UCOrderSet.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UMessageBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

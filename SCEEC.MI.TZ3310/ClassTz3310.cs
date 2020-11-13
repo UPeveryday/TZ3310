@@ -103,8 +103,8 @@ namespace SCEEC.MI.TZ3310
             byte[] buffer = { 0x01, Mark, (byte)checkData };
             try
             {
-                int temp = sc.SendCommand(buffer, ref RecBuffer, 50);
-
+                int temp = sc.SendCommand(buffer, ref RecBuffer, 200);
+                Thread.Sleep(2000);
                 if (temp <= 0)
                     return false;
                 if (RecBuffer[0] == 0xac && RecBuffer[1] == Mark)
@@ -126,8 +126,6 @@ namespace SCEEC.MI.TZ3310
             {
                 return false;
             }
-            // return RecBuffer;
-            // return false;
         }
 
 
@@ -409,103 +407,48 @@ namespace SCEEC.MI.TZ3310
                 {
 
                     sc.SendCommandCap(Sendbuffer, ref RecBuffer, 10);
-                    //if (CheckData(RecData) == RecData[74])
-                    //{
                     if (RecBuffer[0] == 0xfa)
                     {
-                        File.WriteAllBytes(@"D:\\log.txt", RecBuffer);
+                     //   File.WriteAllBytes(@"D:\\log.txt", RecBuffer);
                         string[] RetData = new string[10];
                         RetData[0] = Encoding.ASCII.GetString(RecBuffer.Skip(2).Take(8).ToArray()).Replace('\0', ' ').Trim();
-                        //  PhysicalVariable pv = NumericsConverter.Text2Value(RetData[0]);
-                        // RetData[0] = pv.ToString();
                         RetData[1] = Encoding.ASCII.GetString(RecBuffer.Skip(10).Take(8).ToArray()).Replace('\0', ' ').Trim();
-                        //PhysicalVariable pv1 = NumericsConverter.Text2Value(RetData[1]);
-                        //RetData[1] = pv1.ToString();
                         RetData[2] = Encoding.ASCII.GetString(RecBuffer.Skip(18).Take(8).ToArray()).Replace("$", "Ω").Replace('\0', ' ').Trim();
-                        //PhysicalVariable pv2 = NumericsConverter.Text2Value(RetData[2]);
-                        //RetData[2] = pv2.ToString();
-
                         RetData[3] = Encoding.ASCII.GetString(RecBuffer.Skip(26).Take(8).ToArray()).Replace('\0', ' ').Trim();
-                        //PhysicalVariable pv3 = NumericsConverter.Text2Value(RetData[3]);
-                        //RetData[3] = pv3.ToString();
-
                         RetData[4] = Encoding.ASCII.GetString(RecBuffer.Skip(34).Take(8).ToArray()).Replace('\0', ' ').Trim();
-                        //PhysicalVariable pv4 = NumericsConverter.Text2Value(RetData[4]);
-                        //RetData[4] = pv4.ToString();
                         RetData[5] = Encoding.ASCII.GetString(RecBuffer.Skip(42).Take(8).ToArray()).Replace("$", "Ω").Replace('\0', ' ').Trim();
-                        //PhysicalVariable pv5 = NumericsConverter.Text2Value(RetData[5]);
-                        //RetData[5] = pv5.ToString();
-
                         RetData[6] = Encoding.ASCII.GetString(RecBuffer.Skip(50).Take(8).ToArray()).Replace('\0', ' ').Trim();
-                        //PhysicalVariable pv6 = NumericsConverter.Text2Value(RetData[6]);
-                        //RetData[6] = pv6.ToString();
-
                         RetData[7] = Encoding.ASCII.GetString(RecBuffer.Skip(58).Take(8).ToArray()).Replace('\0', ' ').Trim();
-                        //PhysicalVariable pv7 = NumericsConverter.Text2Value(RetData[7]);
-                        //RetData[7] = pv7.ToString();
                         RetData[8] = Encoding.ASCII.GetString(RecBuffer.Skip(66).Take(8).ToArray()).Replace("$", "Ω").Replace('\0', ' ').Trim();
-                        //PhysicalVariable pv8 = NumericsConverter.Text2Value(RetData[8]);
-                        //RetData[8] = pv8.ToString();
-
                         RetData[9] = "0";
                         return RetData;
-
-
                     }
                     else if (RecBuffer[0] == 0xff)
                     {
-
                         string[] RetData = new string[10];
                         RetData[0] = Encoding.ASCII.GetString(RecBuffer.Skip(2).Take(8).ToArray()).Trim();
-                        //  PhysicalVariable pv = NumericsConverter.Text2Value(RetData[0]);
-                        // RetData[0] = pv.ToString();
                         RetData[1] = Encoding.ASCII.GetString(RecBuffer.Skip(10).Take(8).ToArray()).Trim();
-                        //PhysicalVariable pv1 = NumericsConverter.Text2Value(RetData[1]);
-                        //RetData[1] = pv1.ToString();
                         RetData[2] = Encoding.ASCII.GetString(RecBuffer.Skip(18).Take(8).ToArray()).Replace("$", "Ω").Trim();
-                        //PhysicalVariable pv2 = NumericsConverter.Text2Value(RetData[2]);
-                        //RetData[2] = pv2.ToString();
-
                         RetData[3] = Encoding.ASCII.GetString(RecBuffer.Skip(26).Take(8).ToArray()).Trim();
-                        //PhysicalVariable pv3 = NumericsConverter.Text2Value(RetData[3]);
-                        //RetData[3] = pv3.ToString();
-
                         RetData[4] = Encoding.ASCII.GetString(RecBuffer.Skip(34).Take(8).ToArray()).Trim();
-                        //PhysicalVariable pv4 = NumericsConverter.Text2Value(RetData[4]);
-                        //RetData[4] = pv4.ToString();
                         RetData[5] = Encoding.ASCII.GetString(RecBuffer.Skip(42).Take(8).ToArray()).Replace("$", "Ω").Trim();
-                        //PhysicalVariable pv5 = NumericsConverter.Text2Value(RetData[5]);
-                        //RetData[5] = pv5.ToString();
-
                         RetData[6] = Encoding.ASCII.GetString(RecBuffer.Skip(50).Take(8).ToArray()).Trim();
-                        //PhysicalVariable pv6 = NumericsConverter.Text2Value(RetData[6]);
-                        //RetData[6] = pv6.ToString();
-
                         RetData[7] = Encoding.ASCII.GetString(RecBuffer.Skip(58).Take(8).ToArray()).Trim();
-                        //PhysicalVariable pv7 = NumericsConverter.Text2Value(RetData[7]);
-                        //RetData[7] = pv7.ToString();
                         RetData[8] = Encoding.ASCII.GetString(RecBuffer.Skip(66).Take(8).ToArray()).Replace("$", "Ω").Trim();
-                        //PhysicalVariable pv8 = NumericsConverter.Text2Value(RetData[8]);
-                        //RetData[8] = pv8.ToString();
                         RetData[9] = "1";
-
                         return RetData;
-
                     }
-                    else if (RecBuffer[0] == 0xee)
+                    else
                     {
                         string[] Rd = new string[1];
                         Rd[0] = TestErr(RecBuffer[1].ToString());
                         return Rd;//错误类型
                     }
-                    //}
                 }
                 catch (Exception ex)
                 {
                     throw ex;
                 }
-
-
             }
             if (testkind == Parameter.TestKind.绝缘电阻)
             {
@@ -668,20 +611,23 @@ namespace SCEEC.MI.TZ3310
             if (test == "1")
                 return "切换线失败";
             if (test == "2")
+            {
                 return "手动终止测量";
+            }
             if (test == "238")//ee
                 return "测量失败";
             if (test == "236")//ec
                 return "通讯出错";
             if (test == "255")//FF
                 return "测量成功";
+           // CommunicationQuery(0x00);
             return string.Empty;
 
         }
         private string TestErrDC(string test)
         {
             if (test == "0")
-                return "测量人为中断0";
+                return "测量人为中断";
             if (test == "1")
                 return "切换线失败";
             if (test == "2")
@@ -732,6 +678,7 @@ namespace SCEEC.MI.TZ3310
                 return "正母线过压";
             if (test == "25")
                 return "负母线过压";
+     //       CommunicationQuery(0x00);
             return string.Empty;
 
         }
@@ -771,9 +718,6 @@ namespace SCEEC.MI.TZ3310
                                     }
                                 }
                             }
-
-
-
                         }
                         catch (Exception)
                         {
@@ -900,7 +844,7 @@ namespace SCEEC.MI.TZ3310
             {
                 Thread.Sleep(50);
                 // int ret;
-                sc.SendCommand(DelossData, ref RecBuffer, 30);
+                sc.SendCommand(DelossData, ref RecBuffer, 100);
                 if (RecBuffer[0] == 0xac && RecBuffer[1] == DelossData[DelossData.Length - 2] && CheckData(RecBuffer) == RecBuffer[2])
                 {
                     return true;

@@ -351,7 +351,7 @@
                             <WPF.UI:Dashboard.ContentTemplate>
                                 <DataTemplate>
                                     <StackPanel Margin="0,85,0,0" HorizontalAlignment="Center" Orientation="Vertical">
-                                        <TextBlock FontSize="12" Margin="0,4" Text="A相电流" TextAlignment="Center" />
+                                        <TextBlock FontSize="12" Margin="0,4" Text="B相电流" TextAlignment="Center" />
                                         <TextBlock Margin="0,4" HorizontalAlignment="Center" FontSize="26" Foreground="White"
                                            Text="{Binding Path=Text,
                                                           ElementName=Boltcavalue}" />
@@ -367,7 +367,7 @@
                             <WPF.UI:Dashboard.ContentTemplate>
                                 <DataTemplate>
                                     <StackPanel Margin="0,85,0,0" HorizontalAlignment="Center" Orientation="Vertical">
-                                        <TextBlock FontSize="12" Margin="0,4" Text="A相电流" TextAlignment="Center" />
+                                        <TextBlock FontSize="12" Margin="0,4" Text="C相电流" TextAlignment="Center" />
                                         <TextBlock Margin="0,4" HorizontalAlignment="Center" FontSize="26" Foreground="White"
                                            Text="{Binding Path=Text,
                                                           ElementName=Coltcavalue}" />
@@ -380,15 +380,8 @@
                 </GroupBox>
 
                 <Grid Grid.ColumnSpan="2" Name="Oltcgroupbox"  Margin="10" Background="#333337">
-                    <Grid.RowDefinitions>
-                        <RowDefinition></RowDefinition>
-                        <RowDefinition></RowDefinition>
-                        <RowDefinition></RowDefinition>
-                    </Grid.RowDefinitions>
-                    <cht:ChartWave Grid.Row="0"  Name="chartWave" ></cht:ChartWave>
-                    <cht:ChartWave  Grid.Row="1" Name="chartWave2" ></cht:ChartWave>
-                    <cht:ChartWave Grid.Row="2"  Name="chartWave3" ></cht:ChartWave>
-                    
+                   
+                    <cht:ThreeChart x:Name="threechart"></cht:ThreeChart>
                     
                 </Grid>
                 
@@ -447,7 +440,7 @@
                                     </Style.Triggers>
                                 </Style>
                             </Border.Style>
-                            <TextBlock Text="确认稳定"  HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="32"/>
+                            <TextBlock x:Name="ThirdButton" Text="确认稳定"  HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="32"/>
                         </Border>
 
                     </Grid>

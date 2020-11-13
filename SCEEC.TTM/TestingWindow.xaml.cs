@@ -40,9 +40,6 @@ namespace SCEEC.TTM
         {
             InitializeComponent();
             this.DataContext = this;
-
-
-
             currentJob = WorkingSets.local.getJob(transformerSerialNo, jobName);
             TestingWorker = new BackgroundWorker();
             TestingWorker.WorkerReportsProgress = true;
@@ -75,7 +72,6 @@ namespace SCEEC.TTM
                 if (testingInfoWindow.ShowDialog() != true)
                 {
                     // currentJob.Information = testingInfoWindow.Information;
-
                     inited = false;
                 }
                 else
@@ -87,11 +83,7 @@ namespace SCEEC.TTM
                     inited = true;
                 }
             }
-
-
         }
-
-
         private void TestingWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             var worker = e.Argument as TestingWorkerSender;
@@ -111,31 +103,24 @@ namespace SCEEC.TTM
                     while (!Measurement.CancelWork(ref worker))
                     {
                         TestingWorker.ReportProgress(0, worker);
-                        System.Threading.Thread.Sleep(500);
+                        Thread.Sleep(500);
                     }
-                    //worker.CurrentItemIndex--;
-                    //worker.MeasurementItems[worker.CurrentItemIndex].completed = false;
                     return;
                 }
                 else
                 {
                     Measurement.DoWork(ref worker);
+                    showMassege(worker);
                 }
                 TestingWorker.ReportProgress(worker.ProgressPercent, worker);
                 Thread.Sleep(100);
             }
-            //WorkingSets.local.getTestResultsFromJobID(worker.job.id);
-            //InsertDataTodatabase.UpdataDatabase(WorkingSets.local.getTestResultsFromJobID(worker.job.id));
-
         }
 
         public void Refresh()
         {
             StatusRefresh(worker);
         }
-
-        //dashboard2.Value = 7.56;
-        //    DashboardValue2.Text = dashboard2.Value.ToString("0.00") + "kV";
 
         enum Whichgroupbox
         {
@@ -152,17 +137,55 @@ namespace SCEEC.TTM
             if (num == Whichgroupbox.DCI)
                 dcigroupbox.Visibility = Visibility.Visible;
             if (num == Whichgroupbox.DCR)
+            {
+                ThirdButton.Text = "确认稳定";
                 dcrgroupbox.Visibility = Visibility.Visible;
+            }
             if (num == Whichgroupbox.CAP)
                 capgroupbox.Visibility = Visibility.Visible;
             if (num == Whichgroupbox.OLTC)
+            {
+                ThirdButton.Text = "确认波形";
                 oltcgroupbox.Visibility = Visibility.Visible;
+            }
             if (num == Whichgroupbox.NONE)
             {
                 Oltcgroupbox.Visibility = Visibility.Visible;
             }
 
         }
+
+        private void showMassege(TestingWorkerSender status)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                if (status.MeasurementItems[status.CurrentItemIndex].failed && status.MeasurementItems[status.CurrentItemIndex].completed == true)
+                {
+                    var ret = UMessageBox.Show("警告", "试验出错\t\n" + status.StatusText, "跳过");
+                    if (!(bool)ret)
+                    {
+                        //重做
+                        status.MeasurementItems[status.CurrentItemIndex].failed = false;
+                        status.MeasurementItems[status.CurrentItemIndex].completed = false;
+                        status.MeasurementItems[status.CurrentItemIndex].state = 0;
+                        if (status.CurrentItemIndex > 0)
+                            status.CurrentItemIndex--;
+                        TestFunction.TZ3310.CommunicationQuery(0x00);
+                    }
+                    else
+                    {
+                        status.MeasurementItems[status.CurrentItemIndex].failed = true;
+                        status.MeasurementItems[status.CurrentItemIndex].completed = true;
+                        if (status.MeasurementItems.Length != status.CurrentItemIndex + 1)
+                            status.CurrentItemIndex++;
+                        TestFunction.TZ3310.CommunicationQuery(0x00);
+                    }
+                }
+            });
+        }
+
+
+
         private void StatusRefresh(TestingWorkerSender status)
         {
             if (WorkingSets.local.IsVisible == true && WorkingSets.local.IsVisible1 == true)
@@ -178,88 +201,85 @@ namespace SCEEC.TTM
             ResultListBox.ItemsSource = TestingWorkerUtility.getFinalResultsText(status);
             if (itemIndex < TestItemListBox.Items.Count)
                 TestItemListBox.SelectedIndex = itemIndex;
-            if (status.MeasurementItems[status.CurrentItemIndex].Result != null)
+            if (status.MeasurementItems[status.CurrentItemIndex].Result != null && status.MeasurementItems[status.CurrentItemIndex].Result.values != null)
             {
-                if (status.MeasurementItems[status.CurrentItemIndex].Result.values != null)
+                if (status.MeasurementItems[status.CurrentItemIndex].Function == MeasurementFunction.DCResistance)
                 {
-                    if (status.MeasurementItems[status.CurrentItemIndex].Function == MeasurementFunction.DCResistance)
-                    {
-                        SetgroupboxVisible(Whichgroupbox.DCR);
-                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[2].value != null)
-                            A_resistance_dashboad.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[2].value;
-                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value != null)
-                            A_current_dashboad.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value;
-                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[2].value != null)
-                            A_resistance_value.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[2].OriginText;
-                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value != null)
-                            A_Current_value.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[1].OriginText;
-                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[5].value != null)
-                            B_resistance_dashboad.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[5].value;
-                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[4].value != null)
-                            B_current_dashboad.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[4].value;
-                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[5].value != null)
-                            B_resistance_value.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[5].OriginText;
-                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[4].value != null)
-                            B_Current_value.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[4].OriginText;
-                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[8].value != null)
-                            C_resistance_dashboad.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[8].value;
-                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[7].value != null)
-                            C_current_dashboad.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[7].value;
-                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[8].value != null)
-                            C_resistance_value.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[8].OriginText;
-                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[7].value != null)
-                            C_Current_value.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[7].OriginText;
-                    }
-                    if (status.MeasurementItems[status.CurrentItemIndex].Function == MeasurementFunction.DCInsulation ||
-                        status.MeasurementItems[status.CurrentItemIndex].Function == MeasurementFunction.BushingDCInsulation)
-                    {
-                        SetgroupboxVisible(Whichgroupbox.DCI);
-                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[0].value != null)
-                            dciboard_volate.Value = (double)(status.MeasurementItems[status.CurrentItemIndex].Result.values[0].value / 1000);
-                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[0].value != null)
-                            dciboard_volate_value.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[0].OriginText;
-                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value != null)
-                            dciboard_resistance.Value = (double)(status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value / 1000000000);
-                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value != null)
-                            dciboard_resistance_value.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[1].OriginText + "Ω";
-                    }
+                    SetgroupboxVisible(Whichgroupbox.DCR);
+                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[2].value != null)
+                        A_resistance_dashboad.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[2].value;
+                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value != null)
+                        A_current_dashboad.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value;
+                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[2].value != null)
+                        A_resistance_value.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[2].OriginText;
+                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value != null)
+                        A_Current_value.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[1].OriginText;
+                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[5].value != null)
+                        B_resistance_dashboad.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[5].value;
+                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[4].value != null)
+                        B_current_dashboad.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[4].value;
+                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[5].value != null)
+                        B_resistance_value.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[5].OriginText;
+                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[4].value != null)
+                        B_Current_value.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[4].OriginText;
+                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[8].value != null)
+                        C_resistance_dashboad.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[8].value;
+                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[7].value != null)
+                        C_current_dashboad.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[7].value;
+                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[8].value != null)
+                        C_resistance_value.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[8].OriginText;
+                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[7].value != null)
+                        C_Current_value.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[7].OriginText;
+                }
+                if (status.MeasurementItems[status.CurrentItemIndex].Function == MeasurementFunction.DCInsulation ||
+                    status.MeasurementItems[status.CurrentItemIndex].Function == MeasurementFunction.BushingDCInsulation)
+                {
+                    SetgroupboxVisible(Whichgroupbox.DCI);
+                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[0].value != null)
+                        dciboard_volate.Value = (double)(status.MeasurementItems[status.CurrentItemIndex].Result.values[0].value / 1000);
+                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[0].value != null)
+                        dciboard_volate_value.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[0].OriginText;
+                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value != null)
+                        dciboard_resistance.Value = (double)(status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value / 1000000000);
+                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value != null)
+                        dciboard_resistance_value.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[1].OriginText + "Ω";
+                }
+                if (status.MeasurementItems[status.CurrentItemIndex].Function == MeasurementFunction.Capacitance ||
+                   status.MeasurementItems[status.CurrentItemIndex].Function == MeasurementFunction.BushingCapacitance)
+                {
+                    SetgroupboxVisible(Whichgroupbox.CAP);
+                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value != null)
+                        captance.Value = (double)(status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value / 1000);
+                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value != null)
+                        captancevalue.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[1].OriginText;
 
-                    if (status.MeasurementItems[status.CurrentItemIndex].Function == MeasurementFunction.Capacitance ||
-                       status.MeasurementItems[status.CurrentItemIndex].Function == MeasurementFunction.BushingCapacitance)
-                    {
-                        SetgroupboxVisible(Whichgroupbox.CAP);
-                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value != null)
-                            captance.Value = (double)(status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value / 1000);
-                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value != null)
-                            captancevalue.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[1].OriginText;
-
-                    }
-                    if (status.MeasurementItems[status.CurrentItemIndex].Function == MeasurementFunction.OLTCSwitchingCharacter)
+                }
+                if (status.MeasurementItems[status.CurrentItemIndex].Function == MeasurementFunction.OLTCSwitchingCharacter)
+                {
+                    if (!WorkingSets.local.TestDCI)
                     {
                         SetgroupboxVisible(Whichgroupbox.OLTC);
-                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[1] != null)
-                            Aoltcdashboard.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value;
-                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[1] != null)
-                            Aoltcavalue.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[1].OriginText;
-                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[4] != null)
-                            Boltcdashboard.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[4].value;
-                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[4] != null)
-                            Boltcavalue.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[4].OriginText;
-                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[7] != null)
-                            Coltcdashboard.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[7].value;
-                        if (status.MeasurementItems[status.CurrentItemIndex].Result.values[7] != null)
-                            Boltcavalue.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[7].OriginText;
-                        if (status.MeasurementItems[status.CurrentItemIndex].Result.waves != null)
+                        WorkingSets.local.TestDCI = true;
+                    }
+                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[1] != null)
+                        Aoltcdashboard.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value;
+                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[1] != null)
+                        Aoltcavalue.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[1].OriginText;
+                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[4] != null)
+                        Boltcdashboard.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[4].value;
+                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[4] != null)
+                        Boltcavalue.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[4].OriginText;
+                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[7] != null)
+                        Coltcdashboard.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[7].value;
+                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[7] != null)
+                        Coltcavalue.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[7].OriginText;
+                    if (status.MeasurementItems[status.CurrentItemIndex].Result.waves != null)
+                    {
+                        if (!WorkingSets.local.Testwave)
                         {
-                            if (!WorkingSets.local.Testwave)
-                            {
-                                SetgroupboxVisible(Whichgroupbox.NONE);
-                                var data = ParsingData.deelwaves(status.MeasurementItems[status.CurrentItemIndex].Result.waves);
-                                chartWave.shortWave = data[0];
-                                chartWave2.shortWave = data[1];
-                                chartWave3.shortWave = data[2];
-                                WorkingSets.local.Testwave = true;
-                            }
+                            SetgroupboxVisible(Whichgroupbox.NONE);
+                            threechart.shortWave = status.MeasurementItems[status.CurrentItemIndex].Result.waves;
+                            WorkingSets.local.Testwave = true;
                         }
                     }
                 }
@@ -347,11 +367,9 @@ namespace SCEEC.TTM
         }
         private void StopButton_Click(object sender, MouseButtonEventArgs e)
         {
-            //WorkingStatusLabel.Text = "已经停止测量，\t\n如需重测请点击开始测量";
-            //WorkingSets.local.IsCancer = true;
-            //TestingWorker.CancelAsync();
-            string name = worker.MeasurementItems[2].TapLabel[0] + "-" + worker.MeasurementItems[2].TapLabel[1];
-            SaveFrameworkElementToImage(Oltcgroupbox, worker.job.Information.GetHashCode().ToString(), name);
+            WorkingStatusLabel.Text = "已经停止测量，\t\n如需重测请点击开始测量";
+            WorkingSets.local.IsCancer = true;
+            TestingWorker.CancelAsync();
         }
 
         private void ConfireIsOk_Click(object sender, MouseButtonEventArgs e)
@@ -361,13 +379,16 @@ namespace SCEEC.TTM
                 WorkingSets.local.IsVisible = false;
                 ConfireIsOk.Visibility = Visibility.Collapsed;
                 worker.MeasurementItems[worker.CurrentItemIndex].Result.values =
-                    new PhysicalVariable[] { chartWave.R1Ret, chartWave.R2Ret, chartWave.R1AndR2Ret,
-                        chartWave2.R1Ret, chartWave2.R2Ret, chartWave2.R1AndR2Ret, chartWave3.R1Ret,
-                        chartWave3.R2Ret, chartWave2.R1AndR2Ret };
+                    new PhysicalVariable[] { threechart.WaveResults[0].r1, threechart.WaveResults[0].r2, threechart.WaveResults[0].r12, threechart.WaveResults[1].r1,
+                    threechart.WaveResults[1].r2, threechart.WaveResults[1].r12, threechart.WaveResults[2].r1, threechart.WaveResults[2].r2, threechart.WaveResults[2].r12, };
                 string name = worker.MeasurementItems[worker.CurrentItemIndex].TapLabel[0] + "-" + worker.MeasurementItems[worker.CurrentItemIndex].TapLabel[1];
                 SaveFrameworkElementToImage(Oltcgroupbox, worker.job.Information.GetHashCode().ToString(), name);
 
                 WorkingSets.local.IsCompeleteSaveWave = true;
+
+                //按下确认波形 就跳转到测量位置UI
+                WorkingSets.local.TestDCI = false;
+
             }
 
             if (worker.MeasurementItems[worker.CurrentItemIndex].Function == MeasurementFunction.DCResistance)
@@ -388,7 +409,7 @@ namespace SCEEC.TTM
             encoder.Frames.Add(System.Windows.Media.Imaging.BitmapFrame.Create(bmp));
             encoder.Save(ms);
             ms.Close();
-            string fs = "C:\\waveimgs\\"+ filelocation;
+            string fs = AppDomain.CurrentDomain.BaseDirectory + "\\waveimage\\" + filelocation;
             if (!File.Exists(fs))
             {
                 Directory.CreateDirectory(fs);
