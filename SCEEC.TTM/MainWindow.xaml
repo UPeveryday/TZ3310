@@ -132,7 +132,12 @@
             </Button>
             <TextBlock Text="任务单列表" FontSize="18" Margin="20,10,20,0" Grid.Column="2" Grid.Row="2"/>
             <ListBox x:Name="JobListBox" TouchUp="JobListBox_TouchUp"
-                     ContextMenu="{StaticResource JobNameContextMenu}" Margin="20,10,20,10" MinHeight="240" FontSize="18" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Visible" Grid.Column="2" Grid.Row="3" SelectionChanged="JobListBox_SelectionChanged" MouseDoubleClick="JobListBox_MouseDoubleClick">
+                     ContextMenu="{StaticResource JobNameContextMenu}" 
+                     Margin="20,10,20,10" MinHeight="240" FontSize="18"
+                     ScrollViewer.HorizontalScrollBarVisibility="Hidden" 
+                     ScrollViewer.VerticalScrollBarVisibility="Visible" Grid.Column="2" Grid.Row="3" 
+                     SelectionChanged="JobListBox_SelectionChanged"
+                     MouseDoubleClick="JobListBox_MouseDoubleClick">
             </ListBox>
             <Button x:Name="ModifyJobButton" Margin="20,10,20,20" Visibility="Hidden"  Height="26.8" Grid.Column="2" Grid.Row="4" Click="ModifyJobButton_Click">
                 <TextBlock Text="修改任务单参数" FontSize="18"/>

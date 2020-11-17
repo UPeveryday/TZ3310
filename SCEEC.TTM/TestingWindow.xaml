@@ -17,7 +17,19 @@
         FontSize="18"
         StateChanged="Window_StateChanged" Loaded="Window_Loaded">
     <Window.Resources>
-
+        <ContextMenu  x:Key="TestDevice" Placement="Center"  Background="Black">
+            <MenuItem    Name="redoMenuItem" Click="redo_Click" Header="重做" >
+                <MenuItem.Icon>
+                    <Image Source="Resources/redo.ico"></Image>
+                </MenuItem.Icon>
+            </MenuItem>
+            <!--<Separator></Separator>-->
+            <MenuItem    Name="skipMenuItem"  Click="skip_Click" Header="跳过">
+                <MenuItem.Icon>
+                    <Image Source="Resources/skip.ico"></Image>
+                </MenuItem.Icon>
+            </MenuItem>
+        </ContextMenu>
     </Window.Resources>
     <Grid Margin="5,0,5,0">
         <Grid.RowDefinitions>
@@ -57,7 +69,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <ListBox x:Name="TestItemListBox" Grid.Row="0" Margin="5"/>
+                    <ListBox x:Name="TestItemListBox" ContextMenu="{StaticResource TestDevice}" Grid.Row="0" Margin="5"/>
                     <Grid Grid.Row="1" Margin="5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>

@@ -159,6 +159,18 @@ namespace SCEEC.TTM
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
+                var temp = status.MeasurementItems[status.CurrentItemIndex];
+                if (temp.Function == MeasurementFunction.Description &&
+               !string.IsNullOrEmpty(temp.needSwitchTapNum))
+                {
+                    var ret = UMessageBox.Show("提示", "该步骤需要人工完成\t\n" + "请将有载分接开关切换到（分接" + temp.needSwitchTapNum + "）位置", "确定", false);
+                    if ((bool)ret)
+                    {
+                        var confireRet = UMessageBox.Show("提示", "确认已经切换至" + temp.needSwitchTapNum + "位置。\t\n立即进入试验?", "确定", false);
+                        if ((bool)confireRet)
+                            status.CurrentItemIndex++;
+                    }
+                }
                 if (status.MeasurementItems[status.CurrentItemIndex].failed && status.MeasurementItems[status.CurrentItemIndex].completed == true)
                 {
                     var ret = UMessageBox.Show("警告", "试验出错\t\n" + status.StatusText, "跳过");
@@ -171,6 +183,7 @@ namespace SCEEC.TTM
                         if (status.CurrentItemIndex > 0)
                             status.CurrentItemIndex--;
                         TestFunction.TZ3310.CommunicationQuery(0x00);
+                        Thread.Sleep(2000);
                     }
                     else
                     {
@@ -179,6 +192,7 @@ namespace SCEEC.TTM
                         if (status.MeasurementItems.Length != status.CurrentItemIndex + 1)
                             status.CurrentItemIndex++;
                         TestFunction.TZ3310.CommunicationQuery(0x00);
+                        Thread.Sleep(2000);
                     }
                 }
             });
@@ -415,6 +429,23 @@ namespace SCEEC.TTM
                 Directory.CreateDirectory(fs);
             }
             File.Copy(filename, fs + "\\" + filename + ".jpg", true);
+        }
+
+        private void redo_Click(object sender, RoutedEventArgs e)
+        {
+            var index = TestItemListBox.SelectedIndex;
+            worker.MeasurementItems[index].completed = false;
+            worker.MeasurementItems[index].failed = false;
+            worker.MeasurementItems[index].state = 0;
+
+        }
+
+        private void skip_Click(object sender, RoutedEventArgs e)
+        {
+            var index = TestItemListBox.SelectedIndex;
+            worker.MeasurementItems[index].completed = true;
+            worker.MeasurementItems[index].failed = false;
+            worker.MeasurementItems[index].state = 0;
         }
     }
 

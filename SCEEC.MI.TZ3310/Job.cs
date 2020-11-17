@@ -612,6 +612,8 @@ namespace SCEEC.MI.TZ3310
         internal string stateText = string.Empty;
         private MeasurementResult result;
 
+        public string needSwitchTapNum;
+
         internal static byte[] Array2Bytes(short[] array)
         {
 
@@ -867,10 +869,11 @@ namespace SCEEC.MI.TZ3310
             return mi;
         }
 
-        public static MeasurementItemStruct CreateText(string Text)
+        public static MeasurementItemStruct CreateText(string Text,string NeedSwitckNum="")
         {
             MeasurementItemStruct mi = new MeasurementItemStruct(MeasurementFunction.Description);
             mi.Text = Text;
+            mi.needSwitchTapNum = NeedSwitckNum;
             return mi;
         }
 

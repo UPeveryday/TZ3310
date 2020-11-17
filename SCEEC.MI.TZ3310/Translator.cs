@@ -74,7 +74,7 @@ namespace SCEEC.MI.TZ3310
 
             if (jobList.DCResistance.Enabled)
             {
-                miList.Add(MeasurementItemStruct.CreateText("使用直流电阻试验模块："));
+                //miList.Add(MeasurementItemStruct.CreateText("使用直流电阻试验模块："));
                 if ((jobList.DCResistance.HVEnabled) && (!((jobList.OLTC.Enabled) && (jobList.Transformer.OLTC.WindingPosition == WindingType.HV) && (jobList.OLTC.DCResistance))))
                 {
                     if ((jobList.Transformer.PhaseNum == 3))
@@ -358,8 +358,7 @@ namespace SCEEC.MI.TZ3310
             int TapLocation = mulTapNum + 1;
             int TapMainNum = jobList.Transformer.OLTC.TapMainNum;
 
-            if (jobList.Transformer.OLTC.Contained == true)
-                miList.Add(MeasurementItemStruct.CreateText("将变压器有载分接开关位置切换到额定分接(分接" + "1)位置;"));
+
 
             if (jobList.OLTC.Enabled)
             {
@@ -367,8 +366,7 @@ namespace SCEEC.MI.TZ3310
                 int highest = TapLocation + jobList.OLTC.Range;
                 if (jobList.OLTC.SwitchingCharacter)
                 {
-                    miList.Add(MeasurementItemStruct.CreateText("使用直阻与有载分接试验模块："));
-
+                    miList.Add(MeasurementItemStruct.CreateText("将变压器有载分接开关位置切换到额定(分接" + lowest + ")位置;", lowest.ToString()));
                     for (int i = lowest; i < highest; i++)
                     {
                         getStartAndEndMessage(i, TapLocation, TapMainNum, jobList, miList);
@@ -394,6 +392,7 @@ namespace SCEEC.MI.TZ3310
                 }
                 if (jobList.OLTC.DCResistance)
                 {
+                    miList.Add(MeasurementItemStruct.CreateText("分接位置直流电阻试验，请确认有载分接开关在(分接" + lowest + ")位置;", lowest.ToString()));
                     if (!OltcLocationIsDorYn(jobList))
                     {
                         for (int i = lowest; i <= highest; i++)
@@ -417,12 +416,12 @@ namespace SCEEC.MI.TZ3310
                             {
                                 WindingTerimal firstTerminal = WindingTerimal.A;
                                 WindingTerimal SecondTerminal = WindingTerimal.B;
-                                if(p==0)
+                                if (p == 0)
                                 {
                                     firstTerminal = WindingTerimal.A;
                                     SecondTerminal = WindingTerimal.B;
                                 }
-                                else if(p==1)
+                                else if (p == 1)
                                 {
                                     firstTerminal = WindingTerimal.B;
                                     SecondTerminal = WindingTerimal.C;
@@ -437,11 +436,11 @@ namespace SCEEC.MI.TZ3310
                                 {
                                     for (int j = 0; j < TapMainNum; j++)
                                     {
-                                        miList.Add(MeasurementItemStruct.CreateDCResistanceMeasurementItem(jobList.Transformer.OLTC.WindingPosition,firstTerminal,SecondTerminal,i.ToString()));
+                                        miList.Add(MeasurementItemStruct.CreateDCResistanceMeasurementItem(jobList.Transformer.OLTC.WindingPosition, firstTerminal, SecondTerminal, i.ToString()));
                                     }
                                 }
                                 else
-                                    miList.Add(MeasurementItemStruct.CreateDCResistanceMeasurementItem(jobList.Transformer.OLTC.WindingPosition, firstTerminal,SecondTerminal,i.ToString()));
+                                    miList.Add(MeasurementItemStruct.CreateDCResistanceMeasurementItem(jobList.Transformer.OLTC.WindingPosition, firstTerminal, SecondTerminal, i.ToString()));
                             }
                         }
                     }
@@ -451,7 +450,7 @@ namespace SCEEC.MI.TZ3310
             }
             if (jobList.DCResistance.Enabled)
             {
-                miList.Add(MeasurementItemStruct.CreateText("使用直流电阻试验模块："));
+                //miList.Add(MeasurementItemStruct.CreateText("使用直流电阻试验模块："));
                 if ((jobList.DCResistance.HVEnabled) && (!((jobList.OLTC.Enabled) && (jobList.Transformer.OLTC.WindingPosition == WindingType.HV) && (jobList.OLTC.DCResistance))))
                 {
                     if ((jobList.Transformer.PhaseNum == 3))

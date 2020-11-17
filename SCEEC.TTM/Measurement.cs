@@ -23,7 +23,7 @@ namespace SCEEC.TTM
                 if ((ft > 0) && (ft < 10))
                     WorkingSets.local.TestResults.Rows.Add(sender.MeasurementItems[sender.CurrentItemIndex].ToDataRow(sender.job));
                 WorkingSets.local.saveTestResults();
-                if (sender.MeasurementItems.Length != (sender.CurrentItemIndex + 1))
+                if (sender.MeasurementItems.Length != (sender.CurrentItemIndex + 1)&&string.IsNullOrEmpty( sender.MeasurementItems[sender.CurrentItemIndex].needSwitchTapNum))
                     sender.CurrentItemIndex++;
             }
 
