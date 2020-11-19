@@ -612,8 +612,9 @@ namespace SCEEC.MI.TZ3310
         internal string stateText = string.Empty;
         private MeasurementResult result;
 
+        //自定义
         public string needSwitchTapNum;
-
+        public bool redo;
         internal static byte[] Array2Bytes(short[] array)
         {
 
@@ -691,62 +692,111 @@ namespace SCEEC.MI.TZ3310
 
             return mi;
         }
-
-        public System.Data.DataRow ToDataRow(JobList jobInfo)
+        public System.Data.DataRow ToDataRowAddIndex(TestingWorkerSender sender)
         {
+            var jobInfo = sender.job;
             System.Data.DataRow row = WorkingSets.local.TestResults.NewRow();
-            try { row["testname"] = jobInfo.Information.testingName; } catch { }
-            try { row["testid"] = jobInfo.Information.GetHashCode(); } catch { }
-            try { row["transformerid"] = jobInfo.Transformer.ID; } catch { }
-            try { row["mj_id"] = jobInfo.id; } catch { }
+            row["testjobindex"] = sender.CurrentItemIndex;
+            row["testname"] = jobInfo.Information.testingName;
+            row["testid"] = jobInfo.Information.GetHashCode();
+            row["transformerid"] = jobInfo.Transformer.ID;
+            row["mj_id"] = jobInfo.id;
             //row["testname"] =
-            try { row["function"] = (int)Function; } catch { }
-            try { row["windingtype"] = (int)Winding; } catch { }
+            row["function"] = (int)Function;
+            row["windingtype"] = (int)Winding;
             if (Terimal != null)
             {
                 if (Terimal.Length == 2)
-                    try { row["terimal"] = ((int)Terimal[0]).ToString() + ";" + ((int)Terimal[1]).ToString(); } catch { }
+                    row["terimal"] = ((int)Terimal[0]).ToString() + ";" + ((int)Terimal[1]).ToString();
                 else if (Terimal.Length == 1)
-                    try { row["terimal"] = ((int)Terimal[0]).ToString(); } catch { }
+                    row["terimal"] = ((int)Terimal[0]).ToString();
                 else
-                    try { row["terimal"] = string.Empty; } catch { }
+                    row["terimal"] = string.Empty;
             }
 
             try { row["windingconfig"] = (int)WindingConfig; } catch { }
             if (TapLabel != null)
             {
-                if (Terimal != null)
-                {
-                    if (TapLabel.Length == 2)
-                        try { row["taplabel"] = TapLabel[0] + ";" + TapLabel[1]; } catch { }
-                    else if (Terimal.Length == 1)
-                        try { row["taplabel"] = TapLabel[0]; } catch { }
-                    else
-                        try { row["taplabel"] = string.Empty; } catch { }
-                }
+                if (TapLabel.Length == 2)
+                    row["taplabel"] = TapLabel[0] + ";" + TapLabel[1];
+                else if (TapLabel.Length == 1)
+                    row["taplabel"] = TapLabel[0];
+                else
+                    row["taplabel"] = string.Empty;
             }
-
-            try { row["text"] = Text; } catch { }
-            try { row["failed"] = failed; } catch { }
-            try { row["completed"] = completed; } catch { }
-            if (result != null)
+            if (Text != null)
+                row["text"] = Text;
+            row["failed"] = failed;
+            row["completed"] = completed;
+            if (result.values != null)
             {
-                if (result.values != null)
+                for (int i = 0; i < result.values.Length; i++)
                 {
-                    for (int i = 0; i < result.values.Length; i++)
+                    if (result.values[i] != null)
                     {
-                        if (result.values[i] != null)
-                        {
-                            var pv = result.values[i];
-                            try { row["result_pv" + (i + 1).ToString()] = pv.OriginText; } catch { }
-                        }
+                        var pv = result.values[i];
+                        try { row["result_pv" + (i + 1).ToString()] = pv.OriginText; } catch { }
                     }
                 }
-
-                try { row["recordtime"] = result.recordTime; } catch { }
+                row["recordtime"] = result.recordTime;
                 if (result.waves != null)
                 {
-                    if (result.waves.Length > 0)
+                    if (result.waves != null && result.waves.Length > 0)
+                        try { row["waves"] = System.Convert.ToBase64String(Array2Bytes(result.waves)); } catch { }
+                }
+            }
+            return row;
+        }
+
+
+        public System.Data.DataRow ToDataRow(JobList jobInfo)
+        {
+            System.Data.DataRow row = WorkingSets.local.TestResults.NewRow();
+            row["testname"] = jobInfo.Information.testingName;
+            row["testid"] = jobInfo.Information.GetHashCode();
+            row["transformerid"] = jobInfo.Transformer.ID;
+            row["mj_id"] = jobInfo.id;
+            //row["testname"] =
+            row["function"] = (int)Function;
+            row["windingtype"] = (int)Winding;
+            if (Terimal != null)
+            {
+                if (Terimal.Length == 2)
+                    row["terimal"] = ((int)Terimal[0]).ToString() + ";" + ((int)Terimal[1]).ToString();
+                else if (Terimal.Length == 1)
+                    row["terimal"] = ((int)Terimal[0]).ToString();
+                else
+                    row["terimal"] = string.Empty;
+            }
+
+            try { row["windingconfig"] = (int)WindingConfig; } catch { }
+            if (TapLabel != null)
+            {
+                if (TapLabel.Length == 2)
+                    row["taplabel"] = TapLabel[0] + ";" + TapLabel[1];
+                else if (TapLabel.Length == 1)
+                    row["taplabel"] = TapLabel[0];
+                else
+                    row["taplabel"] = string.Empty;
+            }
+            if (Text != null)
+                row["text"] = Text;
+            row["failed"] = failed;
+            row["completed"] = completed;
+            if (result.values != null)
+            {
+                for (int i = 0; i < result.values.Length; i++)
+                {
+                    if (result.values[i] != null)
+                    {
+                        var pv = result.values[i];
+                        try { row["result_pv" + (i + 1).ToString()] = pv.OriginText; } catch { }
+                    }
+                }
+                row["recordtime"] = result.recordTime;
+                if (result.waves != null)
+                {
+                    if (result.waves != null && result.waves.Length > 0)
                         try { row["waves"] = System.Convert.ToBase64String(Array2Bytes(result.waves)); } catch { }
                 }
             }
@@ -869,7 +919,7 @@ namespace SCEEC.MI.TZ3310
             return mi;
         }
 
-        public static MeasurementItemStruct CreateText(string Text,string NeedSwitckNum="")
+        public static MeasurementItemStruct CreateText(string Text, string NeedSwitckNum = "")
         {
             MeasurementItemStruct mi = new MeasurementItemStruct(MeasurementFunction.Description);
             mi.Text = Text;
@@ -1025,10 +1075,10 @@ namespace SCEEC.MI.TZ3310
                                 retdata += "夹件对地: " + result.values[1].OriginText + "MΩ。  ";
                             return retdata;
                         case MeasurementFunction.Leakagecurrent:
-                           return "泄漏电流试验(双绕组):\n" +
-                                "测试电压10KV：   高压对低压及地： " + result.waves[0].ToString() + " 。 低压对高压及地：  " + result.waves[1].ToString() + " 。 高压、低压对地：  " + result.waves[1].ToString() + "\n" +
-                                "测试电压20KV：   高压对低压及地： " + result.waves[3].ToString() + " 。 低压对高压及地：  " + result.waves[4].ToString() + " 。 高压、低压对地：  " + result.waves[5].ToString() + "\n" +
-                                "测试电压10KV：   高压对低压及地： " + result.waves[6].ToString() + " 。 低压对高压及地：  " + result.waves[7].ToString() + " 。 高压、低压对地：  " + result.waves[8].ToString();
+                            return "泄漏电流试验(双绕组):\n" +
+                                 "测试电压10KV：   高压对低压及地： " + result.waves[0].ToString() + " 。 低压对高压及地：  " + result.waves[1].ToString() + " 。 高压、低压对地：  " + result.waves[1].ToString() + "\n" +
+                                 "测试电压20KV：   高压对低压及地： " + result.waves[3].ToString() + " 。 低压对高压及地：  " + result.waves[4].ToString() + " 。 高压、低压对地：  " + result.waves[5].ToString() + "\n" +
+                                 "测试电压10KV：   高压对低压及地： " + result.waves[6].ToString() + " 。 低压对高压及地：  " + result.waves[7].ToString() + " 。 高压、低压对地：  " + result.waves[8].ToString();
                         case MeasurementFunction.Shortcircuitimpedance:
                             string retdata1 = "低电压短路阻抗:\n";
                             if (result.values[0] != null)

@@ -16,22 +16,41 @@ namespace SCEEC.TTM
 
             MeasurementInterface.DoWork(ref sender);
             //只有完成才会进去下一相
-            if ((sender.MeasurementItems[sender.CurrentItemIndex].completed) && (!sender.MeasurementItems[sender.CurrentItemIndex].failed))
+            if ((sender.MeasurementItems[sender.CurrentItemIndex].completed) && (!sender.MeasurementItems[sender.CurrentItemIndex].failed) && !sender.MeasurementItems[sender.CurrentItemIndex].redo)
             {
                 //WorkingSets.local.refreshTestResults();
                 int ft = (int)sender.MeasurementItems[sender.CurrentItemIndex].Function;
                 if ((ft > 0) && (ft < 10))
-                    WorkingSets.local.TestResults.Rows.Add(sender.MeasurementItems[sender.CurrentItemIndex].ToDataRow(sender.job));
+                    WorkingSets.local.TestResults.Rows.Add(sender.MeasurementItems[sender.CurrentItemIndex].ToDataRowAddIndex(sender));
                 WorkingSets.local.saveTestResults();
-                if (sender.MeasurementItems.Length != (sender.CurrentItemIndex + 1)&&string.IsNullOrEmpty( sender.MeasurementItems[sender.CurrentItemIndex].needSwitchTapNum))
+                if (sender.MeasurementItems.Length != (sender.CurrentItemIndex + 1) && string.IsNullOrEmpty(sender.MeasurementItems[sender.CurrentItemIndex].needSwitchTapNum))
                     sender.CurrentItemIndex++;
             }
 
-            if ((sender.MeasurementItems[sender.CurrentItemIndex].completed) && (sender.MeasurementItems[sender.CurrentItemIndex].failed))
+            if ((sender.MeasurementItems[sender.CurrentItemIndex].completed) && (sender.MeasurementItems[sender.CurrentItemIndex].failed) && !sender.MeasurementItems[sender.CurrentItemIndex].redo)
             {
                 int ft = (int)sender.MeasurementItems[sender.CurrentItemIndex].Function;
                 if ((ft > 0) && (ft < 10))
-                    WorkingSets.local.TestResults.Rows.Add(sender.MeasurementItems[sender.CurrentItemIndex].ToDataRow(sender.job));
+                    WorkingSets.local.TestResults.Rows.Add(sender.MeasurementItems[sender.CurrentItemIndex].ToDataRowAddIndex(sender));
+                WorkingSets.local.saveTestResults();
+            }
+            if ((sender.MeasurementItems[sender.CurrentItemIndex].completed) && sender.MeasurementItems[sender.CurrentItemIndex].redo)
+            {
+                WorkingSets.local.refreshTestResults();
+                List<DataRow> thisJobRows = new List<DataRow>();
+                foreach (DataRow row in WorkingSets.local.TestResults.Rows)
+                {
+                    if (sender.job.Information.GetHashCode() == (int)row["testid"] && sender.CurrentItemIndex == (int)row["testjobindex"])
+                        thisJobRows.Add(row);
+                }
+                foreach (var item in thisJobRows)
+                {
+                    WorkingSets.local.TestResults.Rows.Remove(item);
+                }
+                WorkingSets.local.TestResults.Rows.Add(sender.MeasurementItems[sender.CurrentItemIndex].ToDataRowAddIndex(sender));
+                sender.MeasurementItems[sender.CurrentItemIndex].redo = false;
+                WorkingSets.local.refreshTestResults();
+
                 WorkingSets.local.saveTestResults();
             }
 

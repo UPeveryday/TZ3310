@@ -103,8 +103,7 @@ namespace SCEEC.MI.TZ3310
             byte[] buffer = { 0x01, Mark, (byte)checkData };
             try
             {
-                int temp = sc.SendCommand(buffer, ref RecBuffer, 200);
-                Thread.Sleep(2000);
+                int temp = sc.SendCommand(buffer, ref RecBuffer, 50);
                 if (temp <= 0)
                     return false;
                 if (RecBuffer[0] == 0xac && RecBuffer[1] == Mark)

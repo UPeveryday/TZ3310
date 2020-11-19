@@ -41,6 +41,12 @@ namespace SCEEC.TTM
             set { this.confireButton.Text = value; }
         }
 
+        public string FirstButtonText
+        {
+            get { return this.firstButton.Text; }
+            set { this.firstButton.Text = value; }
+        }
+
         public bool FirstVisible
         {
             get
@@ -76,13 +82,14 @@ namespace SCEEC.TTM
         /// <param name="confireMessage">右边的按钮的文字</param>
         /// <param name="firstButtonVisible">左边按钮是否显示</param>
         /// <returns></returns>
-        public static bool? Show(string title, string msg, string confireMessage = "跳过", bool firstButtonVisible = true)
+        public static bool? Show(string title, string msg, string confireMessage = "跳过", bool firstButtonVisible = true,string firstButtonMessage="重做")
         {
             var msgBox = new UMessageBox();
             msgBox.Title = title;
             msgBox.Message = msg;
             msgBox.ConfireMessage = confireMessage;
             msgBox.FirstVisible = firstButtonVisible;
+            msgBox.FirstButtonText = firstButtonMessage;
             return msgBox.ShowDialog();
         }
 

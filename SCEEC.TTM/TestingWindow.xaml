@@ -17,16 +17,10 @@
         FontSize="18"
         StateChanged="Window_StateChanged" Loaded="Window_Loaded">
     <Window.Resources>
-        <ContextMenu  x:Key="TestDevice" Placement="Center"  Background="Black">
-            <MenuItem    Name="redoMenuItem" Click="redo_Click" Header="重做" >
+        <ContextMenu  x:Key="TestDevice" Placement="Center"   Background="Black">
+            <MenuItem  Height="35" FontSize="22" Name="redoMenuItem" Click="redo_Click" Header="重做" >
                 <MenuItem.Icon>
                     <Image Source="Resources/redo.ico"></Image>
-                </MenuItem.Icon>
-            </MenuItem>
-            <!--<Separator></Separator>-->
-            <MenuItem    Name="skipMenuItem"  Click="skip_Click" Header="跳过">
-                <MenuItem.Icon>
-                    <Image Source="Resources/skip.ico"></Image>
                 </MenuItem.Icon>
             </MenuItem>
         </ContextMenu>

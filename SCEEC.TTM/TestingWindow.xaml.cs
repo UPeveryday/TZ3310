@@ -31,6 +31,8 @@ namespace SCEEC.TTM
     {
         public bool inited = false;
         public bool IsStable = false;//
+
+        public bool Started = false;
         BackgroundWorker TestingWorker;
 
         JobList currentJob;
@@ -39,6 +41,8 @@ namespace SCEEC.TTM
         public WindowTesting(string transformerSerialNo, string jobName, JobInformation job, int testID = -1, bool istcp = false)
         {
             InitializeComponent();
+
+            Started = false;
             this.DataContext = this;
             currentJob = WorkingSets.local.getJob(transformerSerialNo, jobName);
             TestingWorker = new BackgroundWorker();
@@ -87,31 +91,48 @@ namespace SCEEC.TTM
         private void TestingWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             var worker = e.Argument as TestingWorkerSender;
-            WorkingSets.local.TestResults.Rows.Add(worker.job.Information.ToDataRow(worker.job));
-            WorkingSets.local.saveTestResults();
+            if (!Started)
+            {
+                WorkingSets.local.TestResults.Rows.Add(worker.job.Information.ToDataRow(worker.job));
+                WorkingSets.local.saveTestResults();
+                Started = true;
+            }
             while (worker.CurrentItemIndex < worker.MeasurementItems.Length)
             {
                 if (worker.CurrentItemIndex + 1 == worker.MeasurementItems.Length &&
                   worker.MeasurementItems[worker.CurrentItemIndex].completed == true)
                 {
                     TestingWorker.ReportProgress(100, worker);
-                    Thread.Sleep(100);
-                    return;
+                    if (worker.MeasurementItems.Where(p => p.redo == true).Count() > 0)
+                    {
+                        if (reDoMark(worker)) continue;
+                        else return;
+                    }
+                    else
+                        return;
                 }
                 if (TestingWorker.CancellationPending == true)
                 {
                     while (!Measurement.CancelWork(ref worker))
                     {
                         TestingWorker.ReportProgress(0, worker);
-                        Thread.Sleep(500);
+                        Thread.Sleep(50);
                     }
                     return;
                 }
                 else
                 {
-                    Measurement.DoWork(ref worker);
-                    showMassege(worker);
+                    if (!worker.MeasurementItems[worker.CurrentItemIndex].completed)
+                    {
+                        Measurement.DoWork(ref worker);
+                        showMassege(worker);
+                    }
+                    else
+                    {
+                        worker.CurrentItemIndex++;
+                    }
                 }
+                worker.ProgressPercent = (worker.CurrentItemIndex + 1) / worker.MeasurementItems.Length * 100;
                 TestingWorker.ReportProgress(worker.ProgressPercent, worker);
                 Thread.Sleep(100);
             }
@@ -155,6 +176,21 @@ namespace SCEEC.TTM
 
         }
 
+        private bool reDoMark(TestingWorkerSender status)
+        {
+            bool? ret = null;
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                ret = UMessageBox.Show("提示", "试验已经结束，\t\n是否重做标记的试验", "结束试验，不重做", firstButtonVisible: true, firstButtonMessage: "立即重做标记试验");
+            });
+            if (ret != null && !(bool)ret)
+            {
+                status.CurrentItemIndex = 0;
+                return true;
+            }
+            return false;
+        }
+
         private void showMassege(TestingWorkerSender status)
         {
             Application.Current.Dispatcher.Invoke(() =>
@@ -180,10 +216,10 @@ namespace SCEEC.TTM
                         status.MeasurementItems[status.CurrentItemIndex].failed = false;
                         status.MeasurementItems[status.CurrentItemIndex].completed = false;
                         status.MeasurementItems[status.CurrentItemIndex].state = 0;
+                        status.MeasurementItems[status.CurrentItemIndex].redo = true;
                         if (status.CurrentItemIndex > 0)
                             status.CurrentItemIndex--;
                         TestFunction.TZ3310.CommunicationQuery(0x00);
-                        Thread.Sleep(2000);
                     }
                     else
                     {
@@ -192,7 +228,6 @@ namespace SCEEC.TTM
                         if (status.MeasurementItems.Length != status.CurrentItemIndex + 1)
                             status.CurrentItemIndex++;
                         TestFunction.TZ3310.CommunicationQuery(0x00);
-                        Thread.Sleep(2000);
                     }
                 }
             });
@@ -211,6 +246,7 @@ namespace SCEEC.TTM
             }
             WorkingStatusLabel.Text = status.StatusText;
             int itemIndex = TestItemListBox.SelectedIndex;
+
             TestItemListBox.ItemsSource = status.GetList();
             ResultListBox.ItemsSource = TestingWorkerUtility.getFinalResultsText(status);
             if (itemIndex < TestItemListBox.Items.Count)
@@ -434,19 +470,17 @@ namespace SCEEC.TTM
         private void redo_Click(object sender, RoutedEventArgs e)
         {
             var index = TestItemListBox.SelectedIndex;
-            worker.MeasurementItems[index].completed = false;
-            worker.MeasurementItems[index].failed = false;
-            worker.MeasurementItems[index].state = 0;
-
+            if (worker.CurrentItemIndex > index)
+            {
+                worker.MeasurementItems[index].redo = true;
+                worker.MeasurementItems[index].completed = false;
+                worker.MeasurementItems[index].failed = false;
+                worker.MeasurementItems[index].state = 0;
+                TestItemListBox.ItemsSource = worker.GetList();
+            }
         }
 
-        private void skip_Click(object sender, RoutedEventArgs e)
-        {
-            var index = TestItemListBox.SelectedIndex;
-            worker.MeasurementItems[index].completed = true;
-            worker.MeasurementItems[index].failed = false;
-            worker.MeasurementItems[index].state = 0;
-        }
+
     }
 
 

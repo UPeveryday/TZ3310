@@ -39,17 +39,48 @@ namespace SCEEC.MI.TZ3310
                 {
                     if (MeasurementItems[i].Function == MeasurementFunction.Description)
                     {
-                        wp.Children.Add(new Image() { Margin = new Thickness(5), Source = new BitmapImage(new Uri("Resources/Successed.png", UriKind.Relative)), Height = 18 });
+                        if (!MeasurementItems[i].redo)
+                            wp.Children.Add(new Image() { Margin = new Thickness(5), Source = new BitmapImage(new Uri("Resources/Successed.png", UriKind.Relative)), Height = 18 });
+                        else
+                        {
+                            wp.Children.Add(new Image() { Margin = new Thickness(5), Source = new BitmapImage(new Uri("Resources/redo.png", UriKind.Relative)), Height = 18 });
+                        }
                     }
                     else if (!MeasurementItems[i].failed)
-                        wp.Children.Add(new Image() { Margin = new Thickness(5), Source = new BitmapImage(new Uri("Resources/Successed.png", UriKind.Relative)), Height = 18 });
+                    {
+                        if (!MeasurementItems[i].redo)
+                            wp.Children.Add(new Image() { Margin = new Thickness(5), Source = new BitmapImage(new Uri("Resources/Successed.png", UriKind.Relative)), Height = 18 });
+                        else
+                        {
+                            wp.Children.Add(new Image() { Margin = new Thickness(5), Source = new BitmapImage(new Uri("Resources/redo.png", UriKind.Relative)), Height = 18 });
+                        }
+                    }
                     else
-                        wp.Children.Add(new Image() { Margin = new Thickness(5), Source = new BitmapImage(new Uri("Resources/Failed.png", UriKind.Relative)), Height = 18 });
+                    {
+                        if (!MeasurementItems[i].redo)
+                            wp.Children.Add(new Image() { Margin = new Thickness(5), Source = new BitmapImage(new Uri("Resources/Failed.png", UriKind.Relative)), Height = 18 });
+                        else
+                        {
+                            wp.Children.Add(new Image() { Margin = new Thickness(5), Source = new BitmapImage(new Uri("Resources/redo.png", UriKind.Relative)), Height = 18 });
+                        }
+                    }
                 }
                 else if (i == CurrentItemIndex)
                     wp.Children.Add(new Image() { Margin = new Thickness(5), Source = new BitmapImage(new Uri("Resources/Working.png", UriKind.Relative)), Height = 18 });
                 else
-                    wp.Children.Add(new Image() { Margin = new Thickness(5), Source = new BitmapImage(new Uri("Resources/Pending.png", UriKind.Relative)), Height = 18 });
+                {
+                    if (MeasurementItems[i].redo)
+                    {
+                        wp.Children.Add(new Image() { Margin = new Thickness(5), Source = new BitmapImage(new Uri("Resources/redo.png", UriKind.Relative)), Height = 18 });
+                    }
+                    else if (!MeasurementItems[i].failed && MeasurementItems[i].completed)
+                        wp.Children.Add(new Image() { Margin = new Thickness(5), Source = new BitmapImage(new Uri("Resources/Successed.png", UriKind.Relative)), Height = 18 });
+                    else if (MeasurementItems[i].failed && MeasurementItems[i].completed)
+                        wp.Children.Add(new Image() { Margin = new Thickness(5), Source = new BitmapImage(new Uri("Resources/Failed.png", UriKind.Relative)), Height = 18 });
+                    else
+                        wp.Children.Add(new Image() { Margin = new Thickness(5), Source = new BitmapImage(new Uri("Resources/pending.png", UriKind.Relative)), Height = 18 });
+
+                }
                 wp.Children.Add(new TextBlock() { Margin = new Thickness(5), Text = MeasurementItems[i].Description });
                 list.Add(wp);
             }
@@ -59,7 +90,7 @@ namespace SCEEC.MI.TZ3310
         public System.Data.DataRow[] getDatabaseRows()
         {
             List<System.Data.DataRow> rows = new List<System.Data.DataRow>();
-            foreach(var mi in MeasurementItems)
+            foreach (var mi in MeasurementItems)
             {
                 rows.Add(mi.ToDataRow(job));
             }
@@ -76,7 +107,7 @@ namespace SCEEC.MI.TZ3310
                 sender.job = WorkingSets.local.getJob((int)rows[0]["mj_id"]);
                 List<MeasurementItemStruct> mlist = new List<MeasurementItemStruct>();
                 MeasurementItemStruct m;
-                foreach(var row in rows)
+                foreach (var row in rows)
                 {
                     m = new MeasurementItemStruct((MeasurementFunction)((int)row["function"]))
                     {
@@ -101,7 +132,7 @@ namespace SCEEC.MI.TZ3310
                             i = 9;
                     }
                     m.Result = new MeasurementResult(
-                        m.Function, 
+                        m.Function,
                         pvList.ToArray(),
                         MeasurementItemStruct.Bytes2Shorts(Convert.FromBase64String((string)row["waves"])),
                         readyToTrigger: false, processing: false);
@@ -115,7 +146,7 @@ namespace SCEEC.MI.TZ3310
 
     public static class TestingWorkerUtility
     {
-       // static TestingWorkUtility() { }
+        // static TestingWorkUtility() { }
 
         /// <summary>
         /// 筛选测试反馈中最终输出结果的数组

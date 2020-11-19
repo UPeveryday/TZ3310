@@ -115,9 +115,11 @@ namespace SCEEC.MI.TZ3310
             {
                 mi.completed = true;
                 mi.failed = true;
-                mi.stateText = "测量故意认为中断";
+                mi.stateText = "测量人为中断";
                 i = 0;
             }
+            Thread.Sleep(150);
+
             //if (mi.Terimal != null)
             //{
             //    Parameter.ZldzStation Dcposition;
@@ -725,60 +727,72 @@ namespace SCEEC.MI.TZ3310
         static bool Fd = false;
         public static bool CancalWork(ref TestingWorkerSender sender)
         {
-            if (sender.MeasurementItems[sender.CurrentItemIndex].Function == MeasurementFunction.DCResistance)
+            try
             {
-                if (!Fd)
+                if (sender.MeasurementItems[sender.CurrentItemIndex].Function == MeasurementFunction.DCResistance)
                 {
-                    Thread.Sleep(150);
-                    TZ3310.InterRuptMe(Parameter.CommanTest.模拟按键中断测量);
-                    Thread.Sleep(150);
-                    TZ3310.ShutDownOutCurrent(0);
-                    Fd = true;
+
+                    if (!Fd)
+                    {
+                        Thread.Sleep(150);
+                        TZ3310.InterRuptMe(Parameter.CommanTest.模拟按键中断测量);
+                        Thread.Sleep(150);
+                        TZ3310.ShutDownOutCurrent(0);
+                        Fd = true;
+                    }
+                    string[] tpd = TZ3310.ReadTestData(Parameter.TestKind.读取放电数据);
+                    if (tpd != null && tpd[0] == "2")
+                    {
+                        sender.StatusText = "放电完成";
+                        Fd = false;
+                        return true;
+                    }
+                    else
+                    {
+                        // sender.StatusText = "正在放电...";
+                        return false;
+                    }
+
                 }
-                string[] tpd = TZ3310.ReadTestData(Parameter.TestKind.读取放电数据);
-                if (tpd[0] == "2")
+                if (sender.MeasurementItems[sender.CurrentItemIndex].Function == MeasurementFunction.OLTCSwitchingCharacter)
                 {
-                    sender.StatusText = "放电完成";
-                    Fd = false;
-                    return true;
+                    if (!Fd)
+                    {
+                        Thread.Sleep(150);
+                        TZ3310.InterRuptMe(Parameter.CommanTest.模拟按键中断测量);
+                        Thread.Sleep(150);
+                        TZ3310.ShutDownOutCurrent(0);
+                        Fd = true;
+                    }
+                    string[] tpd = TZ3310.ReadTestData(Parameter.TestKind.读取放电数据);
+                    if (tpd[0] == "2")
+                    {
+                        sender.StatusText = "放电完成";
+                        Fd = false;
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
                 else
                 {
-                    // sender.StatusText = "正在放电...";
-                    return false;
-                }
-
-            }
-            if (sender.MeasurementItems[sender.CurrentItemIndex].Function == MeasurementFunction.OLTCSwitchingCharacter)
-            {
-                if (!Fd)
-                {
                     Thread.Sleep(150);
                     TZ3310.InterRuptMe(Parameter.CommanTest.模拟按键中断测量);
-                    Thread.Sleep(150);
-                    TZ3310.ShutDownOutCurrent(0);
-                    Fd = true;
-                }
-                string[] tpd = TZ3310.ReadTestData(Parameter.TestKind.读取放电数据);
-                if (tpd[0] == "2")
-                {
-                    sender.StatusText = "放电完成";
-                    Fd = false;
                     return true;
                 }
-                else
-                {
-                    // sender.StatusText = "正在放电...";
-                    return false;
-                }
             }
-            else
+            catch
             {
-                Thread.Sleep(150);
-                TZ3310.InterRuptMe(Parameter.CommanTest.模拟按键中断测量);
-                return true;
+                sender.MeasurementItems[sender.CurrentItemIndex].stateText = "放电失败，正在尝试重新连接";
+                if(!TZ3310.CommunicationQuery(0x00))
+                {
+                    Thread.Sleep(2000);
+                    sender.MeasurementItems[sender.CurrentItemIndex].stateText = "重新连接失败";
+                }
+                return false;
             }
-
 
         }
 

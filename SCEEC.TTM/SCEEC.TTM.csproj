@@ -422,6 +422,7 @@
     <Resource Include="Resources\skip.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\redo.png" />
     <Content Include="Resources\skip.svg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
