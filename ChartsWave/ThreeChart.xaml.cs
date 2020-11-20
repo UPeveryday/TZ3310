@@ -20,6 +20,7 @@ namespace ChartsWave
     /// <summary>
     /// ThreeChart.xaml 的交互逻辑
     /// </summary>
+    /// 
     public partial class ThreeChart : UserControl
     {
         public ThreeChart()
@@ -60,32 +61,32 @@ namespace ChartsWave
         public static readonly DependencyProperty shortWaveProperty =
             DependencyProperty.Register("shortWave", typeof(short[]), typeof(ThreeChart), new PropertyMetadata(null, null, coreValueCallback));
 
-
-
-
-        private Tuple<int,int> CutWave(GearedValues<ObservablePoint> wave, int cutHeaderLever = 400)
+        private Tuple<int, int> CutWave(GearedValues<ObservablePoint> wave, int cutHeaderLever = 400)
         {
-            double needSelectData = (wave.Select(x => x.Y).Max() + wave.Select(x => x.Y).Min()) / 2;
-            var points = wave.Where(x => x.Y >= needSelectData * 0.95 && x.Y <= needSelectData * 1.05);
-            var temp = points.ToArray();
+            double needSelectData = Math.Round((wave.Select(x => x.Y).Max() + wave.Select(x => x.Y).Min()) / 2, 3);
+            ObservablePoint[] twopoint = new ObservablePoint[2];
+            double[] tempD = wave.Select(x => Math.Round(x.Y, 3)).ToArray();
             double Xmin = 0.00;
-            double Ymin = 300.00;
-            for (int i = 1; i < points.Count(); i++)
+            double Xmax = 300.00;
+            for (int i = 1; i < 6000; i++)
             {
-                if (temp[i].X > temp[i - 1].X * 1.5 || temp[i].X < temp[i - 1].X * 0.5)
+                if ((tempD[i - 1] >= needSelectData && tempD[i] <= needSelectData) || (tempD[i] >= needSelectData && tempD[i - 1] <= needSelectData))
                 {
-                    if (points.ToArray()[i - 1].X > points.ToArray()[i].X)
-                    {
-                        Xmin = points.ToArray()[i].X;
-                        Ymin = Xmin = points.ToArray()[i - 1].X;
-                    }
-                    else
-                    {
-                        Ymin = points.ToArray()[i].X;
-                        Xmin = points.ToArray()[i - 1].X;
-                    }
+                    twopoint[0] = wave[i];
+                    Xmin = wave[i].X;
+                    break;
                 }
             }
+            for (int i = 5999; i > 1; i--)
+            {
+                if ((tempD[i - 1] >= needSelectData && tempD[i] <= needSelectData) || (tempD[i] >= needSelectData && tempD[i - 1] <= needSelectData))
+                {
+                    Xmax= wave[i].X;
+                    break;
+                }
+            }
+
+
             int skip = 0;
             int take = 0;
             if (Xmin < 20)
@@ -97,21 +98,52 @@ namespace ChartsWave
                 skip = (int)(Xmin * 20 - cutHeaderLever);
             }
 
-            if (Ymin > 280)
+            if (Xmax > 280)
             {
                 take = (int)((300 - Xmin) * 20);
             }
             else
             {
-                take = (int)((Ymin - Xmin) * 20 + cutHeaderLever);
+                take = (int)((Xmax - Xmin) * 20 + cutHeaderLever);
             }
-        
-            return new Tuple<int, int>(skip,take) ;
+
+            return new Tuple<int, int>(skip, take);
         }
 
         private static object coreValueCallback(DependencyObject d, object baseValue)
         {
             return (short[])baseValue;
         }
+
+        private WaveResult[] waveResults;
+
+        public WaveResult[] WaveResults
+        {
+            get
+            {
+                waveResults = new WaveResult[3];
+                waveResults[0] = new WaveResult { t1 = wave1.t1Ret, t2 = wave1.t2Ret, t3 = wave1.t3Ret, t4 = wave1.t4Ret, r1 = wave1.R1Ret, r2 = wave1.R2Ret, r12 = wave1.R1AndR2Ret };
+                waveResults[1] = new WaveResult { t1 = wave2.t1Ret, t2 = wave2.t2Ret, t3 = wave2.t3Ret, t4 = wave2.t4Ret, r1 = wave2.R1Ret, r2 = wave2.R2Ret, r12 = wave2.R1AndR2Ret };
+                waveResults[2] = new WaveResult { t1 = wave3.t1Ret, t2 = wave3.t2Ret, t3 = wave3.t3Ret, t4 = wave3.t4Ret, r1 = wave3.R1Ret, r2 = wave3.R2Ret, r12 = wave3.R1AndR2Ret };
+                return waveResults;
+            }
+            private set { waveResults = value; }
+        }
+
+
+    }
+
+
+
+    public class WaveResult
+    {
+        public string t1;
+        public string t2;
+        public string t3;
+        public string t4;
+
+        public string r1;
+        public string r2;
+        public string r12;
     }
 }

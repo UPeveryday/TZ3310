@@ -436,7 +436,7 @@ namespace SCEEC.MI.TZ3310
                                 {
                                     for (int j = 0; j < TapMainNum; j++)
                                     {
-                                        miList.Add(MeasurementItemStruct.CreateDCResistanceMeasurementItem(jobList.Transformer.OLTC.WindingPosition, firstTerminal, SecondTerminal, i.ToString()));
+                                        miList.Add(MeasurementItemStruct.CreateDCResistanceMeasurementItem(jobList.Transformer.OLTC.WindingPosition, firstTerminal, SecondTerminal,i.ToString()+ ((char)('A' + j)).ToString()));
                                     }
                                 }
                                 else

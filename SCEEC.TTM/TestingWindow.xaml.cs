@@ -102,14 +102,18 @@ namespace SCEEC.TTM
                 if (worker.CurrentItemIndex + 1 == worker.MeasurementItems.Length &&
                   worker.MeasurementItems[worker.CurrentItemIndex].completed == true)
                 {
-                    TestingWorker.ReportProgress(100, worker);
+                    worker.ProgressPercent = (worker.MeasurementItems.Where(p => p.completed == true).Count()) * 100 / worker.MeasurementItems.Length;
+                    TestingWorker.ReportProgress(worker.ProgressPercent, worker);
+                    //   TestingWorker.ReportProgress(100, worker);
                     if (worker.MeasurementItems.Where(p => p.redo == true).Count() > 0)
                     {
                         if (reDoMark(worker)) continue;
                         else return;
                     }
                     else
+                    {
                         return;
+                    }
                 }
                 if (TestingWorker.CancellationPending == true)
                 {
@@ -132,7 +136,8 @@ namespace SCEEC.TTM
                         worker.CurrentItemIndex++;
                     }
                 }
-                worker.ProgressPercent = (worker.CurrentItemIndex + 1) / worker.MeasurementItems.Length * 100;
+                var process = worker.MeasurementItems.Where(p => p.completed == true);
+                worker.ProgressPercent = process.Count() * 100 / worker.MeasurementItems.Length;
                 TestingWorker.ReportProgress(worker.ProgressPercent, worker);
                 Thread.Sleep(100);
             }
@@ -256,73 +261,85 @@ namespace SCEEC.TTM
                 if (status.MeasurementItems[status.CurrentItemIndex].Function == MeasurementFunction.DCResistance)
                 {
                     SetgroupboxVisible(Whichgroupbox.DCR);
-                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[2].value != null)
-                        A_resistance_dashboad.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[2].value;
-                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value != null)
-                        A_current_dashboad.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value;
-                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[2].value != null)
-                        A_resistance_value.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[2].OriginText;
-                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value != null)
-                        A_Current_value.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[1].OriginText;
-                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[5].value != null)
-                        B_resistance_dashboad.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[5].value;
-                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[4].value != null)
-                        B_current_dashboad.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[4].value;
-                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[5].value != null)
-                        B_resistance_value.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[5].OriginText;
-                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[4].value != null)
-                        B_Current_value.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[4].OriginText;
-                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[8].value != null)
-                        C_resistance_dashboad.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[8].value;
-                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[7].value != null)
-                        C_current_dashboad.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[7].value;
-                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[8].value != null)
-                        C_resistance_value.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[8].OriginText;
-                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[7].value != null)
-                        C_Current_value.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[7].OriginText;
+                    var testResult = status.MeasurementItems[status.CurrentItemIndex].Result;
+                    if (testResult.values[2] != null && testResult.values[2].value != null)
+                        A_resistance_dashboad.Value = (double)testResult.values[2].value;
+                    if (testResult.values[1] != null && testResult.values[1].value != null)
+                        A_current_dashboad.Value = (double)testResult.values[1].value;
+                    if (testResult.values[2] != null && testResult.values[2].value != null)
+                        A_resistance_value.Text = testResult.values[2].OriginText;
+                    if (testResult.values[1] != null && testResult.values[1].value != null)
+                        A_Current_value.Text = testResult.values[1].OriginText;
+                    if (testResult.values[5] != null && testResult.values[5].value != null)
+                        B_resistance_dashboad.Value = (double)testResult.values[5].value;
+                    if (testResult.values[4] != null && testResult.values[4].value != null)
+                        B_current_dashboad.Value = (double)testResult.values[4].value;
+                    if (testResult.values[5] != null && testResult.values[5].value != null)
+                        B_resistance_value.Text = testResult.values[5].OriginText;
+                    if (testResult.values[4] != null && testResult.values[4].value != null)
+                        B_Current_value.Text = testResult.values[4].OriginText;
+                    if (testResult.values[8] != null && testResult.values[8].value != null)
+                        C_resistance_dashboad.Value = (double)testResult.values[8].value;
+                    if (testResult.values[7] != null && testResult.values[7].value != null)
+                        C_current_dashboad.Value = (double)testResult.values[7].value;
+                    if (testResult.values[8] != null && testResult.values[8].value != null)
+                        C_resistance_value.Text = testResult.values[8].OriginText;
+                    if (testResult.values[7] != null && testResult.values[7].value != null)
+                        C_Current_value.Text = testResult.values[7].OriginText;
                 }
                 if (status.MeasurementItems[status.CurrentItemIndex].Function == MeasurementFunction.DCInsulation ||
                     status.MeasurementItems[status.CurrentItemIndex].Function == MeasurementFunction.BushingDCInsulation)
                 {
                     SetgroupboxVisible(Whichgroupbox.DCI);
-                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[0].value != null)
-                        dciboard_volate.Value = (double)(status.MeasurementItems[status.CurrentItemIndex].Result.values[0].value / 1000);
-                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[0].value != null)
-                        dciboard_volate_value.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[0].OriginText;
-                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value != null)
-                        dciboard_resistance.Value = (double)(status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value / 1000000000);
-                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value != null)
-                        dciboard_resistance_value.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[1].OriginText + "Ω";
+                    var testResult = status.MeasurementItems[status.CurrentItemIndex].Result;
+                    if (testResult.values[0] != null && testResult.values[0].value != null)
+                    {
+                        dciboard_volate.Value = (double)(testResult.values[0].value / 1000);
+                        dciboard_volate_value.Text = testResult.values[0].OriginText;
+                    }
+                    if (testResult.values[1] != null && testResult.values[1].value != null)
+                    {
+                        dciboard_resistance.Value = (double)(testResult.values[1].value / 1000000000);
+                        dciboard_resistance_value.Text = testResult.values[1].OriginText + "Ω";
+                    }
                 }
                 if (status.MeasurementItems[status.CurrentItemIndex].Function == MeasurementFunction.Capacitance ||
                    status.MeasurementItems[status.CurrentItemIndex].Function == MeasurementFunction.BushingCapacitance)
                 {
                     SetgroupboxVisible(Whichgroupbox.CAP);
-                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value != null)
-                        captance.Value = (double)(status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value / 1000);
-                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value != null)
-                        captancevalue.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[1].OriginText;
-
+                    var testResult = status.MeasurementItems[status.CurrentItemIndex].Result;
+                    if (testResult.values[1] != null && testResult.values[1].value != null)
+                    {
+                        captance.Value = (double)(testResult.values[1].value / 1000);
+                        captancevalue.Text = testResult.values[1].OriginText;
+                    }
                 }
                 if (status.MeasurementItems[status.CurrentItemIndex].Function == MeasurementFunction.OLTCSwitchingCharacter)
                 {
+                    var testResult = status.MeasurementItems[status.CurrentItemIndex].Result;
+
                     if (!WorkingSets.local.TestDCI)
                     {
                         SetgroupboxVisible(Whichgroupbox.OLTC);
                         WorkingSets.local.TestDCI = true;
                     }
-                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[1] != null)
-                        Aoltcdashboard.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[1].value;
-                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[1] != null)
-                        Aoltcavalue.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[1].OriginText;
-                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[4] != null)
-                        Boltcdashboard.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[4].value;
-                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[4] != null)
-                        Boltcavalue.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[4].OriginText;
-                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[7] != null)
-                        Coltcdashboard.Value = (double)status.MeasurementItems[status.CurrentItemIndex].Result.values[7].value;
-                    if (status.MeasurementItems[status.CurrentItemIndex].Result.values[7] != null)
-                        Coltcavalue.Text = status.MeasurementItems[status.CurrentItemIndex].Result.values[7].OriginText;
+                    if (testResult.values[1] != null && testResult.values[1].value != null)
+                    {
+                        Aoltcdashboard.Value = (double)testResult.values[1].value;
+                        Aoltcavalue.Text = testResult.values[1].OriginText;
+                    }
+                    if (testResult.values[4] != null && testResult.values[4].value != null)
+                    {
+                        Boltcdashboard.Value = (double)testResult.values[4].value;
+                        Boltcavalue.Text = testResult.values[4].OriginText;
+                    }
+
+                    if (testResult.values[7] != null && testResult.values[7].value != null)
+                    {
+
+                        Coltcdashboard.Value = (double)testResult.values[7].value;
+                        Coltcavalue.Text = testResult.values[7].OriginText;
+                    }
                     if (status.MeasurementItems[status.CurrentItemIndex].Result.waves != null)
                     {
                         if (!WorkingSets.local.Testwave)

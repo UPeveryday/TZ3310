@@ -36,12 +36,15 @@ namespace SCEEC.TTM
             }
             if ((sender.MeasurementItems[sender.CurrentItemIndex].completed) && sender.MeasurementItems[sender.CurrentItemIndex].redo)
             {
-                WorkingSets.local.refreshTestResults();
                 List<DataRow> thisJobRows = new List<DataRow>();
                 foreach (DataRow row in WorkingSets.local.TestResults.Rows)
                 {
-                    if (sender.job.Information.GetHashCode() == (int)row["testid"] && sender.CurrentItemIndex == (int)row["testjobindex"])
-                        thisJobRows.Add(row);
+                    if (sender.job.Information.GetHashCode() == (int)row["testid"] && (int)sender.MeasurementItems[sender.CurrentItemIndex].Function == (int)row["function"])
+                    {
+                        if (sender.CurrentItemIndex == (int)row["testjobindex"])
+                            thisJobRows.Add(row);
+                    }
+
                 }
                 foreach (var item in thisJobRows)
                 {

@@ -728,7 +728,7 @@ namespace SCEEC.MI.TZ3310
                 row["text"] = Text;
             row["failed"] = failed;
             row["completed"] = completed;
-            if (result.values != null)
+            if (result != null && result.values != null)
             {
                 for (int i = 0; i < result.values.Length; i++)
                 {
@@ -783,7 +783,7 @@ namespace SCEEC.MI.TZ3310
                 row["text"] = Text;
             row["failed"] = failed;
             row["completed"] = completed;
-            if (result.values != null)
+            if (result != null && result.values != null)
             {
                 for (int i = 0; i < result.values.Length; i++)
                 {

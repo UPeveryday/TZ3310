@@ -45,15 +45,15 @@ namespace ChartsWave
                 for (int s = start; s < end; s++)
                 {
                     double pdata = 0;
-                    if (waves[6000].ToString() == "1")
+                    if (waves[end].ToString() == "1")
                         pdata = waves[s] * 500d / 32768d / 1000 / current;
-                    if (waves[6000].ToString() == "2")
+                    if (waves[end ].ToString() == "2")
                         pdata = waves[s] * 1000d / 32768d / 1000 / current;
-                    if (waves[6000].ToString() == "3")
+                    if (waves[end ].ToString() == "3")
                         pdata = waves[s] * 5000d / 32768d / 1000 / current;
-                    if (waves[6000].ToString() == "4")
+                    if (waves[end ].ToString() == "4")
                         pdata = waves[s] * 10000d / 32768d / 1000 / current;
-                    if (waves[6000].ToString() == "5")
+                    if (waves[end ].ToString() == "5")
                         pdata = waves[s] * 50000d / 32768d / 1000 / current;
                     else
                     {

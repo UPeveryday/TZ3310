@@ -1,20 +1,12 @@
-﻿<UserControl x:Class="ChartsWave.ThreeChart"
+﻿<UserControl x:Class="ChartsWave.UMessageBox"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ChartsWave"
-             
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition ></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
-        </Grid.RowDefinitions>
-        <local:ChartWave  x:Name="wave1" Grid.Row="0"></local:ChartWave>
-        <local:ChartWave x:Name="wave2" Grid.Row="1"></local:ChartWave>
-        <local:ChartWave x:Name="wave3" Grid.Row="2"></local:ChartWave>
+            
     </Grid>
 </UserControl>

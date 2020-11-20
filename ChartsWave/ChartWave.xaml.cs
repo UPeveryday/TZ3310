@@ -41,7 +41,7 @@ namespace ChartsWave
                 var temp = value.ToArray();
                 for (int i = 0; i < value.Count(); i++)
                 {
-                    ObservablePoint p = new ObservablePoint { X = temp[i].X, Y = Math.Round(temp[i].Y, 3) };
+                    ObservablePoint p = new ObservablePoint { X = temp[i].X, Y = Math.Round(temp[i].Y, 2) };
                     data.Add(p);
                 }
                 DrawWave(data);
@@ -120,36 +120,26 @@ namespace ChartsWave
 
         private void DrawFourLine(GearedValues<ObservablePoint> schart, GearedValues<ObservablePoint> sundata)
         {
-            double needSelectData = (sundata.Select(x => x.Y).Max() + sundata.Select(x => x.Y).Min()) / 2;
-
-            var points = sundata.Where(x => x.Y >= needSelectData * 0.95 && x.Y <= needSelectData * 1.05);
-
+            double needSelectData = Math.Round((sundata.Select(x => x.Y).Max() + sundata.Select(x => x.Y).Min()) / 2, 3);
             ObservablePoint[] twopoint = new ObservablePoint[4];
-            if (points.Count() >= 2)
+            double[] tempD = sundata.Select(x => Math.Round(x.Y, 3)).ToArray();
+            for (int i = 1; i < 6000; i++)
             {
-                var temp = points.ToArray();
-                for (int i = 1; i < points.Count(); i++)
+                if ((tempD[i - 1] >= needSelectData && tempD[i] <= needSelectData) || (tempD[i] >= needSelectData && tempD[i - 1] <= needSelectData))
                 {
-                    if (temp[i].X > temp[i - 1].X * 1.5 || temp[i].X < temp[i - 1].X * 0.5)
-                    {
-                        if (points.ToArray()[i - 1].X < points.ToArray()[i].X)
-                        {
-                            twopoint[0] = points.ToArray()[i - 1];
-                            twopoint[3] = points.ToArray()[i];
-                        }
-                        else
-                        {
-                            twopoint[3] = points.ToArray()[i - 1];
-                            twopoint[0] = points.ToArray()[i];
-                        }
-                    }
+                    twopoint[0] = sundata[i];
+                    break;
                 }
             }
-            else
+            for (int i = 5999; i > 1; i--)
             {
-                twopoint[0] = schart[schart.Count() / 3];
-                twopoint[3] = schart[schart.Count() / 2];
+                if ((tempD[i - 1] >= needSelectData && tempD[i] <= needSelectData) || (tempD[i] >= needSelectData && tempD[i - 1] <= needSelectData))
+                {
+                    twopoint[3] = sundata[i];
+                    break;
+                }
             }
+
 
             double cuttime = cutTake * 0.05;
             double skiptime = cutSkip * 0.05;
@@ -173,24 +163,29 @@ namespace ChartsWave
 
             var centerPoints = schart.Skip(oneStart + (fourStart - oneStart) / 4).Take((fourStart - oneStart) / 2);
 
+            int startI = oneStart + (fourStart - oneStart) / 4;
+
             var centerValue = (centerPoints.Select(x => x.Y).Max() + centerPoints.Select(x => x.Y).Min()) / 2;
 
-            var pointsCenter = centerPoints.Where(x => x.Y >= centerValue * 0.98 && x.Y <= centerValue * 1.02);
-            if (pointsCenter.Count() >= 2)
+            double[] centDoble = centerPoints.Select(x => Math.Round(x.Y, 3)).ToArray();
+            for (int i = 1; i < centDoble.Length; i++)
             {
-                var pointsArray = pointsCenter.ToArray();
-                ObservablePoint xfirst = new ObservablePoint { X = pointsArray[0].X - skiptime, Y = pointsArray[0].Y };
-                ObservablePoint xend = new ObservablePoint { X = pointsArray[pointsCenter.Count() - 1].X - skiptime, Y = pointsArray[pointsCenter.Count() - 1].Y };
-                //导致无线循环
-                //   pointsArray[pointsCenter.Count() - 1].X = pointsArray[pointsCenter.Count() - 1].X - skiptime;
-                twopoint[1] = xfirst;
-                twopoint[2] = xend;
+                if ((centDoble[i - 1] >= centerValue && centDoble[i] <= centerValue) || (centDoble[i] >= centerValue && centDoble[i - 1] <= centerValue))
+                {
+                    twopoint[1] = sundata[i + startI];
+                    break;
+                }
             }
-            else
+            for (int i = centDoble.Length - 1; i > 1; i--)
             {
-                twopoint[1] = schart[schart.Count() * 2 / 3];
-                twopoint[2] = schart[schart.Count() * 5 / 4];
+                if ((centDoble[i - 1] >= centerValue && centDoble[i] <= centerValue) || (centDoble[i] >= centerValue && centDoble[i - 1] <= centerValue))
+                {
+                    twopoint[2] = sundata[i + startI];
+                    break;
+                }
             }
+
+
 
             Hover2.X1 = (twopoint[1].X - skiptime) / cuttime * chartCore.Width + chartCore.Left + 5;
             Hover2.X2 = (twopoint[1].X - skiptime) / cuttime * chartCore.Width + chartCore.Left + 5;
@@ -273,13 +268,11 @@ namespace ChartsWave
                     else
                         dictionary.Add(elevationList[i], 1);
                 }
-                //如果没有众数，返回空
                 if (!flag)
                     return 0;
                 int max = 0;
                 int position = 0;
                 double[] modeArray = new double[elevationList.Count];//众数数组
-                //遍历hash表
                 foreach (KeyValuePair<double, int> myKey in dictionary)
                 {
                     if (myKey.Value > max)
@@ -293,7 +286,6 @@ namespace ChartsWave
                 }
                 Array.Resize(ref modeArray, position + 1);
                 double mode = 0;
-                //如果众数不唯一，求平均数
                 if (modeArray.Length > 1)
                 {
                     for (int i = 0; i < modeArray.Length; i++)
@@ -303,7 +295,6 @@ namespace ChartsWave
                     double elevationMode = mode / modeArray.Length;
                     return elevationMode;
                 }
-                //如果众数唯一，返回众数
                 else
                 {
                     mode = modeArray[0];
@@ -322,24 +313,34 @@ namespace ChartsWave
 
         private void DrawWave(GearedValues<ObservablePoint> data)
         {
-            var max = Math.Round(data.Select(x => x.Y).Max() + 0.1, 1);
-            var min = Math.Round(data.Select(x => x.Y).Min() - 0.1, 1);
-            maxVal = Yaxis.MaxValue = max;
-            minVal = Yaxis.MinValue = min;
-            XFormatter = val => (val).ToString() + "ms";
-            YFormatter = val =>
-            {
-                return Math.Round((maxVal - Math.Abs(val - minVal)), 2).ToString() + "Ω";
-            };
+            var maxf =data.Select(x => x.Y).Max();
+            var minf =data.Select(x => x.Y).Min();
             GearedValues<ObservablePoint> tempdata = new GearedValues<ObservablePoint>();
             tempdata.AddRange(data.Select(x =>
             {
-                x.Y = Math.Round(maxVal - Math.Abs(x.Y - minVal), 2);
+                x.Y = maxf - Math.Abs(x.Y - minf);
                 return x;
             }));
-            var pt = tempdata.Select(x => x.Y);
-            var dt = data.Select(x => x.Y);
-            YaxisSpe.Step = (maxVal - minVal) / 5;
+
+            var max = Math.Round(tempdata.Select(x => x.Y).Max(), 2);
+            var min =Math.Round(tempdata.Select(x => x.Y).Min(), 2);
+            var avg = Math.Round((Math.Abs(max) + Math.Abs(min)) / 5, 2);
+            var step =Math.Ceiling(Math.Abs(min) / avg);
+            var stepmax =Math.Ceiling( Math.Abs(max) / avg);
+
+            min = min >= 0 ? (avg * step) : (-1 * avg * step);
+            max = max >= 0 ? (avg * stepmax) : (-1 * avg * stepmax);
+            maxVal = max;
+            minVal = min;
+            Yaxis.MaxValue = max;
+            Yaxis.MinValue = min;
+            XFormatter = val => (val).ToString() + "ms";
+            YFormatter = val =>
+            {
+                return Math.Round((max - Math.Abs(val - min)), 1).ToString() + "Ω";
+            };
+
+            YaxisSpe.Step = Math.Abs(avg);
             series = new SeriesCollection();
             series.Add(new GLineSeries
             {
@@ -350,8 +351,19 @@ namespace ChartsWave
                 PointGeometrySize = 0,
                 PointForeground = new SolidColorBrush(System.Windows.Media.Color.FromRgb(34, 46, 49)),
                 Values = tempdata
+
             });
             chart_wave.Series = series;
+
+            //Yaxis.Sections = new SectionsCollection {
+            //     new AxisSection
+            //        {
+            //            Value = maxVal-Math.Abs(minVal),
+            //             Stroke = Brushes.Red,
+            //            StrokeThickness = 1.5,
+            //        },
+
+            //};
         }
         public SeriesCollection series { get; set; }
         public Func<double, string> XFormatter { get; set; }
