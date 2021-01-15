@@ -544,7 +544,7 @@ namespace SCEEC.TTM
             if (flag == 0 || flag == 2)
             {
                 string[] lowdata = { "yn", "y", "d" };
-                if (HvWindingConfigComboBox.SelectedValue.ToString().Split(':')[1].Trim().ToCharArray()[0].ToString().ToUpper() ==
+                if (HvWindingConfigComboBox.SelectedValue!=null&&HvWindingConfigComboBox.SelectedValue.ToString().Split(':')[1].Trim().ToCharArray()[0].ToString().ToUpper() ==
              lowdata[LvWindingConfigComboBox.SelectedIndex].ToUpper().ToCharArray()[0].ToString())
                 {
                     int i = 0;

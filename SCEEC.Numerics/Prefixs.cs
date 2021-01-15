@@ -30,9 +30,6 @@ namespace SCEEC.Numerics
         Z = 21,
         Y = 24
     }
-
-
-
     /// <summary>
     /// SI词头转换器
     /// </summary>
@@ -457,7 +454,7 @@ namespace SCEEC.Numerics
                     suffix = suffix.Remove(suffix.Length - 1);
                     break;
             }
-            bool percentage = suffix.StartsWith("%");
+             bool percentage = suffix.StartsWith("%");
             if (percentage)
             {
                 suffix = suffix.Remove(0, 1);

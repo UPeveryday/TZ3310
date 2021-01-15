@@ -1,9 +1,9 @@
-﻿using System;
+﻿using SCEEC.Numerics;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace SCEEC.MI.TZ3310
 {
@@ -57,8 +57,8 @@ namespace SCEEC.MI.TZ3310
                 tws.job.Transformer.WindingConfig.MVLabel;//连结组标号
             row["Model"] = tws.Transformer.SerialNo;
             row["PhaseNumber"] = tws.Transformer.PhaseNum;
-          //  row["RatedCapacitance"] = tws.job.Information.testingName;
-          //  row["VoltageCombination"] = tws.job.Information.testingAgency;
+            //  row["RatedCapacitance"] = tws.job.Information.testingName;
+            //  row["VoltageCombination"] = tws.job.Information.testingAgency;
             //row["DifferentWiring"] = tws.job.Information.auditor; 
             //row["CapacityCombination"] = tws.job.Information.approver;
             //row["CurrentCombination"] = tws.job.Information.principal;
@@ -180,41 +180,53 @@ namespace SCEEC.MI.TZ3310
                                     CapacitanceRowCapacitance["LowPressure_HighMediumVoltage"] = tws.MeasurementItems[i].Result.values[2].ToString();
 
                                 }
-
-
-
                             }
                             if (tws.MeasurementItems[i].Result.Function == MeasurementFunction.DCResistance)
                             {
                                 if (tws.MeasurementItems[i].Winding == WindingType.HV)
                                 {
+                                    var data = tws.MeasurementItems[i].Result.values;
                                     DataRow rowHigh = WorkingSets.local.Dcresistor_Highpressure.NewRow();
-                                    rowHigh["A0"] = tws.MeasurementItems[i].Result.values[2].OriginText;
-                                    rowHigh["A0_75"] = ChangeValueToNeed.DcResistans_To_75(tws.MeasurementItems[i].Result.values[2]);
-                                    rowHigh["B0"] = tws.MeasurementItems[i].Result.values[5].OriginText;
-                                    rowHigh["B0_75"] = ChangeValueToNeed.DcResistans_To_75(tws.MeasurementItems[i].Result.values[5]);
-                                    rowHigh["C0"] = tws.MeasurementItems[i].Result.values[8].OriginText;
-                                    rowHigh["C0_75"] = ChangeValueToNeed.DcResistans_To_75(tws.MeasurementItems[i].Result.values[8]);
+                                    rowHigh["A0"] = data[2].OriginText;
+                                    rowHigh["A0_75"] = ChangeValueToNeed.DcResistans_To_75(data[2]);
+                                    rowHigh["B0"] = data[5].OriginText;
+                                    rowHigh["B0_75"] = ChangeValueToNeed.DcResistans_To_75(data[5]);
+                                    rowHigh["C0"] = data[8].OriginText;
+                                    rowHigh["C0_75"] = ChangeValueToNeed.DcResistans_To_75(data[8]);
                                     rowHigh["TestCode"] = tws.job.Information.GetHashCode();
-                                    rowHigh["A0_B0MutualDifference"] = ChangeValueToNeed.MutualDifference((double)tws.MeasurementItems[i].Result.values[2].value * 310 / 255, Convert.ToDouble(tws.MeasurementItems[i].Result.values[5].value) * 310 / 255);
+                                    if (isNotPhyNull(new PhysicalVariable[] { data[5], data[2] }))
+                                    {
+                                        rowHigh["A0_B0MutualDifference"] = ChangeValueToNeed.MutualDifference((double)data[2].value * 310 / 255, Convert.ToDouble(data[5].value) * 310 / 255);
+                                    }
                                     if (tws.MeasurementItems[i].TapLabel != null)
                                         rowHigh["DCResistorHighPressure"] = tws.MeasurementItems[i].TapLabel[0];
-                                    rowHigh["B0_C0MutualDifference"] = ChangeValueToNeed.MutualDifference((double)tws.MeasurementItems[i].Result.values[5].value * 310 / 255, Convert.ToDouble(tws.MeasurementItems[i].Result.values[8].value) * 310 / 255);
-                                    rowHigh["C0_A0MutualDifference"] = ChangeValueToNeed.MutualDifference((double)tws.MeasurementItems[i].Result.values[8].value * 310 / 255, Convert.ToDouble(tws.MeasurementItems[i].Result.values[2].value) * 310 / 255);
-                                    rowHigh["UnbalanceRate"] = ChangeValueToNeed.UnBalance(Convert.ToDouble(tws.MeasurementItems[i].Result.values[2].value * 310 / 255),
-                                        Convert.ToDouble(tws.MeasurementItems[i].Result.values[5].value * 310 / 255),
-                                        Convert.ToDouble(tws.MeasurementItems[i].Result.values[8].value * 310 / 255));
-                                    rowHigh["MaximumMutualDifference"] = ChangeValueToNeed.MaxMutualDifference((double)tws.MeasurementItems[i].Result.values[2].value * 310 / 255, (double)tws.MeasurementItems[i].Result.values[2].value * 310 / 255,
-                                 (double)tws.MeasurementItems[i].Result.values[2].value * 310 / 255);
+                                    if (isNotPhyNull(new PhysicalVariable[] { data[5], data[8] }))
+                                    {
+                                        rowHigh["B0_C0MutualDifference"] = ChangeValueToNeed.MutualDifference((double)data[5].value * 310 / 255, Convert.ToDouble(data[8].value) * 310 / 255);
+                                    }
+                                    if (isNotPhyNull(new PhysicalVariable[] { data[2], data[8] }))
+                                    {
+                                        rowHigh["C0_A0MutualDifference"] = ChangeValueToNeed.MutualDifference((double)data[8].value * 310 / 255, Convert.ToDouble(data[2].value) * 310 / 255);
+                                    }
+                                    if (isNotPhyNull(new PhysicalVariable[] { data[5], data[2], data[8] }))
+                                    {
+
+                                        rowHigh["UnbalanceRate"] = ChangeValueToNeed.UnBalance(Convert.ToDouble(data[2].value * 310 / 255),
+                                     Convert.ToDouble(data[5].value * 310 / 255),
+                                     Convert.ToDouble(data[8].value * 310 / 255));
+                                    }
+                                    if (isNotPhyNull(new PhysicalVariable[] { data[2] }))
+                                    {
+                                        rowHigh["MaximumMutualDifference"] = ChangeValueToNeed.MaxMutualDifference((double)data[2].value * 310 / 255, (double)data[2].value * 310 / 255,
+                                 (double)data[2].value * 310 / 255);
+                                    }
+
                                     WorkingSets.local.Dcresistor_Highpressure.Rows.Add(rowHigh);
                                     WorkingSets.local.SaveCreateLocateDatabase();
                                 }
                                 if (tws.MeasurementItems[i].Winding == WindingType.MV)
                                 {
-
-
                                     DataRow rowM = WorkingSets.local.Dcresistor_Mediumvoltage.NewRow();
-
                                     if (tws.MeasurementItems[i].WindingConfig == TransformerWindingConfigName.Yn)
                                     {
                                         if (tws.MeasurementItems[i].TapLabel != null)
@@ -263,26 +275,36 @@ namespace SCEEC.MI.TZ3310
                                 if (tws.MeasurementItems[i].Winding == WindingType.LV)
                                 {
                                     DataRow rowLow = WorkingSets.local.Dcresistor_Lowpressure.NewRow();
+                                    var data = tws.MeasurementItems[i].Result.values;
+
                                     if (tws.MeasurementItems[i].WindingConfig == TransformerWindingConfigName.Yn)
                                     {
-                                        if (tws.MeasurementItems[i].TapLabel != null)
-                                            rowLow["DCResistorHighPressure"] = tws.MeasurementItems[i].TapLabel[0];
-                                        rowLow["a-b"] = tws.MeasurementItems[i].Result.values[2].OriginText;
-                                        rowLow["a-b_75"] = ChangeValueToNeed.DcResistans_To_75(tws.MeasurementItems[i].Result.values[2]);
-                                        rowLow["b-c"] = tws.MeasurementItems[i].Result.values[5].OriginText;
-                                        rowLow["b-c_75"] = ChangeValueToNeed.DcResistans_To_75(tws.MeasurementItems[i].Result.values[5]);
-                                        rowLow["c-a"] = tws.MeasurementItems[i].Result.values[8].OriginText;
-                                        rowLow["c-a_75"] = ChangeValueToNeed.DcResistans_To_75(tws.MeasurementItems[i].Result.values[8]);
-                                        rowLow["TestCode"] = tws.job.Information.GetHashCode();
-                                        rowLow["unbalance"] = ChangeValueToNeed.UnBalance(Convert.ToDouble(tws.MeasurementItems[i].Result.values[2].value) * 310 / 255,
-                                            Convert.ToDouble(tws.MeasurementItems[i].Result.values[5].value) * 310 / 255,
-                                            Convert.ToDouble(tws.MeasurementItems[i].Result.values[8].value) * 310 / 255);
-                                        rowLow["ax-byMutualDifference"] = ChangeValueToNeed.MutualDifference((double)tws.MeasurementItems[i].Result.values[2].value * 310 / 255, (double)(tws.MeasurementItems[i].Result.values[5].value * 310 / 255));
-                                        rowLow["by-czMutualDifference"] = ChangeValueToNeed.MutualDifference((double)tws.MeasurementItems[i].Result.values[5].value * 310 / 255, (double)(tws.MeasurementItems[i].Result.values[8].value * 310 / 255));
-                                        rowLow["cz-axMutualDifference"] = ChangeValueToNeed.MutualDifference((double)tws.MeasurementItems[i].Result.values[8].value * 310 / 255, (double)(tws.MeasurementItems[i].Result.values[2].value * 310 / 255));
-                                        rowLow["max"] = ChangeValueToNeed.MaxMutualDifference((double)tws.MeasurementItems[i].Result.values[2].value * 310 / 255, (double)tws.MeasurementItems[i].Result.values[5].value * 310 / 255,
-                                       (double)tws.MeasurementItems[i].Result.values[8].value * 310 / 255);
-
+                                        if (tws.MeasurementItems.Length > (i + 2) && tws.MeasurementItems[i + 1] != null && tws.MeasurementItems[i + 2] != null)
+                                        {
+                                            var data1 = tws.MeasurementItems[i + 1].Result.values;
+                                            var data2 = tws.MeasurementItems[i + 2].Result.values;
+                                            Numerics.PhysicalVariable[] sumData = { data[0], data[1], data[2], data1[3], data1[4], data1[5], data2[6], data2[7], data2[8] };
+                                            if (sumData.Any(p => p != null && p.value != null))
+                                            {
+                                                if (tws.MeasurementItems[i].TapLabel != null)
+                                                    rowLow["DCResistorHighPressure"] = tws.MeasurementItems[i].TapLabel[0];
+                                                rowLow["a-b"] = sumData[2].OriginText;
+                                                rowLow["a-b_75"] = ChangeValueToNeed.DcResistans_To_75(sumData[2]);
+                                                rowLow["b-c"] = sumData[5].OriginText;
+                                                rowLow["b-c_75"] = ChangeValueToNeed.DcResistans_To_75(sumData[5]);
+                                                rowLow["c-a"] = sumData[8].OriginText;
+                                                rowLow["c-a_75"] = ChangeValueToNeed.DcResistans_To_75(sumData[8]);
+                                                rowLow["TestCode"] = tws.job.Information.GetHashCode();
+                                                rowLow["unbalance"] = ChangeValueToNeed.UnBalance(Convert.ToDouble(sumData[2].value) * 310 / 255,
+                                                    Convert.ToDouble(sumData[5].value) * 310 / 255,
+                                                    Convert.ToDouble(sumData[8].value) * 310 / 255);
+                                                rowLow["ax-byMutualDifference"] = ChangeValueToNeed.MutualDifference((double)sumData[2].value * 310 / 255, (double)(sumData[5].value * 310 / 255));
+                                                rowLow["by-czMutualDifference"] = ChangeValueToNeed.MutualDifference((double)sumData[5].value * 310 / 255, (double)(sumData[8].value * 310 / 255));
+                                                rowLow["cz-axMutualDifference"] = ChangeValueToNeed.MutualDifference((double)sumData[8].value * 310 / 255, (double)(sumData[2].value * 310 / 255));
+                                                rowLow["max"] = ChangeValueToNeed.MaxMutualDifference((double)sumData[2].value * 310 / 255, (double)sumData[5].value * 310 / 255,
+                                               (double)sumData[8].value * 310 / 255);
+                                            }
+                                        }
                                     }
                                     if (tws.MeasurementItems[i].WindingConfig != TransformerWindingConfigName.Yn)
                                     {
@@ -295,7 +317,7 @@ namespace SCEEC.MI.TZ3310
                                             rowLow["a-b_75"] = ChangeValueToNeed.DcResistans_To_75(tws.MeasurementItems[i].Result.values[2]);
                                             rowLow["b-c"] = tws.MeasurementItems[i + 1].Result.values[5].OriginText;
                                             rowLow["b-c_75"] = ChangeValueToNeed.DcResistans_To_75(tws.MeasurementItems[i + 1].Result.values[5]);
-                                            if (tws.MeasurementItems[i + 2].Result!=null)
+                                            if (tws.MeasurementItems[i + 2].Result != null)
                                             {
                                                 rowLow["c-a"] = tws.MeasurementItems[i + 2].Result.values[8].OriginText;
                                                 rowLow["c-a_75"] = ChangeValueToNeed.DcResistans_To_75(tws.MeasurementItems[i + 2].Result.values[8]);
@@ -306,18 +328,18 @@ namespace SCEEC.MI.TZ3310
                                                 rowLow["c-a"] = "0";
                                                 rowLow["c-a_75"] = "0";
                                             }
-
-                                            rowLow["TestCode"] = tws.job.Information.GetHashCode();
-                                            rowLow["unbalance"] = ChangeValueToNeed.UnBalance(Convert.ToDouble(tws.MeasurementItems[i].Result.values[2].value) * 310 / 255,
-                                                Convert.ToDouble(tws.MeasurementItems[i + 1].Result.values[5].value) * 310 / 255,
-                                                Convert.ToDouble(tws.MeasurementItems[i + 2].Result.values[8].value) * 310 / 255);
-                                            rowLow["ax-byMutualDifference"] = ChangeValueToNeed.MutualDifference((double)tws.MeasurementItems[i].Result.values[2].value * 310 / 255, (double)(tws.MeasurementItems[i].Result.values[2].value * 310 / 255));
-                                            rowLow["by-czMutualDifference"] = ChangeValueToNeed.MutualDifference((double)tws.MeasurementItems[i + 1].Result.values[5].value * 310 / 255, (double)(tws.MeasurementItems[i + 1].Result.values[5].value * 310 / 255));
-                                            rowLow["cz-axMutualDifference"] = ChangeValueToNeed.MutualDifference((double)tws.MeasurementItems[i + 2].Result.values[8].value * 310 / 255, (double)(tws.MeasurementItems[i + 2].Result.values[8].value * 310 / 255));
-
-
-                                            rowLow["max"] = ChangeValueToNeed.MaxMutualDifference((double)tws.MeasurementItems[i].Result.values[2].value * 310 / 255, (double)tws.MeasurementItems[i + 1].Result.values[5].value * 310 / 255,
-                                           (double)tws.MeasurementItems[i + 2].Result.values[8].value * 310 / 255);
+                                            if (tws.MeasurementItems[i].Result != null && tws.MeasurementItems[i + 1].Result != null && tws.MeasurementItems[i + 2].Result != null)
+                                            {
+                                                rowLow["TestCode"] = tws.job.Information.GetHashCode();
+                                                rowLow["unbalance"] = ChangeValueToNeed.UnBalance(Convert.ToDouble(tws.MeasurementItems[i].Result.values[2].value) * 310 / 255,
+                                                    Convert.ToDouble(tws.MeasurementItems[i + 1].Result.values[5].value) * 310 / 255,
+                                                    Convert.ToDouble(tws.MeasurementItems[i + 2].Result.values[8].value) * 310 / 255);
+                                                rowLow["ax-byMutualDifference"] = ChangeValueToNeed.MutualDifference((double)tws.MeasurementItems[i].Result.values[2].value * 310 / 255, (double)(tws.MeasurementItems[i].Result.values[2].value * 310 / 255));
+                                                rowLow["by-czMutualDifference"] = ChangeValueToNeed.MutualDifference((double)tws.MeasurementItems[i + 1].Result.values[5].value * 310 / 255, (double)(tws.MeasurementItems[i + 1].Result.values[5].value * 310 / 255));
+                                                rowLow["cz-axMutualDifference"] = ChangeValueToNeed.MutualDifference((double)tws.MeasurementItems[i + 2].Result.values[8].value * 310 / 255, (double)(tws.MeasurementItems[i + 2].Result.values[8].value * 310 / 255));
+                                                rowLow["max"] = ChangeValueToNeed.MaxMutualDifference((double)tws.MeasurementItems[i].Result.values[2].value * 310 / 255, (double)tws.MeasurementItems[i + 1].Result.values[5].value * 310 / 255,
+                                               (double)tws.MeasurementItems[i + 2].Result.values[8].value * 310 / 255);
+                                            }
 
                                             i += 2;
                                         }
@@ -328,7 +350,7 @@ namespace SCEEC.MI.TZ3310
 
                                 }
                             }
-                            if (tws.MeasurementItems[i].Result.Function == MeasurementFunction.BushingCapacitance)
+                            if (tws.MeasurementItems[i].Result != null && tws.MeasurementItems[i].Result.Function == MeasurementFunction.BushingCapacitance)
                             {
                                 if (tws.MeasurementItems[i].Winding == WindingType.HV)
                                 {
@@ -388,7 +410,7 @@ namespace SCEEC.MI.TZ3310
 
                                 }
                             }
-                            if (tws.MeasurementItems[i].Result.Function == MeasurementFunction.BushingDCInsulation)
+                            if (tws.MeasurementItems[i].Result!=null&&tws.MeasurementItems[i].Result.Function == MeasurementFunction.BushingDCInsulation)
                             {
                                 if (tws.MeasurementItems[i].Winding == WindingType.HV)
                                 {
@@ -415,24 +437,6 @@ namespace SCEEC.MI.TZ3310
                             }
                         }
 
-                        //if (tws.MeasurementItems[i].Result.Function == MeasurementFunction.OLTCSwitchingCharacter)
-                        //{
-                        //    int j = 0;
-                        //    DataRow OLTERowOLTCSwitchingCharacter = WorkingSets.local.Tapchangertest.NewRow();
-                        //    DataRow rowResultOLTCSwitchingCharacter = WorkingSets.local.Tapchangertestresults.NewRow();
-                        //    OLTERowOLTCSwitchingCharacter["TestCode"] = tws.job.Information.GetHashCode();
-                        //    OLTERowOLTCSwitchingCharacter["SwitchingTime"] = tws.MeasurementItems[i].Result.recordTime;
-                        //    OLTERowOLTCSwitchingCharacter["testchart"] = System.Convert.ToBase64String(Array2Bytes(tws.MeasurementItems[i].Result.waves));
-                        //    OLTERowOLTCSwitchingCharacter["waveformname"] = "WaveFormImage" + j.ToString() + ".png"; j++; //j++;j.ToString()+
-                        //    rowResultOLTCSwitchingCharacter["TestCode"] = tws.job.Information.GetHashCode();
-                        //    rowResultOLTCSwitchingCharacter["Temperature"] = tws.job.Information.temperature;
-                        //    rowResultOLTCSwitchingCharacter["Humidity"] = tws.job.Information.humidity;
-                        //    rowResultOLTCSwitchingCharacter["OilTemperature"] = tws.job.Information.oilTemperature;
-                        //    rowResultOLTCSwitchingCharacter["InstrumentNumber"] = InstrumentNumber;
-                        //    WorkingSets.local.Tapchangertestresults.Rows.Add(rowResultOLTCSwitchingCharacter);
-                        //    WorkingSets.local.Tapchangertest.Rows.Add(OLTERowOLTCSwitchingCharacter);
-                        //    WorkingSets.local.SaveCreateLocateDatabase();
-                        //}
                     }
                     #region 数据行
                     WorkingSets.local.Dcresistor_Lowpressureresults.Rows.Add(rowLowResult);
@@ -855,6 +859,15 @@ namespace SCEEC.MI.TZ3310
 
         }
 
+        private static bool isNotPhyNull(PhysicalVariable[] physicalVariable)
+        {
+            foreach (PhysicalVariable item in physicalVariable)
+            {
+                if (item == null || item.value == null)
+                    return false;
+            }
+            return true;
+        }
         public static void CreateWaveResult(OverResult or, int testcode)
         {
 
@@ -999,7 +1012,8 @@ namespace SCEEC.MI.TZ3310
         public static void ShowExport(string ResultName)
         {
             var tws = WorkingSets.local.getTestResults(ResultName);
-            HNReport.DoReport.Run(HNReport.ReportOperator.Design, tws.job.Information.GetHashCode().ToString(), "配电变压器");
+            HNReport.DoReport.Run(HNReport.ReportOperator.Previev, tws.job.Information.GetHashCode().ToString(), "配电变压器");
+
         }
         /// <summary>
         /// 处理波形数据库问题
@@ -1034,7 +1048,7 @@ namespace SCEEC.MI.TZ3310
         }
         public static void UpdataDatabase(string ResultName)
         {
-          //  WorkingSets.local.DeleteAllExportTable(ResultName);//删除原表数据
+            WorkingSets.local.DeleteAllExportTable(ResultName);//删除原表数据
             CreateTableHead(ResultName);//创建新表头，表头哈希代码不同需要新的表头检索
             CreateParameterInformation(ResultName);
             CreateSampleInformation(ResultName);

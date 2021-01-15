@@ -7,6 +7,7 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:WPF.UI="clr-namespace:ZdfFlatUI;assembly=WPF.UI"
         xmlns:cht="clr-namespace:ChartsWave;assembly=ChartsWave"
+        xmlns:testui="clr-namespace:TestUi;assembly=TestUi"
         mc:Ignorable="d"
         Style="{DynamicResource WizardForm}"
         Title="变压器现场综合测试系统管理器"  Icon="icon.ico"
@@ -96,87 +97,10 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <GroupBox x:Name="dcigroupbox"  Header="实时测量" Grid.Row="0" Grid.ColumnSpan="2" Margin="5" Visibility="Hidden">
-                    <Grid x:Name="MeasurementPanelGrid">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="0.05*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="0.1*"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock x:Name="DashboardTitle1" Text="" Visibility="Hidden"/>
-                        <TextBlock x:Name="dciboard_volate_value" Text="0" Visibility="Hidden"/>
-                        <TextBlock x:Name="DashboardUnit1" Text="" Visibility="Hidden"/>
-                        <TextBlock x:Name="DashboardTitle2" Text="" Visibility="Hidden"/>
-                        <TextBlock x:Name="dciboard_resistance_value" Text="0" Visibility="Hidden"/>
-                        <TextBlock x:Name="DashboardUnit2" Text="" Visibility="Hidden"/>
-                        <WPF.UI:Dashboard x:Name="dciboard_resistance" Width="200" Height="200" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                   LongTickCount="11" Maximum="5000" ShortTickCount="5" Skin="Resistance"
-                                   Grid.Column="1">
-                            <WPF.UI:Dashboard.ContentTemplate>
-                                <DataTemplate>
-                                    <StackPanel Margin="0,85,0,0" HorizontalAlignment="Center" Orientation="Vertical">
-                                        <TextBlock FontSize="18" Margin="0,4" Text="电阻" TextAlignment="Center" />
-                                        <TextBlock Margin="0,4" HorizontalAlignment="Center" FontSize="26" Foreground="White"
-                                           Text="{Binding Path=Text,
-                                                          ElementName=dciboard_resistance_value}" />
-                                        <TextBlock Margin="0,4" HorizontalAlignment="Center" FontSize="18" Text="{Binding Path=Text, ElementName=DashboardUnit1}"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </WPF.UI:Dashboard.ContentTemplate>
-                        </WPF.UI:Dashboard>
-                        <WPF.UI:Dashboard x:Name="dciboard_volate" Width="200" Height="200" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                   LongTickCount="10" Maximum="10" ShortTickCount="5" Skin="Flow"
-                                   Value="0" Grid.Column="2">
-                            <WPF.UI:Dashboard.ContentTemplate>
-                                <DataTemplate>
-                                    <StackPanel Margin="0,85,0,0" HorizontalAlignment="Center" Orientation="Vertical">
-                                        <TextBlock FontSize="18" Margin="0,4"  Text="电压"  TextAlignment="Center" /> <!--Text="{Binding Path=Text, ElementName=DashboardTitle2}"-->
-                                        <TextBlock Margin="0,4" HorizontalAlignment="Center" FontSize="26" Foreground="White"
-                                           Text="{Binding Path=Text,
-                                                          ElementName=dciboard_volate_value}" />
-                                        <!--<TextBlock Margin="0,4" HorizontalAlignment="Center" FontSize="18" Text="{Binding Path=Text, ElementName=DashboardUnit2}"/>-->
-                                    </StackPanel>
-                                </DataTemplate>
-                            </WPF.UI:Dashboard.ContentTemplate>
-                        </WPF.UI:Dashboard>
-                        <Grid Grid.Column="1" Grid.ColumnSpan="2">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="0.5*"></ColumnDefinition>
-                                <ColumnDefinition></ColumnDefinition>
-                                <ColumnDefinition Width="0.5*"></ColumnDefinition>
-                                <ColumnDefinition></ColumnDefinition>
-                                <ColumnDefinition Width="0.5*"></ColumnDefinition>
-                                <ColumnDefinition></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition></RowDefinition>
-                                <RowDefinition></RowDefinition>
-                                <RowDefinition></RowDefinition>
-                            </Grid.RowDefinitions>
-                            <TextBlock x:Name="vn1" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
-                            <TextBlock x:Name="v1" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
-                            <TextBlock  x:Name="vn2" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
-                            <TextBlock  x:Name="v2" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
-                            <TextBlock x:Name="vn3" Grid.Row="0" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
-                            <TextBlock x:Name="v3"  Grid.Row="0" Grid.Column="5" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
-                            <TextBlock  x:Name="vn4" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
-                            <TextBlock  x:Name="v4" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
-                            <TextBlock  x:Name="vn5" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
-                            <TextBlock  x:Name="v5" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
-                            <TextBlock  x:Name="vn6" Grid.Row="1" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
-                            <TextBlock  x:Name="v6" Grid.Row="1" Grid.Column="5" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
-                            <TextBlock  x:Name="vn7" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
-                            <TextBlock  x:Name="v7" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
-                            <TextBlock  x:Name="vn8" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
-                            <TextBlock  x:Name="v8" Grid.Row="2" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
-                            <TextBlock  x:Name="vn9" Grid.Row="2" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
-                            <TextBlock  x:Name="v9" Grid.Row="2" Grid.Column="5" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
-                        </Grid>
-
-                    </Grid>
+                    <testui:DciResistance x:Name="DciRe"></testui:DciResistance>
                 </GroupBox>
-                <GroupBox x:Name="dcrgroupbox" Header="实时测量" Grid.Row="0" Grid.ColumnSpan="2" Margin="5" Visibility="Hidden">
-                    <Grid >
+                <GroupBox x:Name="dcrgroupbox" Header="实时测量" Grid.Row="0" Grid.ColumnSpan="2" Margin="5" Visibility="Visible">
+                    <!--<Grid >
                         <Grid.RowDefinitions>
                             <RowDefinition></RowDefinition>
                             <RowDefinition></RowDefinition>
@@ -194,11 +118,9 @@
                         <TextBlock x:Name="BCurrent" >0AΩ</TextBlock>
                         <TextBlock x:Name="CResistance" >0GΩ</TextBlock>
                         <TextBlock x:Name="CCurrent" >0AΩ</TextBlock>
-
                         <TextBlock Visibility="Hidden" x:Name="A_resistance_value">0.00G</TextBlock>
                         <TextBlock Visibility="Hidden" x:Name="B_resistance_value">0.00G</TextBlock>
                         <TextBlock Visibility="Hidden" x:Name="C_resistance_value">0.00G</TextBlock>
-
                         <TextBlock Visibility="Hidden" x:Name="A_Current_value">0.0A</TextBlock>
                         <TextBlock Visibility="Hidden" x:Name="B_Current_value">0.0A</TextBlock>
                         <TextBlock Visibility="Hidden" x:Name="C_Current_value">0.0A</TextBlock>
@@ -232,7 +154,6 @@
                                 </DataTemplate>
                             </WPF.UI:Dashboard.ContentTemplate>
                         </WPF.UI:Dashboard>
-
                         <WPF.UI:Dashboard x:Name="B_resistance_dashboad" Width="150" Height="150" HorizontalAlignment="Center" VerticalAlignment="Center"
                                    LongTickCount="8" Maximum="500" ShortTickCount="5" Skin="Resistance"
                                    Grid.Column="2" Grid.Row="0">
@@ -263,7 +184,6 @@
                                 </DataTemplate>
                             </WPF.UI:Dashboard.ContentTemplate>
                         </WPF.UI:Dashboard>
-
                         <WPF.UI:Dashboard x:Name="C_resistance_dashboad" Width="150" Height="150" HorizontalAlignment="Center" VerticalAlignment="Center"
                                    LongTickCount="8" Maximum="500" ShortTickCount="5" Skin="Resistance"
                                    Grid.Column="3" Grid.Row="0">
@@ -294,103 +214,32 @@
                                 </DataTemplate>
                             </WPF.UI:Dashboard.ContentTemplate>
                         </WPF.UI:Dashboard>
-
+                    </Grid>-->
+                    <Grid>
+                        <testui:ThreeResistance x:Name="threeDcr"></testui:ThreeResistance>
+                        <testui:SignalResistance x:Name="signalDcr"></testui:SignalResistance>
                     </Grid>
                 </GroupBox>
 
                 <GroupBox x:Name="capgroupbox" Header="实时测量" Grid.Row="0" Grid.ColumnSpan="2" Margin="5" Visibility="Hidden">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition></ColumnDefinition>
-                            <ColumnDefinition></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="0.0KV" Visibility="Hidden" Name="captancevalue"></TextBlock>
-                        <WPF.UI:Dashboard x:Name="captance" Width="220" Height="220" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                   LongTickCount="11" Maximum="10" ShortTickCount="5" Skin="Flow"
-                                   Grid.Column="0" >
-                            <WPF.UI:Dashboard.ContentTemplate>
-                                <DataTemplate>
-                                    <StackPanel Margin="0,85,0,0" HorizontalAlignment="Center" Orientation="Vertical">
-                                        <TextBlock FontSize="12" Margin="0,4" Text="电压" TextAlignment="Center" />
-                                        <TextBlock Margin="0,4" HorizontalAlignment="Center" FontSize="26" Foreground="White"
-                                           Text="{Binding Path=Text,
-                                                          ElementName=captancevalue}" />
-                                        <TextBlock Margin="0,4" HorizontalAlignment="Center" FontSize="18" Text="{Binding Path=Text, ElementName=DashboardUnit1}"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </WPF.UI:Dashboard.ContentTemplate>
-                        </WPF.UI:Dashboard>
+                    <testui:DashBoard x:Name="Capui" MaxValue="10" IsResistance="False" Margin="15"></testui:DashBoard>
+                </GroupBox>
 
-                        <GroupBox Header="提示" Grid.Column="1" Margin="15"></GroupBox>
-
+                <GroupBox x:Name="finishgroupbox" Header="实时测量" Grid.Row="0" Grid.ColumnSpan="2" Margin="5" Visibility="Visible">
+                    <Grid Background="#333337">
+                        <Viewbox Margin="50">
+                            <TextBlock HorizontalAlignment="Center"  Name="hideTest"  VerticalAlignment="Center"  Foreground="Green">试验已结束</TextBlock>
+                        </Viewbox>
                     </Grid>
                 </GroupBox>
 
-                <GroupBox x:Name="oltcgroupbox" Header="" Grid.Row="0" Grid.ColumnSpan="2" Margin="0">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition></ColumnDefinition>
-                            <ColumnDefinition></ColumnDefinition>
-                            <ColumnDefinition></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="0A" Visibility="Hidden" Name="Aoltcavalue"></TextBlock>
-                        <TextBlock Text="0A" Visibility="Hidden" Name="Boltcavalue"></TextBlock>
-                        <TextBlock Text="0A" Visibility="Hidden" Name="Coltcavalue"></TextBlock>
-                        <WPF.UI:Dashboard x:Name="Aoltcdashboard" Width="220" Height="220" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                   LongTickCount="11" Maximum="20" ShortTickCount="5" Skin="Resistance"
-                                   Grid.Column="0" >
-                            <WPF.UI:Dashboard.ContentTemplate>
-                                <DataTemplate>
-                                    <StackPanel Margin="0,85,0,0" HorizontalAlignment="Center" Orientation="Vertical">
-                                        <TextBlock FontSize="12" Margin="0,4" Text="A相电流" TextAlignment="Center" />
-                                        <TextBlock Margin="0,4" HorizontalAlignment="Center" FontSize="26" Foreground="White"
-                                           Text="{Binding Path=Text,
-                                                          ElementName=Aoltcavalue}" />
-                                        <TextBlock Margin="0,4" HorizontalAlignment="Center" FontSize="18" Text="{Binding Path=Text, ElementName=DashboardUnit1}"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </WPF.UI:Dashboard.ContentTemplate>
-                        </WPF.UI:Dashboard>
-                        <WPF.UI:Dashboard x:Name="Boltcdashboard" Width="220" Grid.Column="1" Height="220" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                   LongTickCount="11" Maximum="20" ShortTickCount="5" Skin="Flow"
-                                   >
-                            <WPF.UI:Dashboard.ContentTemplate>
-                                <DataTemplate>
-                                    <StackPanel Margin="0,85,0,0" HorizontalAlignment="Center" Orientation="Vertical">
-                                        <TextBlock FontSize="12" Margin="0,4" Text="B相电流" TextAlignment="Center" />
-                                        <TextBlock Margin="0,4" HorizontalAlignment="Center" FontSize="26" Foreground="White"
-                                           Text="{Binding Path=Text,
-                                                          ElementName=Boltcavalue}" />
-                                        <TextBlock Margin="0,4" HorizontalAlignment="Center" FontSize="18" Text="{Binding Path=Text, ElementName=DashboardUnit1}"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </WPF.UI:Dashboard.ContentTemplate>
-                        </WPF.UI:Dashboard>
-
-                        <WPF.UI:Dashboard x:Name="Coltcdashboard" Width="220" Grid.Column="2" Height="220" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                   LongTickCount="11" Maximum="20" ShortTickCount="5" Skin="Flow"
-                                   >
-                            <WPF.UI:Dashboard.ContentTemplate>
-                                <DataTemplate>
-                                    <StackPanel Margin="0,85,0,0" HorizontalAlignment="Center" Orientation="Vertical">
-                                        <TextBlock FontSize="12" Margin="0,4" Text="C相电流" TextAlignment="Center" />
-                                        <TextBlock Margin="0,4" HorizontalAlignment="Center" FontSize="26" Foreground="White"
-                                           Text="{Binding Path=Text,
-                                                          ElementName=Coltcavalue}" />
-                                        <TextBlock Margin="0,4" HorizontalAlignment="Center" FontSize="18" Text="{Binding Path=Text, ElementName=DashboardUnit1}"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </WPF.UI:Dashboard.ContentTemplate>
-                        </WPF.UI:Dashboard>
-                    </Grid>
+                <GroupBox x:Name="oltcgroupbox" Visibility="Hidden" Header="" Grid.Row="0" Grid.ColumnSpan="2" Margin="0">
+                    <testui:OltcSwicher x:Name="Oltcui"></testui:OltcSwicher>
                 </GroupBox>
 
-                <Grid Grid.ColumnSpan="2" Name="Oltcgroupbox"  Margin="10" Background="#333337">
-                   
+                <Grid Grid.ColumnSpan="2" Visibility="Collapsed" Name="Oltcgroupbox"  Margin="10" Background="#333337">
                     <cht:ThreeChart x:Name="threechart"></cht:ThreeChart>
-                    
                 </Grid>
-                
 
                 <GroupBox Header="试验结果" Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Margin="5">
                         <ListBox x:Name="ResultListBox" Margin="5" FontSize="12">

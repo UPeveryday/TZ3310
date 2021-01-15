@@ -37,8 +37,6 @@ namespace SCEEC.MI.TZ3310
                 sc.setSerialPort(comPortName, baudRate, dataBits, stopBits);
                 sc.openPort();
                 sc.DataReceived += new SerialClass.SerialPortDataReceiveEventArgs(Screceivee);
-
-
             }
             catch (Exception)
             {
@@ -109,16 +107,8 @@ namespace SCEEC.MI.TZ3310
                 if (RecBuffer[0] == 0xac && RecBuffer[1] == Mark)
                 {
                     return true;
-
                 }
-                else if (RecBuffer[0] == 0xee && RecBuffer[1] == 0xee)
-                {
-                    return false;
-                }
-                else
-                {
-                    return false;
-                }
+                return false;
 
             }
             catch (Exception)
@@ -357,7 +347,7 @@ namespace SCEEC.MI.TZ3310
                 //string[] RetData = new string[5];
                 byte[] SendComman = { 0x12 };
                 byte[] RecBuffer = new byte[31];
-                sc.SendCommandCap(SendComman, ref RecBuffer, 10);
+                sc.SendCommandCap(SendComman, ref RecBuffer, 100);
 
                 if (RecBuffer[0] == 0xfa)
                 {
@@ -408,7 +398,7 @@ namespace SCEEC.MI.TZ3310
                     sc.SendCommandCap(Sendbuffer, ref RecBuffer, 10);
                     if (RecBuffer[0] == 0xfa)
                     {
-                     //   File.WriteAllBytes(@"D:\\log.txt", RecBuffer);
+                        //   File.WriteAllBytes(@"D:\\log.txt", RecBuffer);
                         string[] RetData = new string[10];
                         RetData[0] = Encoding.ASCII.GetString(RecBuffer.Skip(2).Take(8).ToArray()).Replace('\0', ' ').Trim();
                         RetData[1] = Encoding.ASCII.GetString(RecBuffer.Skip(10).Take(8).ToArray()).Replace('\0', ' ').Trim();
@@ -573,7 +563,7 @@ namespace SCEEC.MI.TZ3310
                 byte[] RecData = new byte[26];
                 // float[] RetData = new float[4];
                 byte[] SendComman = { 0x3e };
-                if (sc.SendCommandCap(SendComman, ref RecData, 10) >= 0)
+                if (sc.SendCommandCap(SendComman, ref RecData, 100) >= 0)
                 {
 
                     string[] RetData = new string[4];
@@ -619,7 +609,7 @@ namespace SCEEC.MI.TZ3310
                 return "通讯出错";
             if (test == "255")//FF
                 return "测量成功";
-           // CommunicationQuery(0x00);
+            // CommunicationQuery(0x00);
             return string.Empty;
 
         }
@@ -677,7 +667,7 @@ namespace SCEEC.MI.TZ3310
                 return "正母线过压";
             if (test == "25")
                 return "负母线过压";
-     //       CommunicationQuery(0x00);
+            //       CommunicationQuery(0x00);
             return string.Empty;
 
         }
@@ -815,7 +805,6 @@ namespace SCEEC.MI.TZ3310
             var RecBuffer1 = sc.ReadPortsData(new byte[3] { 0x4f, 0X00, 0x4f }, RecBuffer, 48010, 800);
             if (RecBuffer1.Length != 48010)
             {
-                Thread.Sleep(2000);
                 RecBuffer1 = sc.ReadPortsData(new byte[3] { 0x4f, 0X00, 0x4f }, RecBuffer, 48010);
             }
             return ParsingWaveFormData(RecBuffer1);
@@ -929,8 +918,9 @@ namespace SCEEC.MI.TZ3310
             SendBuffer[2] = CheckData(SendBuffer);
             byte[] RecBuffer = new byte[3];
             //  sc.SendDataByte(SendBuffer,0,3);
-            if (sc.SendCommand(SendBuffer, ref RecBuffer, 20) >= 0)
+            if (sc.SendCommand(SendBuffer, ref RecBuffer, 50) >= 0)
             {
+                Thread.Sleep(1000);
                 if (RecBuffer[0] == 0xac)
                 {
                     return true;

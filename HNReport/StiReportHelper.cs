@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace HNReport
 {
- 
+
     public delegate void OutputReportInfo(string info);
 
     public class StiReportHelper

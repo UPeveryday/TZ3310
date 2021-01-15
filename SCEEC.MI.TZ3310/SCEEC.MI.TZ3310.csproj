@@ -92,7 +92,7 @@
     <Compile Include="XmlFile.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\HNReport\HNReport\HNReport.csproj">
+    <ProjectReference Include="..\HNReport\HNReport.csproj">
       <Project>{69abfce5-0e0d-49e1-8972-90abfe8cd9c4}</Project>
       <Name>HNReport</Name>
     </ProjectReference>

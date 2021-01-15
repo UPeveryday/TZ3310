@@ -1,0 +1,62 @@
+﻿<UserControl x:Class="TestUi.DashBoard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TestUi"
+             mc:Ignorable="d"  Loaded="UserControl_Loaded">
+    <Viewbox Margin="10 15">
+        <Grid Width="250" Height="150"  >
+            <Canvas x:Name="gaugeCanvas"   Width="260" Height="150" >
+                <Path StrokeThickness="10" Width="260" Height="130"   StrokeStartLineCap="Round" StrokeEndLineCap="Round">
+                    <Path.Data>
+                        <PathGeometry Figures="M 0,125 A 125,125 0 0 1 250,125"/>
+                    </Path.Data>
+                    <Path.Stroke>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0" >
+                            <LinearGradientBrush.GradientStops>
+                                <GradientStop Offset="0" x:Name="firtsColor"  Color="Green"/>
+                                <GradientStop Offset="0.5"  x:Name="secondColor" Color="#abca16"/>
+                                <GradientStop Offset="1.0 " x:Name="thirdColor" Color="Red"/>
+                            </LinearGradientBrush.GradientStops>
+                        </LinearGradientBrush>
+                    </Path.Stroke>
+                </Path>
+                <Path x:Name="indicatorPin" Fill="Orange" >
+                    <Path.Data>
+                        <PathGeometry>
+                            <PathGeometry.Figures>
+                                <PathFigure StartPoint="130,120" IsClosed="True">
+                                    <PathFigure.Segments>
+                                        <LineSegment Point="15,125"/>
+                                        <LineSegment Point="130,130"/>
+                                    </PathFigure.Segments>
+                                </PathFigure>
+                            </PathGeometry.Figures>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+                
+                
+                
+            </Canvas>
+            <Canvas  Visibility="Visible"  Width="160" Height="100" >
+                <Path StrokeThickness="1" Fill="#404040" Width="160" Height="80" Canvas.Bottom="0"   StrokeStartLineCap="Round" StrokeEndLineCap="Round">
+                    <Path.Data>
+                        <PathGeometry Figures="M 0,80 A 80,80 0 0 1 160,80"/>
+                    </Path.Data>
+                    <!--<Path.Stroke>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <LinearGradientBrush.GradientStops>
+                                <GradientStop Offset="0" Color="Green"/>
+                                <GradientStop Offset="1.0" Color="Red"/>
+                            </LinearGradientBrush.GradientStops>
+                        </LinearGradientBrush>
+                    </Path.Stroke>-->
+                </Path>
+            </Canvas>
+            <TextBlock Name="hideTest"   HorizontalAlignment="Center" FontSize="22"   VerticalAlignment="Bottom" Margin="0 50"  Foreground="LightGreen"></TextBlock>
+            <TextBlock Name="currentValue"     HorizontalAlignment="Center" FontSize="22"   VerticalAlignment="Bottom"  Margin="0 25"  Foreground="LightGreen"></TextBlock>
+        </Grid>
+    </Viewbox>
+</UserControl>

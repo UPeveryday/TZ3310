@@ -134,7 +134,7 @@
                                 </WrapPanel>
                                 <CheckBox x:Name="HVWindingCapacitanceCheckBox" Content="高压绕组" IsChecked="True" Height="25" Margin="5" Checked="JobChanged" Unchecked="JobChanged"/>
                                 <CheckBox x:Name="MVWindingCapacitanceCheckBox" Content="中压绕组" IsChecked="True" Height="25" Margin="5" Checked="JobChanged" Unchecked="JobChanged"/>
-                                <CheckBox x:Name="LVWindingCapacitanceCheckBox" Content="低压绕组" IsChecked="True" Height="25" Margin="5" Checked="JobChanged" Unchecked="JobChanged"/>
+                                <CheckBox x:Name="LVWindingCapacitanceCheckBox" Content="低压绕组" IsChecked="False" Height="25" Margin="5" Checked="JobChanged" Unchecked="JobChanged"/>
                             </StackPanel>
                         </StackPanel>
                     </Expander>

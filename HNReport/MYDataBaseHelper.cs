@@ -25,7 +25,7 @@ namespace HNReport
 {
     class MYDataBaseHelper
     {
-        protected static string connectionString = "server=localhost;uid=root;password=www.sceec.com;database=shanghailitiantian2020.3.6;Charset=utf8";
+           protected static string connectionString = "server=localhost;uid=ttm;password=shsceecttm;database=tz3310;Charset=utf8";
         DbProviderFactory provider;
         public MYDataBaseHelper()
         {

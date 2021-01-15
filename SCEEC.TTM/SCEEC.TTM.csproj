@@ -388,6 +388,10 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\HNReport\HNReport.csproj">
+      <Project>{69abfce5-0e0d-49e1-8972-90abfe8cd9c4}</Project>
+      <Name>HNReport</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SCEEC.Config\SCEEC.Config.csproj">
       <Project>{c6bf5148-94fc-43a1-8ca8-f2665bf57939}</Project>
       <Name>SCEEC.Config</Name>
@@ -407,6 +411,10 @@
     <ProjectReference Include="..\SCEEC.Numerics\SCEEC.Numerics.csproj">
       <Project>{9a4b3d86-6679-4d42-a5f3-f917dedf2261}</Project>
       <Name>SCEEC.Numerics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TestUi\TestUi.csproj">
+      <Project>{a9f20402-39cc-4b1b-9cf3-2dcfd36034eb}</Project>
+      <Name>TestUi</Name>
     </ProjectReference>
     <ProjectReference Include="..\WPF.UI-master\ZdfFlatUI\ZdfFlatUI.csproj">
       <Project>{a5932abc-910b-4a80-ada0-0732ff08d520}</Project>
